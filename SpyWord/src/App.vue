@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <RouterView class="scrollbar scrollbar-thumb-color-bluegray font-default font-size-3 sm:(font-size-4)" />
+  <RouterView class="scrollbar scrollbar-thumb-color-bluegray font-default font-size-3  sm:(font-size-4)" />
 </template>
 
 <style scoped>

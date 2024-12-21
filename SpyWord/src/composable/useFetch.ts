@@ -1,38 +1,71 @@
-import {  ref } from "vue"
+import { ref } from 'vue'
+import { useAuthStore } from '@/stores/auth'
+
 interface FetchOptions {
-  method?: string
-  body?:object,
-  token?:string,
+  method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
+  body?: object
+  token?: string
 }
+export interface Error {
+  error: {
+    message: string | null
+    code: number | null
+  }
+  data?: {
+    message: string
+    code: number
+  }
+}
+export function useFetch<T>(url: string, options: FetchOptions) {
 
-export function useFetch<T>(url: string,options:FetchOptions) {
   const data = ref<T | null>(null)
-  const error = ref<unknown>(null)
-  const loading = ref(true)
+  const error = ref<Error>({ error: { message: null, code: null } })
+  const loading = ref(false)
+  const inError = ref(false)
+  const isComplete = ref(false)
 
-  const fetchData = async () => {
+   const fetchData = async () => {
+    loading.value = true
+    const {isCredentials,credentials}=useAuthStore()
     try {
       const headers: HeadersInit = {
         'Content-Type': 'application/json',
       }
-      if (options.token) {
-        headers['Authorization'] = `Bearer ${options.token}`
+      if (isCredentials) {
+        headers['Authorization'] = `${credentials.token.type} ${credentials.token.value}`
       }
 
-      const res = await fetch(`http://localhost:3000/${url}`,{
-        method:options.method || 'GET',
+      const res = await fetch(`http://maison.laurisceresoli.fr:5003/${url}`, {
+        method: options.method || 'GET',
         headers,
-        body:options.body ? JSON.stringify(options.body) : null
+        body: options.body ? JSON.stringify(options.body) : null,
       })
       if (!res.ok) {
-        throw { message: res.statusText, code: res.status }
+        inError.value = true
+        const data = await res.json()
+        error.value.data = { message: data.message, code: data.code }
+        error.value.error={ message: res.statusText, code: res.status }
+        throw {}
       }
       data.value = await res.json()
+      isComplete.value = true
     } catch (err) {
-      error.value = err
+      console.log(err)
+      isComplete.value = false
     } finally {
       loading.value = false
     }
   }
-  return { data, error, loading,fetchData }
+  const getErrorMessage = ():string => {
+    switch (error.value.data?.code) {
+      case 4031:
+        return 'Ce nom est déja pris et le mot de passe est incorrect'
+      case 4011:
+      case 4012: 
+        return 'Erreur d\'identification'
+      default:
+        return 'Erreur inconnue'
+    }
+  }
+  return { data, error, loading, fetchData, getErrorMessage,inError,isComplete }
 }

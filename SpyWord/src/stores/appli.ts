@@ -1,11 +1,8 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import type { UserInfos,WindowInfos} from '@/models/appli.model'
+import type {WindowInfos} from '@/models/appli.model'
 export const useAppliStore = defineStore('appli', () => {
-  const infoUser=ref<UserInfos>({
-    name:null,
-    isConnect:false
-  })
+
   const infoWindow=ref<WindowInfos>({
     width:window.innerWidth,
     height:window.innerHeight
@@ -15,5 +12,6 @@ export const useAppliStore = defineStore('appli', () => {
       infoWindow.value.width=window.innerWidth
       infoWindow.value.height=window.innerHeight
   })
-  return {infoUser,infoWindow}
+
+  return { infoWindow }
 })

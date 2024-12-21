@@ -15,8 +15,9 @@ export default defineConfig({
   },
   plugins: [
     vue(),
-    vueDevTools(),
-    Unocss()],
+    Unocss(),
+    vueDevTools()
+],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))

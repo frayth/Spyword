@@ -1,0 +1,10 @@
+Code 403 :
+
+  4031: utilisateur existe déja en base de donnée et mot de passe fournis n'est pas valide lors d'une requete non authentifié
+  4032: utilisateur essaye de recuperer des infos de partie qui ne sont pas la sienne
+code 401
+  4011: Le token fournis ne correspond pas au nom d'utilisateur fournis lors d'une requete authentifié
+  4012: Token non reconnu lors d'une requete authentifié
+  4013: Game non trouve lorsque l'utilisateur essaie de rejoindre une partie
+  4014: La partie que le joueur veux rejoindre est pleine
+

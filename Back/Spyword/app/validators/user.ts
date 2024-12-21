@@ -6,3 +6,9 @@ export const createUserValidator = vine.compile(
     password: vine.string(),
   })
 )
+
+export const connectUserValidator = vine.compile(
+  vine.object({
+    name: vine.string().escape(),
+  })
+)

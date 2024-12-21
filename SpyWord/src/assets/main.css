@@ -2,11 +2,11 @@
 
  #app {
   margin: 0 auto;
-  padding: 2rem;
   font-weight: normal;
-  height: 100dvh;
   overflow: auto;
-
+  display: grid;
+  align-items: start;
+  justify-items: center;
 }
 
 
