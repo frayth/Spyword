@@ -15,10 +15,11 @@ export default class GameStat extends BaseModel {
   declare gameId: number
   @column()
   declare userId: number
+  @column({ serializeAs: null })
+  declare role: string
+  @column()
+  declare urlAvatar: string
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
-
-  @hasOne(() => Role)
-  declare role: HasOne<typeof Role>
 }

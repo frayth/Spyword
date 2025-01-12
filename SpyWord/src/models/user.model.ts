@@ -1,4 +1,4 @@
-import type { Game, GameStat, UserPublicInfo } from '@/models/game.model'
+import type { Game, GameStat } from '@/models/game.model'
 
 export interface UserResponse {
   createdAt: string
@@ -21,7 +21,7 @@ export interface User {
   gameId: number | null
   id: number
   updatedAt: string
-  publicInfo?:UserPublicInfo
+  gameStat: GameStat | null
 }
 
 
@@ -34,5 +34,6 @@ export interface UserInfos {
     createdAt: string,
     updatedAt: string,
     game: Game | null,
+    gameStat: GameStat | null,
   }
 }

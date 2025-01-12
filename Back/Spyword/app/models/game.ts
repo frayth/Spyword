@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon'
 import {
+  afterFind,
   afterCreate,
   afterUpdate,
   BaseModel,
@@ -13,7 +14,8 @@ import type { BelongsTo, HasMany, HasOne } from '@adonisjs/lucid/types/relations
 import User from './user.js'
 import GameStat from './game_stat.js'
 import GameOption from './game_option.js'
-import { addPlayer, generateSlug, checkForDelete } from '#services/game_functions'
+import { addPlayer, generateSlug, checkForDelete, getAllInfo } from '#services/game_functions'
+
 export default class Game extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
@@ -27,7 +29,7 @@ export default class Game extends BaseModel {
   @column()
   declare ownerId: number
 
-  @column({ columnName: 'in_game' })
+  @column({ columnName: 'in_game', serialize: (value: number) => (value === 0 ? false : true) })
   declare inGame: boolean
 
   @column()
@@ -60,6 +62,12 @@ export default class Game extends BaseModel {
       gameId: game.id,
     })
   }
+
+  // @afterFind()
+  // public static async afterFindHook(game: Game) {
+  //   await game.load('gameOption')
+  //   await game.load('users')
+  // }
   // Relation avec les utilisateurs
   @hasMany(() => User)
   declare users: HasMany<typeof User>
@@ -81,4 +89,5 @@ export default class Game extends BaseModel {
   declare activePlayer: BelongsTo<typeof User>
   public checkForDelete = checkForDelete
   public addPlayer = addPlayer
+  public getAllInfo = getAllInfo
 }

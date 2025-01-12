@@ -46,7 +46,7 @@ export default class UsersController {
           return response.status(401).send({ message: 'error between token and data', code: 4011 })
         }
       } catch (e) {
-        return response.status(401).send(e)
+        return response.status(401).send({ error: e, message: 'erreur inconnue', code: 4012 })
       }
     }
   }
@@ -60,6 +60,7 @@ export default class UsersController {
     }
     try {
       const user = await auth.authenticate()
+      console.log(user.fullName, payload.name)
       if (user && user.fullName === payload.name) {
         await user.load('game')
         await user.load('gameStat')
@@ -70,15 +71,17 @@ export default class UsersController {
         throw { message: 'Invalid Token', code: 4012 }
       }
     } catch (e) {
+      console.log(e)
       return response.status(401).send(e.message)
     }
   }
+
   async info({ auth, response, request }: HttpContext) {
     const user = auth.user!
     if (user.gameId === null) {
       return response.status(403).send({ message: 'not in the game', code: 4032 })
     }
-    const responseUser = await userResponse(user)
-    return response.status(200).send({ message: 'game info', data: responseUser, code: 200 })
+    await userResponse(user)
+    return response.status(200).send({ message: 'game info', data: user, code: 200 })
   }
 }

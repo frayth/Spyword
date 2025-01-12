@@ -9,6 +9,7 @@ import { useFetch } from '@/composable/useFetch';
 import type { GameResponse } from '@/models/game.model';
 import router from '@/router';
 import { useGameStore } from '@/stores/game';
+import { subscription } from '@/Services/useWs';
 const game=useGameStore()
 
 const {  fetchData,isComplete } = useFetch<GameResponse>(
@@ -21,6 +22,7 @@ async function leaveGame() {
   await fetchData()
   if(isComplete.value){
     game.resetGame()
+    await subscription?.delete()
     router.replace('/')
   }
 }

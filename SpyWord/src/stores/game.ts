@@ -15,7 +15,8 @@ export const useGameStore = defineStore('game', () => {
     gameOption: {
       id: 0,
       gameId: 0,
-      maxPlayer: 0,
+      maxPlayers: 0,
+      whiteIsPresent: true,
     },
   })
   const { data, fetchData } = useFetch<UserInfos>('api/users/info', {
@@ -40,7 +41,8 @@ export const useGameStore = defineStore('game', () => {
       gameOption: {
         id: 0,
         gameId: 0,
-        maxPlayer: 0,
+        maxPlayers: 0,
+        whiteIsPresent: true,
       },
     }
   }

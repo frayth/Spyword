@@ -7,6 +7,7 @@ import router from '@/router'
 import { initialRoute } from '@/router'
 import type { UserResponse, User } from '@/models/user.model'
 import { useGameStore } from './game'
+import { JoinUserChannel } from '@/Services/useWs'
 export const useAuthStore = defineStore('auth', () => {
   const gameStore = useGameStore()
   const infoUser = ref<User & { isConnect: boolean }>({
@@ -16,6 +17,7 @@ export const useAuthStore = defineStore('auth', () => {
     id: 0,
     updatedAt: '',
     isConnect: false,
+    gameStat: null,
   })
 
   const credentials = useStorage(
@@ -55,15 +57,15 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function connect() {
-    const { data, error, loading, fetchData, getErrorMessage ,isComplete } =
-     useFetch<UserResponse>(
+    const { data, error, loading, fetchData, getErrorMessage, isComplete } =
+      useFetch<UserResponse>(
         `api/users/connect?name=${credentials.value.name}`,
         {
           method: 'GET',
         },
       )
     await fetchData()
-    
+
     if (isComplete.value === false) {
       setCredentials({ name: '', token: { type: '', value: '' } })
     } else {
@@ -72,6 +74,7 @@ export const useAuthStore = defineStore('auth', () => {
       infoUser.value.createdAt = data.value!.createdAt
       infoUser.value.updatedAt = data.value!.updatedAt
       infoUser.value.isConnect = true
+      await JoinUserChannel(infoUser.value.id)
       if (data.value?.gameId !== null) {
         infoUser.value.gameId = data.value!.gameId
         await gameStore.fetchUserInfo()

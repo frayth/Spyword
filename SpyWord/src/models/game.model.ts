@@ -30,10 +30,12 @@ export interface GameStat {
   score:number,
   updatedAt:string,
   userId:number,
+  urlAvatar:string,
 }
 
 export interface GameOption {
-  maxPlayer:number,
+  maxPlayers:number,
   gameId:number,
   id:number
+  whiteIsPresent:boolean,
 }

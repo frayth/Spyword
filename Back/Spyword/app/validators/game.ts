@@ -5,3 +5,9 @@ export const joinGameValidator = vine.compile(
     game_id: vine.string(),
   })
 )
+
+export const kickGameValidator = vine.compile(
+  vine.object({
+    user_id: vine.string(),
+  })
+)

@@ -5,4 +5,5 @@ export default class Role extends BaseModel {
   declare id: number
   @column()
   declare name: string
+  static DEFAULT_ROLE = 'civil'
 }

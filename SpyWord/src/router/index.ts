@@ -75,8 +75,7 @@ router.beforeEach((to,from) => {
   }else if(from.path.startsWith('/play/') && currentGame.value.slug !== '')
   {
     return false
-  }
-   else {
+  }else {
     return true
   }
 })

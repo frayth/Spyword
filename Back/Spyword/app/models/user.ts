@@ -7,7 +7,7 @@ import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
 import type { BelongsTo, HasOne } from '@adonisjs/lucid/types/relations'
 import Game from './game.js'
 import GameStat from './game_stat.js'
-import { createGame, joinGame, createToken, leaveGame } from '#services/user_fonctions'
+import { createGame, joinGame, createToken, leaveGame, getAll } from '#services/user_fonctions'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['fullname'],
@@ -33,15 +33,6 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
 
-  @computed()
-  public get publicInfo() {
-    return {
-      id: this.id,
-      fullName: this.fullName,
-      gameId: this.gameId,
-    }
-  }
-
   @belongsTo(() => Game)
   declare game: BelongsTo<typeof Game>
 
@@ -59,4 +50,5 @@ export default class User extends compose(BaseModel, AuthFinder) {
   public joinGame = joinGame
   public createToken = createToken
   public leaveGame = leaveGame
+  public getAll = getAll
 }

@@ -2,6 +2,8 @@ import User from '#models/user'
 import Game from '#models/game'
 import GameStat from '#models/game_stat'
 import { v4 as uuidv4 } from 'uuid'
+import { getRandomAvatar } from './avatar/avatar.js'
+
 export async function addPlayer(this: Game, user: User) {
   console.log('addPlayer')
   user.gameId = this.id
@@ -16,13 +18,18 @@ export async function addPlayer(this: Game, user: User) {
   await GameStat.create({
     gameId: this.id,
     userId: user.id,
+    urlAvatar: `public/images/avatars/${getRandomAvatar()}`,
   })
 }
+
 export async function checkForDelete(this: Game) {
   await this.load('users')
-  console.log('checkForDelete', this.users.length)
   if (this.users.length === 0) {
     await this.delete()
+  } else {
+    const firstUser = this.users[0]
+    this.ownerId = firstUser.id
+    await this.save()
   }
 }
 
@@ -36,4 +43,12 @@ export async function generateSlug(): Promise<string> {
     }
   }
   return slug
+}
+
+export async function getAllInfo(this: Game) {
+  await this.load('users')
+  for (const user of this.users) {
+    await user.load('gameStat')
+  }
+  await this.load('gameOption')
 }

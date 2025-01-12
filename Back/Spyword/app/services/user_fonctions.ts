@@ -42,3 +42,8 @@ export async function createToken(user: User): Promise<{
     token: token.value?.release(),
   }
 }
+
+export async function getAll(this: User) {
+  this.load('game')
+  this.load('gameStat')
+}

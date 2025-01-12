@@ -30,7 +30,7 @@
         :lock="status.loading"
         @keydown.enter="handleForm"
         placeholder="Entrer votre mot de passe"
-        type="text"
+        type="password"
         :error="infoUser.password.error"
         v-model="infoUser.password.value"
         class="grid-col-span-2 self-center"
