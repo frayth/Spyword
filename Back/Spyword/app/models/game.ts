@@ -14,14 +14,45 @@ import type { BelongsTo, HasMany, HasOne } from '@adonisjs/lucid/types/relations
 import User from './user.js'
 import GameStat from './game_stat.js'
 import GameOption from './game_option.js'
-import { addPlayer, generateSlug, checkForDelete, getAllInfo } from '#services/game_functions'
-
+import {
+  addPlayer,
+  generateSlug,
+  checkForDelete,
+  getAllInfo,
+  checkForStart,
+  initGame,
+  resetGame,
+} from '#services/game_functions'
+interface GameProperties {
+  gamePhase?: 'choose' | 'play' | 'vote'
+  words?: {
+    civil: string
+    spy: string
+  }
+  orderGame?: number[]
+  indexCurrentPlayer?: number
+}
 export default class Game extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
 
   @column()
   declare name: string
+
+  @column({
+    prepare: (value: GameProperties) => JSON.stringify(value),
+    consume: (value: string) => JSON.parse(value),
+    serialize: (value: GameProperties) => {
+      if (value) {
+        return {
+          gamePhase: value.gamePhase,
+          orderGame: value.orderGame,
+          indexCurrentPlayer: value.indexCurrentPlayer,
+        }
+      }
+    },
+  })
+  declare properties: GameProperties
 
   @column()
   declare slug: string
@@ -90,4 +121,7 @@ export default class Game extends BaseModel {
   public checkForDelete = checkForDelete
   public addPlayer = addPlayer
   public getAllInfo = getAllInfo
+  public checkForStart = checkForStart
+  public initGame = initGame
+  public resetGame = resetGame
 }

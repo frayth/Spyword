@@ -36,6 +36,9 @@ export default class GamesController {
       if (game.users.length >= game.gameOption.maxPlayers) {
         return response.status(401).send({ message: 'game full', code: 4014 })
       }
+      if (game.inGame) {
+        return response.status(403).send({ message: 'game alredy started', code: 4038 })
+      }
       await user.joinGame(game)
       const responseGame = await gameResponse(game)
       transmitGame(game.id, game)
@@ -54,9 +57,14 @@ export default class GamesController {
     const gameid = user.game.id
     try {
       await user.leaveGame()
-      const gameCurr = await Game.findBy('id', gameid)
+      let gameCurr = await Game.findBy('id', gameid)
+      if (gameCurr?.inGame) {
+        console.log('reset game')
+        await gameCurr.resetGame()
+      }
       // if game still exist
       if (gameCurr) {
+        console.log('transmit game')
         await gameResponse(gameCurr)
         transmitGame(gameCurr.id, gameCurr)
         transmitUser(user.id, 'action', 'leave')
@@ -83,34 +91,39 @@ export default class GamesController {
     if (!userToKick.game || userToKick.game.id !== user.game?.id) {
       return response.status(403).send({ message: 'user not in game', code: 4034 })
     }
+    if (user.game.inGame) {
+      return response.status(403).send({ message: 'game already started', code: 4039 })
+    }
     await userToKick.leaveGame()
     transmitUser(userToKick.id, 'action', 'leave')
     await gameResponse(user.game)
     transmitGame(user.game.id, user.game)
     return response.status(200).send({ message: 'kick ok', code: 200 })
   }
+
+  async start({ auth, response }: HttpContext) {
+    const user = auth.user!
+    await user.load('game')
+    if (!user.game) {
+      return response.status(400).send({ message: 'not in game', code: 4002 })
+    }
+    if (user.game.ownerId !== user.id) {
+      return response.status(403).send({ message: 'not owner', code: 4033 })
+    }
+
+    await user.game.getAllInfo()
+    // if (user.game.users.length < 3) {
+    //   return response.status(400).send({ message: 'not enough players', code: 4036 })
+    // }
+    // if (!user.game.checkForStart()) {
+    //   return response.status(400).send({ message: 'error Game Option', code: 4037 })
+    // }
+    await user.game.initGame()
+    transmitGame(user.game.id, user.game)
+    response.status(200).send({ message: 'game started', code: 200 })
+  }
   /**
    * Handle form submission for the create action
    */
   async store({ request }: HttpContext) {}
-
-  /**
-   * Show individual record
-   */
-  async show({ params }: HttpContext) {}
-
-  /**
-   * Edit individual record
-   */
-  async edit({ params }: HttpContext) {}
-
-  /**
-   * Handle form submission for the edit action
-   */
-  async update({}: HttpContext) {}
-
-  /**
-   * Delete record
-   */
-  async destroy({ params }: HttpContext) {}
 }

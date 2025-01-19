@@ -6,10 +6,11 @@
         <h1 class="font-900 text-size-xl justify-self-center">SpyWord</h1>
         <div class=""></div>
       </div>
-      <div class="h-100% w-100% bg-amber grid grid-col-[auto] grid-rows-[auto_1fr] lg:(grid grid-cols-3 gap-2 grid-rows-[auto])">
+      <div class="h-100% w-100% bg-amber grid grid-col-[auto] grid-rows-[auto_1fr] lg:(grid grid-cols-3 gap-2 grid-rows-[auto]) relative" id="mainPanel">
         <playerList />
         <div class=" bg-red h-full p-2  lg:(grid-col-start-2 grid-col-span-2 p-5) ">
-          <OptionsGame :game="game.currentGame"></OptionsGame>
+          <OptionsGame :game="game.currentGame" v-if="!game.currentGame.inGame"></OptionsGame>
+          <div v-else> on est en game</div>
         </div>
 
       </div>

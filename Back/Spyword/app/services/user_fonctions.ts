@@ -46,4 +46,5 @@ export async function createToken(user: User): Promise<{
 export async function getAll(this: User) {
   this.load('game')
   this.load('gameStat')
+  return this
 }

@@ -1,9 +1,19 @@
 <script setup lang="ts">
-
+  import Alert from '@/components/alert/alertComponent.vue'
+  import { useAlertStore } from '@/stores/alert';
+import { storeToRefs } from 'pinia';
+  const { alerts, alertIsVisible } =storeToRefs(useAlertStore());
 </script>
 
 <template>
-  <RouterView class="scrollbar scrollbar-thumb-color-bluegray font-default font-size-3  sm:(font-size-4)" />
+  <div v-if="alertIsVisible" class="z-1000 bg-black/50 w-full h-full absolute overflow-hidden">
+    <Alert v-for="(alert,i) in alerts" :zIndex="alert.zIndex!" :message="alert.message" :type="alert.type!" :index="i" :visible="alertIsVisible"  :key="`${i}alert`"/>
+  </div>
+  
+  <RouterView :class="{
+    'scrollbar scrollbar-thumb-color-bluegray font-default font-size-3   sm:(font-size-4)': true,
+    'blur-1':alertIsVisible
+}" />
 </template>
 
 <style scoped>

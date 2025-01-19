@@ -27,7 +27,7 @@ const router = createRouter({
         } else {
           next('/')
         }
-      }
+      },
     },
     {
       path: '/',
@@ -60,9 +60,9 @@ window.addEventListener('storage', () => {
   }
 })
 
-router.beforeEach((to,from) => {
+router.beforeEach((to, from) => {
   const { infoUser } = useAuthStore()
-  const {currentGame} = storeToRefs(useGameStore())
+  const { currentGame } = storeToRefs(useGameStore())
   // redirect to login page if not logged in and trying to access a restricted page
   const publicPages = ['/login']
   const authRequired = !publicPages.includes(to.path)
@@ -72,10 +72,9 @@ router.beforeEach((to,from) => {
     return '/login'
   } else if (to.path === '/login' && loggedIn) {
     return '/'
-  }else if(from.path.startsWith('/play/') && currentGame.value.slug !== '')
-  {
+  } else if (from.path.startsWith('/play/') && currentGame.value.slug !== '') {
     return false
-  }else {
+  } else {
     return true
   }
 })

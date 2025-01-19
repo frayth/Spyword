@@ -48,6 +48,7 @@ export default defineConfig({
     [/^pborder-(\d+)$/,([,d])=>({border:`${d}px solid #fbbf24`})],
     ['grid-center',{display:'grid','place-items':'center'}],
     [/^image-(\d+)$/,([,d])=>({width:`${d}px`,height:`${d}px`})],
+    ['translate',{'transform':'translate(-50%,-50%)'}]
   ],shortcuts:{
     'card':'shadow-xl bg-white color-white rounded-lg font-size-3 sm:(font-size-4)  ',
     'title':'font-bold text-size-5 sm:(text-size-xl) color-black',

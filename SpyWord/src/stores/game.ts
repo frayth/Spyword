@@ -11,6 +11,7 @@ export const useGameStore = defineStore('game', () => {
     createdAt: '',
     inGame: false,
     slug: '',
+    properties:{},
     users: [],
     gameOption: {
       id: 0,
@@ -38,6 +39,7 @@ export const useGameStore = defineStore('game', () => {
       inGame: false,
       slug: '',
       users: [],
+      properties:{},
       gameOption: {
         id: 0,
         gameId: 0,

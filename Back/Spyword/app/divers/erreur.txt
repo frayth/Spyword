@@ -5,6 +5,10 @@ Code 403 :
   4033: utilisateur tente de modifier des parametre de partie alors qu'il n'est pas le proprio
   4034: Utilisateur essaie d'interagir avec un autre joueur qui n'est pas dans sa partie
   4035: Utilisateur essaie de modifier des parametre de partie mais condition non remplis
+  4036: impossible d'effectuer l'action car joueur manquant
+  4037: impossible d'effectuer l'action car option de partie ne sont pas valable
+  4038: impossible de rejoindre la partie car partie en cours
+  4039: impossible d'exclure le joueur carla partie à déja commencé
 code 401
   4011: Le token fournis ne correspond pas au nom d'utilisateur fournis lors d'une requete authentifié
   4012: Token non reconnu lors d'une requete authentifié
@@ -12,7 +16,7 @@ code 401
   4014: La partie que le joueur veux rejoindre est pleine
 
 code 400:
-  4002: utilisateur essais de quitter une game alors que celui ci n'en a pas 
+  4002: utilisateur essais de d'interagiravec une game alors que celui ci n'en a pas 
 
 code 404
   4041: Joueur introuvable

@@ -1,4 +1,4 @@
-export type TypeUser = 'action' | 'info'
+export type TypeUser = 'action' | 'info' | 'alert'
 export type Action = 'leave'
 export interface InfoUser {
   id: number
@@ -12,5 +12,10 @@ export interface InfoUser {
 
 export interface WsMessages {
   type: TypeUser
-  data: Action | InfoUser
+  data: Action | InfoUser | Alert
+}
+
+export interface Alert {
+  message: string
+  code: number
 }

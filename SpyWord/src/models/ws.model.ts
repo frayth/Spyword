@@ -1,3 +1,4 @@
+import type { AlertType } from "./appli.model"
 import type { Game } from "./game.model"
 
 export interface BaseWSMessage{
@@ -9,12 +10,27 @@ export interface GameWSMessage extends BaseWSMessage{
   data:Game
 }
 
-export type UserAction='leave'
+export type UserAction='leave' | 'alert'
 
 export type InfoUser='info'
 
-export interface UserWSMessage extends BaseWSMessage{
-  type:'action'|'info'
-  data:UserAction|InfoUser
+export interface Alert{
+  message:string
+  code:number
+  type?:AlertType
+  zIndex?:number
+}
+
+export type UserWSMessages = 
+{
+  type:'action',
+  data:UserAction
+} | {
+  type:'info',
+  data:InfoUser
+} |
+{
+  type:'alert',
+  data:Alert
 }
 export type WsMessages = GameWSMessage

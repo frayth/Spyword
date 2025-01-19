@@ -27,6 +27,7 @@ router
     router.put('/join', [GamesController, 'join'])
     router.put('/leave', [GamesController, 'leave'])
     router.put('/kick', [GamesController, 'kick'])
+    router.put('/start', [GamesController, 'start'])
   })
   .prefix('api/games')
   .use([middleware.auth()])

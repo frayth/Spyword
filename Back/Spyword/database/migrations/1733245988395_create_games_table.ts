@@ -13,6 +13,7 @@ export default class extends BaseSchema {
       table.boolean('in_game').defaultTo(false)
       table.string('slug').notNullable().unique()
       table.integer('Player_turn').nullable().references('id').inTable('users').onDelete('SET NULL')
+      table.json('properties').notNullable().defaultTo({})
     })
   }
 

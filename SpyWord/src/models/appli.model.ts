@@ -7,3 +7,4 @@ export interface WindowInfos {
   width:number,
   height:number
 }
+export type AlertType= 'warning' | 'error' | 'success' |'info'

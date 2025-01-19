@@ -5,6 +5,11 @@ export interface GameResponse{
   data:Game,
   code:number
 }
+export interface GameProperties {
+  gamePhase?: 'choose' | 'play' | 'vote',
+  indexCurrentPlayer?: number,
+  orderGame?: number[],
+}
 
 export interface Game {
   id: number,
@@ -15,6 +20,7 @@ export interface Game {
   slug: string,
   users:User[],
   gameOption:GameOption,
+  properties:GameProperties | object,
 }
 
 export interface UserPublicInfo {

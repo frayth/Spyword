@@ -11,6 +11,8 @@ export function useError(code:number):string{
             return "Impossible de rejoindre, la partie n'existe pas"
         case 4014:
             return "Impossible de rejoindre, la partie est pleine"
+        case 4038:
+            return "La partie à déja commencée"
         default:
             return "oups! une erreur est survenue"
     }

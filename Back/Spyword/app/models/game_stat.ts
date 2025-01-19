@@ -22,4 +22,9 @@ export default class GameStat extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
+
+  public resetStat() {
+    this.score = 0
+    this.role = 'civil'
+  }
 }

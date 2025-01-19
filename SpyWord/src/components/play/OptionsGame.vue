@@ -57,7 +57,7 @@
         'grid-row-start-5 grid-col-start-1 bg-amber h-50px grid-center rounded-xl cursor-pointer':true,
         'cursor-auto! bg-gray-400':!userIsOwner
       }"
-      @click="copyLink">
+      @click="lauchGame">
       <p v-if="userIsOwner">Lancer la partie</p>
       <div v-else class="flex items-center justify-center space-x-2 ">
         <div class="w-4 h-4 bg-amber rounded-full animate-bounce animate-delay-0 animate-duration-[1000ms]"></div>
@@ -115,6 +115,11 @@ async function handleMrWhite(){
   await fetchData()
 }
 
+async function lauchGame(){
+  if(currentGame.value.ownerId !== infoUser.value.id)return
+  const {fetchData} = useFetch(`api/games/start`,{method:'PUT'})
+  await fetchData()
+}
 
 </script>
 
