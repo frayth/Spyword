@@ -16,8 +16,51 @@ import { storeToRefs } from 'pinia';
 }" />
 </template>
 
-<style scoped>
+<style>
+@keyframes levitation {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
 
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+::-webkit-scrollbar {
+  width: 6px; /* Largeur de la barre verticale */
+  height: 6px; /* Hauteur de la barre horizontale */
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 100, 100, 0.5); /* Couleur de la poignée */
+  border-radius: 10px; /* Bords arrondis */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 100, 100, 0.7); /* Assombri au survol */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; /* Cache la piste */
+}
+
+/* Scrollbar pour Firefox */
+* {
+  scrollbar-width: thin; /* Mince */
+  scrollbar-color: rgba(100, 100, 100, 0.5) transparent; /* Poignée + fond */
+}
  /*header {
   line-height: 1.5;
   max-height: 100vh;

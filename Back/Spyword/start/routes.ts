@@ -18,6 +18,7 @@ router
     router.post('/create', [UsersController, 'create'])
     router.get('/connect', [UsersController, 'connect'])
     router.get('/info', [UsersController, 'info']).use([middleware.auth()])
+    router.get('/word', [UsersController, 'getWord']).use([middleware.auth()])
   })
   .prefix('api/users')
 
@@ -28,6 +29,9 @@ router
     router.put('/leave', [GamesController, 'leave'])
     router.put('/kick', [GamesController, 'kick'])
     router.put('/start', [GamesController, 'start'])
+    router.post('/open', [GamesController, 'open'])
+    router.post('/proposition', [GamesController, 'proposition'])
+    router.post('/validateWord', [GamesController, 'validateWord'])
   })
   .prefix('api/games')
   .use([middleware.auth()])

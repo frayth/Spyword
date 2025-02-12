@@ -8,10 +8,11 @@ import type {
 import { useGameStore } from '@/stores/game'
 import { storeToRefs } from 'pinia'
 import router from '@/router'
-import {useAlertStore}  from '@/stores/alert'
+import { useAlertStore } from '@/stores/alert'
+import { useAnimationStore } from '@/stores/animation'
+import { useAuthStore } from '@/stores/auth'
 
 const wsURL = import.meta.env.VITE_WEBSOCKET_URL
-
 
 export let subscription: null | Subscription = null
 
@@ -44,9 +45,11 @@ export async function JoinChanel(id: number) {
 }
 
 export async function JoinUserChannel(id: number) {
+  const auth= useAuthStore()
   const gameStore = useGameStore()
-  const {addAlert } = useAlertStore()
-  
+  const {addAnimation}= useAnimationStore()
+  const { addAlert } = useAlertStore()
+
   if (userSubscription !== null) {
     await userSubscription.delete()
   }
@@ -60,7 +63,15 @@ export async function JoinUserChannel(id: number) {
       handleUserAction(json.data, gameStore)
     } else if (json.type === 'alert') {
       addAlert(json.data)
-      console.log('is an alert', json.data)
+    } else if (json.type === 'info') {
+      if(json.data.word){
+        auth.infoUser.currentWord=json.data.word
+      }
+    } else if (json.type === 'animate') {
+      addAnimation({
+        name: json.data,
+        duration: 3000,
+      })
     }
   })
 }

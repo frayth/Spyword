@@ -20,6 +20,7 @@ const router = createRouter({
       path: '/play/:slug',
       name: 'play',
       component: () => import('@/views/PlayView.vue'),
+      
       beforeEnter: (to, from, next) => {
         const { currentGame } = storeToRefs(useGameStore())
         if (currentGame.value.id !== 0) {
@@ -28,6 +29,7 @@ const router = createRouter({
           next('/')
         }
       },
+      
     },
     {
       path: '/',

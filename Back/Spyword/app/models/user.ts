@@ -7,7 +7,14 @@ import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
 import type { BelongsTo, HasOne } from '@adonisjs/lucid/types/relations'
 import Game from './game.js'
 import GameStat from './game_stat.js'
-import { createGame, joinGame, createToken, leaveGame, getAll } from '#services/user_fonctions'
+import {
+  createGame,
+  joinGame,
+  createToken,
+  leaveGame,
+  getAll,
+  addProposition,
+} from '#services/user_fonctions'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['fullname'],
@@ -51,4 +58,5 @@ export default class User extends compose(BaseModel, AuthFinder) {
   public createToken = createToken
   public leaveGame = leaveGame
   public getAll = getAll
+  public addProposition = addProposition
 }

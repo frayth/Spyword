@@ -1,13 +1,8 @@
-export type TypeUser = 'action' | 'info' | 'alert'
-export type Action = 'leave'
+export type TypeUser = 'action' | 'info' | 'alert' | 'animate' | 'verify'
+export type Action = 'leave' | 'animate'
 export interface InfoUser {
-  id: number
-  name: string
-  avatar: string
-  score: number
-  isSpy: boolean
-  isReady: boolean
-  isMaster: boolean
+  role?: string
+  word?: string
 }
 
 export interface WsMessages {
@@ -19,3 +14,5 @@ export interface Alert {
   message: string
   code: number
 }
+
+export type AnimationName = 'start'

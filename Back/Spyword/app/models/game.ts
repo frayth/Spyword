@@ -22,15 +22,18 @@ import {
   checkForStart,
   initGame,
   resetGame,
+  defineRoles,
 } from '#services/game_functions'
 interface GameProperties {
-  gamePhase?: 'choose' | 'play' | 'vote'
+  gamePhase?: 'choose' | 'play' | 'vote' | 'white'
+  verifyPhase?: boolean
   words?: {
     civil: string
     spy: string
   }
   orderGame?: number[]
   indexCurrentPlayer?: number
+  playersReady?: number[]
 }
 export default class Game extends BaseModel {
   @column({ isPrimary: true })
@@ -48,7 +51,10 @@ export default class Game extends BaseModel {
           gamePhase: value.gamePhase,
           orderGame: value.orderGame,
           indexCurrentPlayer: value.indexCurrentPlayer,
+          verifyPhase: value.verifyPhase,
         }
+      } else {
+        return null
       }
     },
   })
@@ -124,4 +130,5 @@ export default class Game extends BaseModel {
   public checkForStart = checkForStart
   public initGame = initGame
   public resetGame = resetGame
+  public defineRole = defineRoles
 }

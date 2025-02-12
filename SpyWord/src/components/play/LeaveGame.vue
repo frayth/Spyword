@@ -4,7 +4,7 @@
       <p>Leave game</p>
     </button>
     <Teleport to="#mainPanel" v-if="verif">
-      <div class="w-full h-full bg-yellow absolute grid-center">
+      <div class="w-full h-full bg-yellow absolute grid-center z-21">
         <div class="w-300px h-auto bg-white p-5 rounded-md grid flex flex-col gap-5px shadow">
           <p class="text-align-center text-size-lg">Veux-tu vraiment quitter la partie?</p>
           <p class="text-align-center">Cela mettra <span class="font-700 text-red">fin à la partie</span> pour tout les joueurs :(</p>

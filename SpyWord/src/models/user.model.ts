@@ -15,6 +15,10 @@ export interface UserResponse {
   updatedAt: string
 }
 
+export type WordResponse={
+  data:string,
+  message:string
+}
 export interface User {
   createdAt: string
   fullName: string

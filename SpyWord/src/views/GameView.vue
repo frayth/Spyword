@@ -1,6 +1,6 @@
 <template>
   <div class="place-items-center bg-white">
-    <section class="flex-center-col bg-yellow-200 p-y-50px p-x-5px">
+    <section class="flex-center-col bg-yellow-200 p-y-20px p-x-5px lg:(p-y-50px)">
       <h1 class="title m-b-50px underline">LANCE UNE PARTIE !</h1>
       <p class="text-align-center">
         Pour lancer une partie rien de plus simple appuie sur le bontton
@@ -8,15 +8,14 @@
         le lien ou le code de ta partie avec d'autre joueur !
       </p>
       <button
-        class="bg-amber w-250px h-100px b-rounded-lg m-10 p-x-20px font-900 text-size-xl md:(w-300px text-size-2xl) hover:transform hover:scale-102"
+        class="bg-amber w-200px h-70px b-rounded-lg m-10 p-x-20px font-900 text-size-lg md:(w-300px text-size-2xl w-250px h-100px) hover:transform hover:scale-102"
         ref="button"
         @click="lauchGame"
       >
-        Lancer une partie
-        {{ loading }}
+        <span class="font-700 ">Lancer une partie</span>
       </button>
     </section>
-    <section class=" flex-center-col p-y-20px p-x-5px">
+    <section class=" flex-center-col p-y-20px p-x-5px w-full lg:(p-y-50px)">
       <p>
         si tu veux rejoindre une partie rentre le code qu'on ta fournis ci
         dessous!
@@ -30,7 +29,7 @@
       />
       <div>
         <div class="flex-center-col">
-          <joinButton :game_id @error="(err)=>joinError=err"/>
+          <joinButton class="font-700 text-size-2xl" :game_id @error="(err)=>joinError=err"/>
           <Transition>
           <p class="c-red" v-if="joinError!==''">{{joinError}}</p>
           </Transition>
@@ -51,7 +50,7 @@ import joinButton from '@/components/game/joinButton.vue';
 import { storeToRefs } from 'pinia';
 import router from '@/router';
 const {currentGame}=storeToRefs(useGameStore())
-const { data, loading, fetchData, inError } = useFetch<GameResponse>(
+const { data, fetchData, inError } = useFetch<GameResponse>(
     'api/games/create',
     {
       method: 'POST',

@@ -1,7 +1,6 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column, hasOne } from '@adonisjs/lucid/orm'
-import Role from './role.js'
-import type { HasOne } from '@adonisjs/lucid/types/relations'
+import { serialize } from 'node:v8'
 
 export default class GameStat extends BaseModel {
   @column({ isPrimary: true })
@@ -9,16 +8,30 @@ export default class GameStat extends BaseModel {
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
+
   @column()
   declare score: number
+
   @column()
   declare gameId: number
+
   @column()
   declare userId: number
+
   @column({ serializeAs: null })
   declare role: string
+
+  @column({ serializeAs: null })
+  declare word: string
+
   @column()
   declare urlAvatar: string
+
+  @column({
+    prepare: (value: string[]) => JSON.stringify(value),
+    consume: (value: string) => JSON.parse(value),
+  })
+  declare words: string[]
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
@@ -26,5 +39,6 @@ export default class GameStat extends BaseModel {
   public resetStat() {
     this.score = 0
     this.role = 'civil'
+    this.words = []
   }
 }

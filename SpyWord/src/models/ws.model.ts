@@ -12,7 +12,12 @@ export interface GameWSMessage extends BaseWSMessage{
 
 export type UserAction='leave' | 'alert'
 
-export type InfoUser='info'
+export type AnimationName='start'
+
+export type InfoUser={
+  role?:string
+  word?:string
+}
 
 export interface Alert{
   message:string
@@ -32,5 +37,10 @@ export type UserWSMessages =
 {
   type:'alert',
   data:Alert
+} |
+{
+  type:'animate',
+  data:AnimationName
 }
 export type WsMessages = GameWSMessage
+

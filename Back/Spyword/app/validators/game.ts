@@ -11,3 +11,15 @@ export const kickGameValidator = vine.compile(
     user_id: vine.string(),
   })
 )
+
+export const propositionValidator = vine.compile(
+  vine.object({
+    word: vine.string(),
+  })
+)
+
+export const validateWordValidator = vine.compile(
+  vine.object({
+    value: vine.boolean(),
+  })
+)

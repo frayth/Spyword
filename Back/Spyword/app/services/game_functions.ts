@@ -4,6 +4,9 @@ import GameStat from '#models/game_stat'
 import { v4 as uuidv4 } from 'uuid'
 import { getRandomAvatar } from './avatar/avatar.js'
 import { transmitUser } from './ws/ws.js'
+import words from '../assets/words.js'
+import type { Word } from '../assets/words.js'
+
 export async function addPlayer(this: Game, user: User) {
   console.log('addPlayer')
   user.gameId = this.id
@@ -71,14 +74,15 @@ export async function initGame(this: Game) {
   this.properties.gamePhase = 'choose'
   this.properties.indexCurrentPlayer = 0
   this.properties.orderGame = arrayIndex
+  this.properties.verifyPhase = false
   this.inGame = true
   await this.save()
 }
 
 function shuffleArray(array: User[]): number[] {
   const arrayIndex: number[] = []
-  for (let i = 0; i < array.length; i++) {
-    arrayIndex.push(i)
+  for (let user of array) {
+    arrayIndex.push(user.id)
   }
   for (let i = arrayIndex.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1))
@@ -102,4 +106,63 @@ export async function resetGame(this: Game) {
     console.log('transmit reset', user.fullName, this.inGame)
     transmitUser(user.id, 'alert', { code: 10, message: 'game reset' })
   }
+}
+
+export async function defineRoles(this: Game) {
+  await this.load('users')
+  await this.load('gameOption')
+  const word = await getWord()
+  this.properties.words = {
+    civil: word.word,
+    spy: word.spy[Math.floor(Math.random() * word.spy.length)],
+  }
+  await this.save()
+  for (const user of this.users) {
+    await user.load('gameStat')
+  }
+  const civilWord = this.properties.words.civil
+  this.users.forEach(async (user) => {
+    user.gameStat.role = 'civil'
+    user.gameStat.word = civilWord
+    user.gameStat.save()
+  })
+  if (this.gameOption.whiteIsPresent) {
+    const whiteIndex = Math.floor(Math.random() * this.users.length)
+    this.users[whiteIndex].gameStat.role = 'white'
+    this.users[whiteIndex].gameStat.word = ''
+    this.users[whiteIndex].gameStat.save()
+  }
+  const eligibleUsers = this.users.filter((user) => user.gameStat.role === 'civil')
+  const spyIndex = Math.floor(Math.random() * eligibleUsers.length)
+  eligibleUsers[spyIndex].gameStat.role = 'spy'
+  eligibleUsers[spyIndex].gameStat.word = this.properties.words.spy
+  eligibleUsers[spyIndex].gameStat.save()
+  await this.refresh()
+  for (const user of this.users) {
+    switch (user.gameStat.role) {
+      case 'spy':
+        transmitUser(user.id, 'info', {
+          role: user.gameStat.role,
+          word: this.properties.words.spy,
+        })
+        break
+      case 'white':
+        transmitUser(user.id, 'info', {
+          role: user.gameStat.role,
+          word: '',
+        })
+        break
+      case 'civil':
+        transmitUser(user.id, 'info', {
+          role: user.gameStat.role,
+          word: this.properties.words.civil,
+        })
+        break
+    }
+  }
+}
+
+async function getWord(): Promise<Word> {
+  const index = Math.floor(Math.random() * words.length)
+  return words[index]
 }

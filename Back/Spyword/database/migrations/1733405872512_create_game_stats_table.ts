@@ -14,6 +14,8 @@ export default class extends BaseSchema {
       table.timestamp('updated_at')
       table.integer('score').defaultTo(0)
       table.string('url_avatar').nullable()
+      table.string('word').nullable()
+      table.json('words').defaultTo([])
     })
   }
 

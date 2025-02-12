@@ -1,7 +1,7 @@
 <template>
   <button
     @click="joinGame"
-    class="bg-amber w-100px h-50px b-rounded-lg m-1 p-x-20px text-size-md md:(w-150px text-size-lg)"
+    class="bg-amber w-100px h-50px text-size-sm b-rounded-lg m-1 p-x-20px text-size-md md:(w-150px text-size-lg)"
   >
     <p v-if="!loading">Rejoindre</p>
     <div v-else>Chargement</div>

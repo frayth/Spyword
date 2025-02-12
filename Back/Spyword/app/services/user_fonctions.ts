@@ -48,3 +48,15 @@ export async function getAll(this: User) {
   this.load('gameStat')
   return this
 }
+
+export async function addProposition(this: User, word: string) {
+  await this.load('gameStat')
+
+  if (!this.gameStat) {
+    throw new Error('User not in a game')
+  }
+
+  this.gameStat.words.push(word)
+
+  await this.gameStat.save()
+}

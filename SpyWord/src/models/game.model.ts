@@ -6,9 +6,10 @@ export interface GameResponse{
   code:number
 }
 export interface GameProperties {
-  gamePhase?: 'choose' | 'play' | 'vote',
+  gamePhase?: 'choose' | 'play' | 'vote' | 'white',
   indexCurrentPlayer?: number,
   orderGame?: number[],
+  verifyPhase?: boolean,
 }
 
 export interface Game {
@@ -20,7 +21,7 @@ export interface Game {
   slug: string,
   users:User[],
   gameOption:GameOption,
-  properties:GameProperties | object,
+  properties:GameProperties,
 }
 
 export interface UserPublicInfo {
@@ -37,6 +38,8 @@ export interface GameStat {
   updatedAt:string,
   userId:number,
   urlAvatar:string,
+  word:string,
+  words:string[]
 }
 
 export interface GameOption {

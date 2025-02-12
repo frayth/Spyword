@@ -10,9 +10,11 @@ export default defineConfig({
     presetTypography(),
     presetWebFonts({
       provider:'bunny',
+      
       fonts:{
         default:'Merriweather',
         sans:'Roboto',
+        game:'Engagement',
       }
     })
   ],
@@ -23,13 +25,16 @@ export default defineConfig({
     },
     animation:{
       keyframes:{
-        bounce:'{0%, 100% { transform: scale(0.5); } 50% { transform: scale(1); }}'
+        bounce:'{0%, 100% { transform: scale(0.5); } 50% { transform: scale(1); }}',
+        game:'{0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); }}'
       },
       durations:{
-        bounce:'1s'
+        bounce:'1s',
+        game:'1s'
       },      
       timingFns: {
         bounce: 'cubic-bezier(0.4,0,.6,1)',
+        game: 'cubic-bezier(0.4,0,.6,1)',
       },
       properties: {
         bounce: { 'transform-origin': 'center' },

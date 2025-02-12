@@ -7,17 +7,20 @@ import { userResponse } from '#services/responses/user'
 export default class UsersController {
   @inject()
   async create({ request, response, auth }: HttpContext, { createUser, find, deleteToken }: db) {
+    console.log('create user')
     const payload = await request.validateUsing(createUserValidator)
     //essaye de creer un utilisateur si aucune authentification n'est presente
     if (
       !request.headers().authorization ||
       !request.headers().authorization?.startsWith('Bearer ')
     ) {
+      console.log('no auth')
       try {
         const token = await createUser(payload)
         return response.status(201).send(token)
       } catch (e) {
         //si utilisateur existe deja test le mot de passe fournis
+        console.log('user already exist')
         const user = await find(payload.name)
         if (user) {
           const checkPassword = await hash.verify(user.password, payload.password)
@@ -33,15 +36,15 @@ export default class UsersController {
         }
       }
     } else {
+      console.log('auth')
       //si authentification presente verifie que le token correspond a l'utilisateur
       try {
         const user = await auth.authenticate()
-        if (!user) {
-          throw { message: 'Invalid Token', code: 4012 }
-        }
         if (user.fullName === payload.name) {
+          console.log('auth ok')
           return response.status(200)
         } else {
+          console.log('auth nok')
           deleteToken(user)
           return response.status(401).send({ message: 'error between token and data', code: 4011 })
         }
@@ -83,5 +86,11 @@ export default class UsersController {
     }
     await userResponse(user)
     return response.status(200).send({ message: 'game info', data: user, code: 200 })
+  }
+
+  async getWord({ auth, response }: HttpContext) {
+    const user = auth.user!
+    await user.load('gameStat')
+    return response.status(200).send({ message: 'word', data: user.gameStat?.word, code: 200 })
   }
 }
