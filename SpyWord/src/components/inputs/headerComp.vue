@@ -1,24 +1,38 @@
 <template>
-  <div class="flex justify-between gap-5 p-2px md:gap-10 p-10px" ref="header">
-    <div class="ml-5  ">
-      <p class="font-900 md:text-size-2xl">{{infoUser.fullName}}</p>
+  <div class="flex justify-between items-center p-3 md:p-5 bg-gray-900 text-white shadow-md" ref="header">
+    <!-- Nom de l'utilisateur -->
+    <div class="ml-3 md:ml-5">
+      <p class="font-bold text-lg md:text-2xl text-cyan-400">{{ infoUser.fullName }}</p>
     </div>
-    <div class="flex gap-5 p-10px md:gap-10 items-center">
+  
+    <!-- Liens de navigation -->
+    <div class="flex gap-6 md:gap-10 items-center">
       <div class="relative">
-        <RouterLink to="/" class="text-size-3 font-700 md:text-size-5 link" @mouseover.stop="handleAfterElement(1)" @mouseleave="handleAfterElement(0)">Régles</RouterLink>
-        <Transition name="toto">
-          <div class="absolute h-2px w-100% bg-black" v-if="overElement==1"></div>
-        </Transition>
-        
+        <RouterLink 
+          to="/" 
+          class="text-sm md:text-lg font-semibold tracking-wide relative after:content-[''] after:block after:h-0.5 after:w-0 after:bg-cyan-400 after:transition-all hover:after:w-full"
+          @mouseover.stop="handleAfterElement(1)" 
+          @mouseleave="handleAfterElement(0)"
+        >
+          Règles
+        </RouterLink>
       </div>
+  
       <div class="relative">
-        <routerLink to="game" class="text-size-3 font-700 md:text-size-5 link" @mouseover.stop="handleAfterElement(2)" @mouseleave="handleAfterElement(0)">Jouer</routerLink>
-        <Transition name="toto">
-          <div class="absolute h-2px w-100% bg-black" v-if="overElement==2"></div>
-        </Transition>
+        <RouterLink 
+          to="game" 
+          class="text-sm md:text-lg font-semibold tracking-wide relative after:content-[''] after:block after:h-0.5 after:w-0 after:bg-cyan-400 after:transition-all hover:after:w-full"
+          @mouseover.stop="handleAfterElement(2)" 
+          @mouseleave="handleAfterElement(0)"
+        >
+          Jouer
+        </RouterLink>
       </div>
-      
-      <button class="bg-white b-rounded-full p-5px transition-all hover:bg-red-500 md:p-10px">Se deconnecter</button>
+  
+      <!-- Bouton de déconnexion -->
+      <button class="bg-red-600 text-white px-4 py-2 rounded-full transition-all duration-300 hover:bg-red-700 active:scale-95">
+        Se déconnecter
+      </button>
     </div>
   </div>
 </template>
@@ -57,4 +71,5 @@ function handleAfterElement(element:number) {
   width:100%;
   opacity:1
 }
+
 </style>

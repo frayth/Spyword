@@ -9,6 +9,9 @@ Code 403 :
   4037: impossible d'effectuer l'action car option de partie ne sont pas valable
   4038: impossible de rejoindre la partie car partie en cours
   4039: impossible d'exclure le joueur carla partie à déja commencé
+  40311:impossible de votr pour un joueur qui n'est pas dans la partie
+  40312:joueur veut voter copntre lui meme
+  40313:Joueur veut revoter mais a deja voté
 code 401
   4011: Le token fournis ne correspond pas au nom d'utilisateur fournis lors d'une requete authentifié
   4012: Token non reconnu lors d'une requete authentifié

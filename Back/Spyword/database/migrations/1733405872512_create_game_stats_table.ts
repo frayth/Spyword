@@ -16,6 +16,9 @@ export default class extends BaseSchema {
       table.string('url_avatar').nullable()
       table.string('word').nullable()
       table.json('words').defaultTo([])
+      table.boolean('is_alive').defaultTo(true)
+      table.integer('vote').nullable()
+      table.boolean('as_voted').defaultTo(false)
     })
   }
 

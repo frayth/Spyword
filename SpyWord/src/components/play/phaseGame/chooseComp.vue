@@ -1,29 +1,33 @@
 <template>
-  <div class="w-full h-full bg-amber">
+  <div class="w-full h-full bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 p-3">
     <Transition name="fade" mode="out-in">
-      <h1 v-if="!isSelected" class="text-size-5 font-900 text-center m-b-10 lg:(text-size-10 m-b-20)">
-        Choississez une enveloppe !
+      <h1 v-if="!isSelected" class="text-3xl font-bold text-center mb-10 lg:text-4xl lg:mb-20 text-white tracking-wide">
+        Choisissez une enveloppe !
       </h1>
-      <div v-else class="flex justify-center m-b-10 lg:(m-b-20) ">
-        <span class="text-size-4 lg:(text-size-5)" v-if="auth.infoUser.currentWord">Votre mot est <span class="text-size-6 font-bold lg:(text-size-8)">{{auth.infoUser.currentWord}}</span></span>
-        <span v-else>Vous êtes Mr White</span>
-      </div>
-    </Transition>
-    <div class="flex flex-wrap justify-center m-b-10 lg:(m-b-20)">
-      <div v-for="i in numberOfIndex" :key="`enveloppe${i}`">
-        <EnveloppeSvg
-          :width="appli.infoWindow.width<=1024 ? 100 : 200"
-          :open="open === i ? true : false"
-          @click="openEnveloppe(i)"
-        />
-      </div>
-    </div>
-    <Transition>
-      <div v-if="isSelected" class="flex-center-col">
-        <div class="blink"> En attente des autre joueurs ...</div>
+      <div v-else class="flex justify-center mb-10 lg:mb-20">
+        <span class="text-2xl lg:text-3xl text-white" v-if="auth.infoUser.currentWord">
+          Votre mot est <span class="text-4xl lg:text-5xl font-semibold">{{ auth.infoUser.currentWord }}</span>
+        </span>
+        <span v-else class="text-2xl lg:text-3xl text-white">Vous êtes Mr White</span>
       </div>
     </Transition>
 
+    <div class="flex flex-wrap justify-center mb-10 lg:mb-20">
+      <div v-for="i in numberOfIndex" :key="`enveloppe${i}`" class="transform transition-transform duration-300 hover:scale-105 w-fit h-fit">
+        <EnveloppeSvg
+          :width="appli.infoWindow.width <= 1024 ? 100 : 200"
+          :open="open === i ? true : false"
+          @click="openEnveloppe(i)"
+          class="cursor-pointer  hover:shadow-2xl transition-all ease-in-out"
+        />
+      </div>
+    </div>
+
+    <Transition name="fade">
+      <div v-if="isSelected" class="flex-center-col">
+        <div class="blink text-lg text-white font-semibold">En attente des autres joueurs...</div>
+      </div>
+    </Transition>
   </div>
 </template>
 

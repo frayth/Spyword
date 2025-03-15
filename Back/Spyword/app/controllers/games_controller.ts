@@ -9,7 +9,7 @@ import Game from '#models/game'
 import User from '#models/user'
 import gameResponse from '#services/responses/game'
 import { transmitGame, transmitUser } from '#services/ws/ws'
-import { nextPlayer, lauchPlay } from '#services/game/game'
+import { nextPlayer, lauchPlay, lauchAnimation, lauchResultVote } from '#services/game/game'
 
 export default class GamesController {
   /**
@@ -133,17 +133,18 @@ export default class GamesController {
     // }
     await user.game.initGame()
     await user.game.defineRole()
-    transmitGame(user.game.id, user.game)
-    user.game.users.forEach((el) => {
-      transmitUser(el.id, 'animate', 'start')
-      if (el.gameStat.role === 'white') {
-        transmitUser(el.id, 'info', { word: '' })
-      } else if (el.gameStat.role === 'spy') {
-        transmitUser(el.id, 'info', { word: user.game.properties.words?.spy })
-      } else {
-        transmitUser(el.id, 'info', { word: user.game.properties.words?.civil })
-      }
+    lauchAnimation(user.game, 'start', () => {
+      user.game.users.forEach((el) => {
+        if (el.gameStat.role === 'white') {
+          transmitUser(el.id, 'info', { word: '' })
+        } else if (el.gameStat.role === 'spy') {
+          transmitUser(el.id, 'info', { word: user.game.properties.words?.spy })
+        } else {
+          transmitUser(el.id, 'info', { word: user.game.properties.words?.civil })
+        }
+      })
     })
+
     response.status(200).send({ message: 'game started', code: 200 })
   }
 
@@ -173,7 +174,7 @@ export default class GamesController {
 
   async proposition({ auth, response, request }: HttpContext) {
     const { word } = await request.validateUsing(propositionValidator)
-    console.log(word)
+
     const user = auth.user!
     await user.load('gameStat')
     await user.load('game')
@@ -186,10 +187,13 @@ export default class GamesController {
     if (user.id !== user.game.properties.orderGame![user.game.properties.indexCurrentPlayer!])
       return response.status(403).send({ message: 'not your turn', code: 4035 })
 
+    if (user.gameStat.words.length >= user.game.properties.round!)
+      return response.status(400).send({ message: 'too much words', code: 4004 })
+
     user.gameStat.words.push(word)
     await user.gameStat.save()
     await user.game.load('users', (query) => query.preload('gameStat'))
-
+    transmitGame(user.game.id, user.game)
     if (!userIsOwner) {
       user.game.properties.verifyPhase = true
       await user.game.save()
@@ -221,6 +225,89 @@ export default class GamesController {
     }
     transmitGame(user.game.id, user.game)
     return response.status(200).send({ message: 'validate ok', code: 200 })
+  }
+
+  async vote({ auth, response, request }: HttpContext) {
+    const user = auth.user!
+    const payload = await request.validateUsing(kickGameValidator)
+    await user.load('game')
+    await user.game.getAllInfo()
+    await user.load('gameStat')
+    if (!user.gameStat.isAlive) {
+      return response.status(400).send({ message: 'user is dead', code: 4005 })
+    }
+    if (!user.game.inGame)
+      return response.status(400).send({ message: 'game not started', code: 4003 })
+
+    if (user.gameStat.asVoted)
+      return response.status(403).send({ message: 'already voted', code: 40313 })
+
+    if (!user.game.users.find((el) => el.id === +payload.user_id)) {
+      return response.status(400).send({
+        message: "impossible de voter pour un joueur qui n'est pas dans la partie",
+        code: 40311,
+      })
+    }
+
+    if (+payload.user_id === user.id) {
+      return response.status(400).send({
+        message: 'impossible de voter pour soi-même',
+        code: 40312,
+      })
+    }
+    const target = await User.findBy('id', +payload.user_id)
+    if (!target) {
+      return response.status(404).send({ message: 'user not found', code: 4041 })
+    }
+    await target.load('gameStat')
+    if (target.gameStat.isAlive === false) {
+      return response.status(400).send({ message: 'user is dead', code: 4005 })
+    }
+    user.gameStat.vote = +payload.user_id
+    user.gameStat.asVoted = true
+    await user.gameStat.save()
+    await user.load('game')
+    await user.game.getAllInfo()
+    transmitGame(user.game.id, user.game)
+    if (
+      user.game.users
+        .filter((el) => user.game.properties.orderGame?.includes(el.id))
+        .every((el) => el.gameStat.asVoted)
+    ) {
+      lauchResultVote(user.game)
+    }
+    return response.status(200).send({ message: 'vote ok', code: 200 })
+  }
+
+  async reset({ auth, response }: HttpContext) {
+    const user = auth.user!
+    await user.load('game')
+    await user.game.getAllInfo()
+    if (user.id !== user.game.ownerId) {
+      return response.status(403).send({ message: 'not owner', code: 4033 })
+    }
+    if (user.game.properties.gamePhase !== 'end') {
+      return response.status(400).send({ message: 'not end phase', code: 4006 })
+    }
+    await user.game.resetGame()
+
+    transmitGame(user.game.id, user.game)
+    return response.status(200).send({ message: 'game reset', code: 200 })
+  }
+
+  async nextRound({ auth, response }: HttpContext) {
+    const user = auth.user!
+    await user.load('game')
+    await user.game.getAllInfo()
+    if (user.id !== user.game.ownerId) {
+      return response.status(403).send({ message: 'not owner', code: 4033 })
+    }
+    if (user.game.properties.gamePhase !== 'end') {
+      return response.status(400).send({ message: 'not end phase', code: 4006 })
+    }
+    await user.game.nextRound()
+    transmitGame(user.game.id, user.game)
+    return response.status(200).send({ message: 'next round', code: 200 })
   }
   /**
    * Handle form submission for the create action

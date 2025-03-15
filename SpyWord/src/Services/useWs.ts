@@ -4,6 +4,7 @@ import type {
   WsMessages,
   UserWSMessages,
   GameWSMessage,
+  AnimationName,
 } from '@/models/ws.model'
 import { useGameStore } from '@/stores/game'
 import { storeToRefs } from 'pinia'
@@ -11,6 +12,15 @@ import router from '@/router'
 import { useAlertStore } from '@/stores/alert'
 import { useAnimationStore } from '@/stores/animation'
 import { useAuthStore } from '@/stores/auth'
+const defaultAnimationTime = 3000
+type TimerAnimation = AnimationName | 'default'
+const timerAnimation: Partial<Record<TimerAnimation, number>> = {
+  default: defaultAnimationTime,
+  nextPlayer : defaultAnimationTime * 2.2,
+  resultVote: defaultAnimationTime * 2.2,
+  target: defaultAnimationTime * 1.5,
+  nextTurn: defaultAnimationTime * 1.7,
+}
 
 const wsURL = import.meta.env.VITE_WEBSOCKET_URL
 
@@ -45,9 +55,9 @@ export async function JoinChanel(id: number) {
 }
 
 export async function JoinUserChannel(id: number) {
-  const auth= useAuthStore()
+  const auth = useAuthStore()
   const gameStore = useGameStore()
-  const {addAnimation}= useAnimationStore()
+  const { addAnimation } = useAnimationStore()
   const { addAlert } = useAlertStore()
 
   if (userSubscription !== null) {
@@ -64,13 +74,22 @@ export async function JoinUserChannel(id: number) {
     } else if (json.type === 'alert') {
       addAlert(json.data)
     } else if (json.type === 'info') {
-      if(json.data.word){
-        auth.infoUser.currentWord=json.data.word
+      if (json.data.word) {
+        auth.infoUser.currentWord = json.data.word
       }
     } else if (json.type === 'animate') {
+      console.log('ANIMATION',json.type)
+      if (json.data === 'resultVote') {
+        console.log('ANIMATION TARGET')
+        addAnimation({
+          name: 'target',
+          duration:timerAnimation.target!
+        })
+      }
+      console.log('ANIMATION', json.data)
       addAnimation({
         name: json.data,
-        duration: 3000,
+        duration: timerAnimation[json.data as TimerAnimation]! || timerAnimation.default!,
       })
     }
   })

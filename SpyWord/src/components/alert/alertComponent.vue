@@ -1,22 +1,28 @@
 <template>
   <div class="z-1001 w-full h-full relative opacity-100" id="alertWindow">
     <div
-      :class="`bg-white fixed border b-black/80 grid grid-cols-1 grid-rows-[auto_1fr_auto] w-250px h-200px p-4 shadow-md shadow-${colorAlert}-500/50 touch-none select-none rounded-sm lg:(w-350px h-300px)`"
+    :class="`fixed border border-black/20 w-72 lg:w-96 p-5 shadow-lg rounded-lg bg-white flex flex-col items-center touch-none select-none`"
     ref="alertWindow"
     :style="style"
-      >
-      <div
-        :class="`w-full h-30px bg-${colorAlert} opacity-80 absolute top-0`"
-      ></div>
-      <div class="h-15px"></div>
-      <p class="grid-row-start-2 justify-center font-700 text-align-center self-center lg:(text-size-lg )">{{ message }}</p>
-      <button
-        class="bg-amber w-fit justify-self-center p-[5px_10px] rounded-sm grid-row-start-3 lg:(p-[10px_20px])"
-        @click="alertStore.closeAlert(index)"
-      >
-        Fermer
-      </button>
-    </div>
+  >
+    <!-- Bandeau de couleur -->
+    <div
+      :class="`absolute top-0 left-0 w-full h-2 rounded-t-lg bg-${colorAlert}`"
+    ></div>
+  
+    <!-- Message -->
+    <p class="mt-4 text-center font-semibold text-gray-800 lg:text-lg">
+      {{ message }}
+    </p>
+  
+    <!-- Bouton -->
+    <button
+      class="mt-4 bg-amber-500 text-white px-4 py-2 rounded-md shadow-md transition-all hover:bg-amber-600 active:scale-95"
+      @click="alertStore.closeAlert(index)"
+    >
+      Fermer
+    </button>
+  </div>
   </div>
 </template>
 

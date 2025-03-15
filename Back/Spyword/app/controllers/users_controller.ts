@@ -74,7 +74,6 @@ export default class UsersController {
         throw { message: 'Invalid Token', code: 4012 }
       }
     } catch (e) {
-      console.log(e)
       return response.status(401).send(e.message)
     }
   }

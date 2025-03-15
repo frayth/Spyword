@@ -11,12 +11,20 @@ export default class GameStat extends BaseModel {
 
   @column()
   declare score: number
+  @column({ serialize: (value: number) => (value === 0 ? false : true) })
+  declare isAlive: boolean
 
   @column()
   declare gameId: number
 
   @column()
   declare userId: number
+
+  @column()
+  declare vote: number | null
+
+  @column({ serialize: (value: number) => (value === 0 ? false : true) })
+  declare asVoted: boolean
 
   @column({ serializeAs: null })
   declare role: string
@@ -37,8 +45,11 @@ export default class GameStat extends BaseModel {
   declare updatedAt: DateTime
 
   public resetStat() {
-    this.score = 0
     this.role = 'civil'
     this.words = []
+    this.isAlive = true
+    this.vote = null
+    this.asVoted = false
+    this.isAlive = true
   }
 }

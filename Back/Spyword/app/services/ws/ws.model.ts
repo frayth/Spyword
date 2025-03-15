@@ -15,4 +15,11 @@ export interface Alert {
   code: number
 }
 
-export type AnimationName = 'start'
+export type AnimationName =
+  | 'start'
+  | 'vote'
+  | 'nextPlayer'
+  | 'resultVote'
+  | 'nextManche'
+  | 'end'
+  | 'nextTurn'

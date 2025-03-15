@@ -6,10 +6,21 @@ export interface GameResponse{
   code:number
 }
 export interface GameProperties {
-  gamePhase?: 'choose' | 'play' | 'vote' | 'white',
+  gamePhase?: 'choose' | 'play' | 'vote' | 'white' |'resultVote' | 'end',
   indexCurrentPlayer?: number,
   orderGame?: number[],
   verifyPhase?: boolean,
+  round?: number,
+  resultRound?: {
+    egalite: boolean,
+    eliminated: null | User,
+    role: null | string,
+    history: { target: number, numberOfVote: number, idList: number[] }[]
+  },
+  endDetails?: {
+    winner: 'civil' | 'spy' | 'white' | 'none'
+    winnersId: number[]
+  }
 }
 
 export interface Game {
@@ -40,6 +51,9 @@ export interface GameStat {
   urlAvatar:string,
   word:string,
   words:string[]
+  isAlive:boolean,
+  vote:number |null,
+  asVoted:boolean,
 }
 
 export interface GameOption {

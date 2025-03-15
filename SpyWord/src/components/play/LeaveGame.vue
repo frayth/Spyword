@@ -1,23 +1,44 @@
 <template>
   <div>
-    <button class="w-150px h-40px bg-red rounded-md" @click="leaveGame">
-      <p>Leave game</p>
+    <!-- Bouton quitter -->
+    <button 
+      class="w-fit h-10 p-5 bg-red-500 text-white rounded-md hover:bg-red-600 transition flex-center"
+      @click="verif = true"
+    >
+      Quitter la partie
     </button>
+
+    <!-- Fenêtre de confirmation -->
     <Teleport to="#mainPanel" v-if="verif">
-      <div class="w-full h-full bg-yellow absolute grid-center z-21">
-        <div class="w-300px h-auto bg-white p-5 rounded-md grid flex flex-col gap-5px shadow">
-          <p class="text-align-center text-size-lg">Veux-tu vraiment quitter la partie?</p>
-          <p class="text-align-center">Cela mettra <span class="font-700 text-red">fin à la partie</span> pour tout les joueurs :(</p>
-          <div class="flex justify-evenly m-t-4">
-            <button @click="verif=false" class="bg-green w-35% h50px rounded-md">Annuler</button>
-            <button @click="leaveGame" class="bg-red w-35% h50px rounded-md">Quitter</button>
+      <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="w-80 max-w-md bg-white p-6 rounded-lg shadow-lg grid gap-3 animate-fade-in animate-scale-up">
+          
+          <p class="text-center text-lg font-bold">Veux-tu vraiment quitter la partie ?</p>
+          <p class="text-center text-sm">
+            Cela mettra <span class="font-bold text-red-500">fin à la partie</span> pour tous les joueurs. 😢
+          </p>
+          
+          <div class="flex justify-evenly mt-4">
+            <button 
+              @click="verif = false" 
+              class="w-32 h-10 bg-green-500 text-white rounded-md hover:bg-green-600 transition"
+            >
+              Annuler
+            </button>
+            <button 
+              @click="leaveGame" 
+              class="w-32 h-10 bg-red-500 text-white rounded-md hover:bg-red-600 transition"
+            >
+              Quitter
+            </button>
           </div>
+
         </div>
       </div>
     </Teleport>
   </div>
-
 </template>
+
 
 <script setup lang="ts">
 import { useFetch } from '@/composable/useFetch';

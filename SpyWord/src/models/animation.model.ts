@@ -1,4 +1,4 @@
-export type AnimationName = 'start'
+import type { AnimationName } from "./ws.model";
 
 export type Animation= {
   duration: number;

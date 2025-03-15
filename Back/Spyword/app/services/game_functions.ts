@@ -71,11 +71,23 @@ export function checkForStart(this: Game) {
 export async function initGame(this: Game) {
   await this.getAllInfo()
   const arrayIndex = shuffleArray(this.users)
+  this.properties.playersReady = []
   this.properties.gamePhase = 'choose'
   this.properties.indexCurrentPlayer = 0
   this.properties.orderGame = arrayIndex
   this.properties.verifyPhase = false
+  this.properties.round = 1
   this.inGame = true
+  this.properties.resultRound = {
+    egalite: false,
+    eliminated: null,
+    role: null,
+    history: [],
+  }
+  this.properties.endDetails = {
+    winner: 'none',
+    winnersId: [],
+  }
   await this.save()
 }
 
@@ -101,10 +113,13 @@ export async function resetGame(this: Game) {
     await user.gameStat.save()
   }
   await this.save()
-  await this.refresh()
+  await this.alert(10, 'Un joueur à quitté la partie')
+}
+
+export async function alert(this: Game, code: number, message: string) {
+  await this.load('users')
   for (const user of this.users) {
-    console.log('transmit reset', user.fullName, this.inGame)
-    transmitUser(user.id, 'alert', { code: 10, message: 'game reset' })
+    transmitUser(user.id, 'alert', { code, message })
   }
 }
 
@@ -134,6 +149,8 @@ export async function defineRoles(this: Game) {
   }
   const eligibleUsers = this.users.filter((user) => user.gameStat.role === 'civil')
   const spyIndex = Math.floor(Math.random() * eligibleUsers.length)
+  console.log('spyIndex', spyIndex)
+  console.log('spy = ', eligibleUsers[spyIndex])
   eligibleUsers[spyIndex].gameStat.role = 'spy'
   eligibleUsers[spyIndex].gameStat.word = this.properties.words.spy
   eligibleUsers[spyIndex].gameStat.save()
@@ -165,4 +182,16 @@ export async function defineRoles(this: Game) {
 async function getWord(): Promise<Word> {
   const index = Math.floor(Math.random() * words.length)
   return words[index]
+}
+
+export async function nextRound(this: Game) {
+  await this.load('users')
+  this.initGame()
+  await this.save()
+  for (const user of this.users) {
+    await user.load('gameStat')
+    user.gameStat.resetStat()
+    await user.gameStat.save()
+  }
+  await this.defineRole()
 }

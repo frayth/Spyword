@@ -1,6 +1,5 @@
 import { DateTime } from 'luxon'
 import {
-  afterFind,
   afterCreate,
   afterUpdate,
   BaseModel,
@@ -23,9 +22,11 @@ import {
   initGame,
   resetGame,
   defineRoles,
+  nextRound,
+  alert,
 } from '#services/game_functions'
 interface GameProperties {
-  gamePhase?: 'choose' | 'play' | 'vote' | 'white'
+  gamePhase?: 'choose' | 'play' | 'vote' | 'white' | 'end' | 'resultVote'
   verifyPhase?: boolean
   words?: {
     civil: string
@@ -34,6 +35,17 @@ interface GameProperties {
   orderGame?: number[]
   indexCurrentPlayer?: number
   playersReady?: number[]
+  round?: number
+  endDetails?: {
+    winner: 'civil' | 'spy' | 'white' | 'none'
+    winnersId: number[]
+  }
+  resultRound?: {
+    egalite: boolean
+    eliminated: User | null
+    role: string | null
+    history: { target: number; numberOfVote: number; idList: number[] }[]
+  }
 }
 export default class Game extends BaseModel {
   @column({ isPrimary: true })
@@ -52,6 +64,9 @@ export default class Game extends BaseModel {
           orderGame: value.orderGame,
           indexCurrentPlayer: value.indexCurrentPlayer,
           verifyPhase: value.verifyPhase,
+          round: value.round,
+          resultRound: value.resultRound,
+          endDetails: value.endDetails,
         }
       } else {
         return null
@@ -131,4 +146,6 @@ export default class Game extends BaseModel {
   public initGame = initGame
   public resetGame = resetGame
   public defineRole = defineRoles
+  public alert = alert
+  public nextRound = nextRound
 }

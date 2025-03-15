@@ -12,7 +12,7 @@ export interface GameWSMessage extends BaseWSMessage{
 
 export type UserAction='leave' | 'alert'
 
-export type AnimationName='start'
+export type AnimationName='start' | 'vote' | 'nextPlayer' | 'resultVote' | 'nextManche' | 'end' | 'target' | 'nextTurn'
 
 export type InfoUser={
   role?:string

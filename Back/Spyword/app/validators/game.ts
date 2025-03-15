@@ -23,3 +23,9 @@ export const validateWordValidator = vine.compile(
     value: vine.boolean(),
   })
 )
+
+export const voteValidator = vine.compile(
+  vine.object({
+    user_id: vine.number(),
+  })
+)

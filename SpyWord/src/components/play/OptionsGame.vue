@@ -1,96 +1,80 @@
 <template>
   <div class="w-full h-full flex flex-col gap-5">
-    <p class="self-center font-900 lg:(text-size-2xl)">
-      PARAMETRES DE LA PARTIE
+    <!-- Titre -->
+    <p class="self-center font-black text-lg lg:text-2xl">
+      PARAMÈTRES DE LA PARTIE
     </p>
-    <div
-      class="w-full h-full m-t-4 grid grid-rows-[auto_1fr_1fr_auto] grid-cols-[1fr_1fr] grow-1 gap-4 overflow-auto lg:()"
-    >
+  
+    <!-- Conteneur principal -->
+    <div class="w-full h-full mt-4 grid grid-rows-[auto_1fr_1fr_auto] grid-cols-2 gap-4 grow overflow-auto">
+      
+      <!-- Sélection du nombre de joueurs -->
       <select
         :disabled="optionsLoading.players || !userIsOwner"
-        name="player"
+        class="w-full h-10 grid-col-span-2 lg:h-12 border rounded-lg px-2 text-center cursor-pointer"
         id="nbPlayer"
-        class="w-full h-30px grid-col-span-2 lg:(h-50px)"
-        @change="changeNumberOfPlayer"
         v-model="numberOfPlayer"
+        @change="changeNumberOfPlayer"
       >
-        <option :value="3">3 Joueurs</option>
-        <option :value="4">4 Joueurs</option>
-        <option :value="5">5 Joueurs</option>
-        <option :value="6">6 Joueurs</option>
-        <option :value="7">7 Joueurs</option>
-        <option :value="8">8 Joueurs</option>
-        <option :value="9">9 Joueurs</option>
-        <option :value="10">10 Joueurs</option>
-        <option :value="15">15 Joueurs</option>
-        <option :value="20">20 Joueurs</option>
+        <option v-for="n in [3,4,5,6,7,8,9,10,15,20]" :key="n" :value="n">
+          {{ n }} Joueurs
+        </option>
       </select>
-      <div
-        class="grid-row-start-2 grid-row-span-3 grid-col-span-2 grid-col-start-1 w-full  grid-row-[auto_1fr]"
-      >
-        <div class="justify-self-center p-5">
-          <p class="font-900 text-sm text-center lg:(text-xl)">
-            Choissisez les rôles présents dans la partie
-          </p>
-          <p class="text-center">
-            Civil et espion ne peuvent pas être désactivé
-          </p>
+  
+      <!-- Sélection des rôles -->
+      <div class="grid-row-start-2 grid-row-span-3 grid-col-span-2 w-full grid grid-rows-[auto_1fr]">
+        
+        <!-- Titre rôles -->
+        <div class="text-center p-5">
+          <p class="font-black text-sm lg:text-xl">Choisissez les rôles présents dans la partie</p>
+          <p class="text-gray-600">Civil et espion ne peuvent pas être désactivés</p>
         </div>
-        <div
-        id="card-container"
-          class="w-full justify-center flex flex-wrap p-1 gap-6 content-start lg:(gap-7 p-5)"
-        >
-          <cardRole
-            :is-present="true"
-            :locked="true"
-            name="Civil"
-            img="civilianHd.jpg"
-          ></cardRole>
-          <cardRole
-            :is-present="true"
-            :locked="true"
-            name="Espion"
-            img="spyHd.jpg"
-          ></cardRole>
-          <cardRole
-            :locked="false"
+  
+        <!-- Cartes des rôles -->
+        <div id="card-container" class="w-full flex flex-wrap justify-center gap-6 p-1 lg:gap-7 lg:p-5">
+          <cardRole is-present locked name="Civil" img="civilianHd.jpg" />
+          <cardRole is-present locked name="Espion" img="spyHd.jpg" />
+          <cardRole 
             :is-present="currentGame.gameOption.whiteIsPresent"
+            :locked="false"
             name="Mr.White"
             img="mrwhiteHd.jpg"
             :action="changeMrWhite"
-          ></cardRole>
+          />
         </div>
       </div>
     </div>
-    <div class="grid grid-cols-2 grid-rows-1 gap-4">
+  
+    <!-- Boutons de validation -->
+    <div class="grid grid-cols-2 gap-4">
+      
+      <!-- Bouton "Lancer la partie" -->
       <div
         :class="{
-          'grid-col-start-1 bg-amber h-50px grid-center rounded-xl cursor-pointer': true,
-          'cursor-auto! bg-gray-400': !userIsOwner,
+          'flex items-center justify-center':true,
+          'bg-amber h-12 rounded-xl text-center text-lg font-bold cursor-pointer hover:scale-105 transition': userIsOwner,
+          'cursor-not-allowed bg-gray-400': !userIsOwner,
         }"
         @click="lauchGame"
       >
         <p v-if="userIsOwner">Lancer la partie</p>
         <div v-else class="flex items-center justify-center space-x-2">
-          <div
-            class="w-4 h-4 bg-amber rounded-full animate-bounce animate-delay-0 animate-duration-[1000ms]"
-          ></div>
-          <div
-            class="w-4 h-4 bg-amber rounded-full animate-bounce animate-delay-100 animate-duration-[1000ms]"
-          ></div>
-          <div
-            class="w-4 h-4 bg-amber rounded-full animate-bounce animate-delay-200 animate-duration-[1000ms]"
-          ></div>
+          <div class="w-4 h-4 bg-amber rounded-full animate-bounce animate-delay-0 animate-duration-1000"></div>
+          <div class="w-4 h-4 bg-amber rounded-full animate-bounce animate-delay-100 animate-duration-1000"></div>
+          <div class="w-4 h-4 bg-amber rounded-full animate-bounce animate-delay-200 animate-duration-1000"></div>
         </div>
       </div>
-      <div
-        class="grid-col-start-2 bg-amber h-50px grid-center rounded-xl cursor-pointer"
+  
+      <!-- Bouton "Copier le lien" -->
+      <div 
+        class="bg-amber h-12 flex items-center justify-center rounded-xl text-center text-lg font-bold cursor-pointer hover:scale-105 transition"
         @click="copyLink"
       >
         <p>{{ copyTextButton }}</p>
       </div>
     </div>
   </div>
+  
 </template>
 
 <script setup lang="ts">
@@ -158,6 +142,7 @@ function checkWhiteCondition() {
   }
 }
 async function changeMrWhite() {
+  if(userIsOwner.value===false) return false
   const error = ref(false)
   if (checkWhiteCondition())
     currentGame.value.gameOption.whiteIsPresent =

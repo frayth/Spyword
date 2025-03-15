@@ -46,7 +46,7 @@
     <div class="relative m-t-6 max-w-350px min-w-300px">
       <input
         @keyup.enter="handleValidation"
-        :disabled="currentGame.properties.verifyPhase"
+        :disabled="currentGame.properties.verifyPhase && animationIsVisible"
         type="text"
         class="w-full h-70px p-y-2 p-x-4 rounded-md outline-none shad"
         placeholder=""
@@ -117,7 +117,9 @@ import { useFetch } from '@/composable/useFetch'
 import LoadingSvg from '@/assets/SVG/LoadingSvg.vue'
 import { useGameStore } from '@/stores/game'
 import { storeToRefs } from 'pinia'
+import { useAnimationStore } from '@/stores/animation'
 
+const { isVisible:animationIsVisible } = storeToRefs( useAnimationStore() );
 const { currentGame } = storeToRefs(useGameStore())
 const masterPlayer = computed(() => {
   return currentGame.value.users.find(

@@ -1,5 +1,8 @@
 <template>
   <div class="flex-center-col gap-2 justify-center">
+    <div class="flex justify-center p-2 bg-white rounded-3 shadow-amber-3 w-full shadow-md text-size-sm font-bold md:(px-5 w-75%)   lg:( p-5 w-60%)">
+      <span class="text-2xl font-bold" >Tour&nbsp; </span> <span class="text-2xl font-bold">{{` ${currentGame.properties.round}`}} </span>
+    </div>
     <div class="flex-center-col">
       <span class="text-size-5">Votre mot est</span>
       <span :class="{

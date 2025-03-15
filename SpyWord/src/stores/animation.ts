@@ -10,7 +10,7 @@ export const useAnimationStore = defineStore('animation', () => {
   }
 
   function play() {
-    console.log('play')
+
     if (animationList.value.length > 0) {
       currentAnimation.value = animationList.value.shift()!
     }
