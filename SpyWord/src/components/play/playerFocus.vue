@@ -1,5 +1,5 @@
 <template>
-  <div class="m-t-5 w-full lg:(m-t-10)">
+  <div class=" w-full  md:min-w-500px lg:min-w-700px ">
     <div class="flex-center-col justify-center gap-10 w-full">
       <div
         :class="`w-200px h150px rounded-full overflow-hidden flex-center portrait `"
@@ -29,7 +29,7 @@
 <script setup lang="ts">
 import { useGameStore } from '@/stores/game'
 import { storeToRefs } from 'pinia'
-import verificationComp from './verificationComp.vue'
+import verificationComp from '../verification/verificationComp.vue'
 import { useAuthStore } from '@/stores/auth'
 import { computed, ref } from 'vue'
 const { infoUser } = storeToRefs(useAuthStore())

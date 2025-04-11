@@ -1,6 +1,6 @@
 <template>
   <div 
-  class="flex flex-col items-center gap-4 p-4 bg-gray-900 text-white rounded-lg shadow-lg w-full max-w-md mx-auto transition-all duration-300"
+  class="flex flex-col items-center j gap-4 p-4 bg-gray-900 text-white rounded-lg shadow-lg w-full max-w-md mx-auto transition-all duration-300"
   :class="{
     'text-green-400': isVictory,
     'text-red-400 shadow-bloody': !isVictory

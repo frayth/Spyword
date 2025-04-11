@@ -2,7 +2,7 @@
   <div
     :class="{
       'w-150px h-100px bg-white cursor-pointer rounded-xl relative lg:(w-200px h150px)': true,
-      'cursor-default!': props.locked,
+      'cursor-default!': props.locked || !userIsOwner,
     }"
     @click="handleclick"
   >
@@ -43,7 +43,7 @@
 <script setup lang="ts">
 import { useGameStore } from '@/stores/game'
 import { useAuthStore } from '@/stores/auth'
-import { ref, watchEffect } from 'vue'
+import { computed, ref, watchEffect } from 'vue'
 type Error = {
   value: boolean
   message: string
@@ -90,6 +90,9 @@ watchEffect(() => {
   } else {
     clearTimeout(event.value as number)
   }
+})
+const userIsOwner=computed(()=>{
+  return currentGame.ownerId === infoUser.id
 })
 </script>
 

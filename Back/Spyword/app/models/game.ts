@@ -24,6 +24,7 @@ import {
   defineRoles,
   nextRound,
   alert,
+  calculateWhiteVote,
 } from '#services/game_functions'
 interface GameProperties {
   gamePhase?: 'choose' | 'play' | 'vote' | 'white' | 'end' | 'resultVote'
@@ -46,6 +47,12 @@ interface GameProperties {
     role: string | null
     history: { target: number; numberOfVote: number; idList: number[] }[]
   }
+  whitePhase?: {
+    whiteId: number | null
+    word: string | null
+    playersValidation: { id: number; vote: boolean }[]
+    validation: boolean
+  }
 }
 export default class Game extends BaseModel {
   @column({ isPrimary: true })
@@ -67,6 +74,7 @@ export default class Game extends BaseModel {
           round: value.round,
           resultRound: value.resultRound,
           endDetails: value.endDetails,
+          whitePhase: value.whitePhase,
         }
       } else {
         return null
@@ -148,4 +156,5 @@ export default class Game extends BaseModel {
   public defineRole = defineRoles
   public alert = alert
   public nextRound = nextRound
+  public calculateWhiteVote = calculateWhiteVote
 }

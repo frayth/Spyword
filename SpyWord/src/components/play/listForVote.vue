@@ -1,7 +1,7 @@
 <template>
-  <div class="flex flex-col gap-4 p-x-4">
+  <div class="flex flex-col gap-4 p-x-4 w-full">
     <!--Liste des portrait-->
-    <div class="flex gap-4">
+    <div class="flex gap-4 justify-center w-full">
       <div
         v-for="player in currentGame.users.filter(
           user => user.id != infoUser.id && user.gameStat?.isAlive,
@@ -18,7 +18,7 @@
     </div>
     <div
       id="selectZone"
-      class="w-full max-w-md mx-auto bg-blue-500 text-white shadow-lg rounded-lg p-6 flex flex-col items-center gap-4"
+      class="w-full max-w-md mx-auto bg-blue-500 text-white shadow-lg rounded-lg p-6 flex flex-col items-center gap-4 lg:min-w-[400px] md:min-w-[400px]"
       v-if="playerSelected"
     >
       <!-- Avatar -->

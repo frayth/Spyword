@@ -84,26 +84,18 @@ export async function lauchResultVote(game: Game) {
         return { target: targetID, numberOfVote: numberOfVote, idList: userVotedForThisId }
       }),
     }
-    await eliminationPlayer(game, player!)
+    if (player.gameStat.role !== 'white') {
+      await eliminationPlayer(game, player!)
+      await game.refresh()
+    }
   }
-
-  await player.load('game')
-  await player.game.getAllInfo()
-  transmitGame(player.game.id, player.game)
-  const { gameIsOver, winner, winnersId } = await checkForEndCondition(player.game)
-  if (gameIsOver) {
-    lauchAnimation(player.game, 'resultVote', async () => {
-      player.game.properties.endDetails = { winner, winnersId }
-      player.game.properties.gamePhase = 'end'
-      await player.game.save()
-    })
+  if (player.gameStat.role !== 'white') {
+    await handleEndVote(game)
   } else {
-    nextTurn(player.game)
-    await player.game.save()
-    lauchAnimation(player.game, 'resultVote', async () => {
-      changePhase(player.game)
-      lauchAnimation(player.game, 'nextTurn', async () => {})
-    })
+    game.properties.gamePhase = 'white'
+    game.properties.whitePhase!.whiteId = player.id
+    await game.save()
+    await handleEndVote(game, false)
   }
 }
 
@@ -163,29 +155,33 @@ export async function nextTurn(game: Game): Promise<void> {
 
 export async function checkForEndCondition(game: Game): Promise<{
   gameIsOver: boolean
-  winner: 'spy' | 'civil' | 'none'
+  winner: 'spy' | 'civil' | 'none' | 'white'
   winnersId: number[]
 }> {
   await game.load('users')
 
   await Promise.all(game.users.map((el) => el.load('gameStat')))
-  let winner: 'spy' | 'civil' | 'none' = 'none'
+  let winner: 'spy' | 'civil' | 'none' | 'white' = 'none'
   const spyIsAlive = game.users.some((el) => {
-    return el.gameStat.role === 'spy' && Boolean(el.gameStat.isAlive)
+    return (
+      (el.gameStat.role === 'spy' && Boolean(el.gameStat.isAlive)) ||
+      (el.gameStat.role === 'white' && Boolean(el.gameStat.isAlive))
+    )
   })
 
   const numberOfPlayerAlive = game.users.filter((el) => {
     return Boolean(el.gameStat.isAlive)
   }).length
 
-  console.log('spyIsAlive', spyIsAlive)
-  console.log('numberOfPlayerAlive', numberOfPlayerAlive)
-
   if (!spyIsAlive) {
     winner = 'civil'
   }
   if (numberOfPlayerAlive <= 2 && spyIsAlive) {
-    winner = 'spy'
+    const spyAlive = game.users.some((el) => {
+      return el.gameStat.role === 'spy' && Boolean(el.gameStat.isAlive)
+    })
+    if (spyAlive) winner = 'spy'
+    else winner = 'white'
   }
   const winnersId = game.users.filter((el) => el.gameStat.role === winner).map((el) => el.id)
 
@@ -193,5 +189,38 @@ export async function checkForEndCondition(game: Game): Promise<{
     gameIsOver: winner !== 'none',
     winner,
     winnersId,
+  }
+}
+
+export async function handleEndVote(game: Game, next: boolean = true) {
+  await game.getAllInfo()
+
+  const { gameIsOver, winner, winnersId } = await checkForEndCondition(game)
+  if (gameIsOver) {
+    await Promise.all(
+      game.users.map((el) => {
+        if (el.gameStat.role !== winner) el.gameStat.isAlive = false
+        el.gameStat.save()
+      })
+    )
+    await game.save()
+    await game.getAllInfo()
+    transmitGame(game.id, game)
+    lauchAnimation(game, 'resultVote', async () => {
+      game.properties.endDetails = { winner, winnersId }
+      game.properties.gamePhase = 'end'
+      game.save()
+    })
+  } else {
+    if (next) {
+      nextTurn(game)
+    }
+    await game.save()
+    lauchAnimation(game, 'resultVote', async () => {
+      if (next) {
+        changePhase(game)
+        lauchAnimation(game, 'nextTurn', async () => {})
+      }
+    })
   }
 }

@@ -1,14 +1,14 @@
 <template>
-  <div class="">
-    <div class="flex flex-col gap-6 w-80%">
+  <div class="grid place-items-center text-white p-6 w-full h-full bg-gray-950">
+    <div class="flex flex-col gap-6 w-full lg:w-90%">
       <div
         v-for="{ target, idList } in game.currentGame.properties.resultRound
           ?.history"
         :key="target"
-        class="grid grid-rows-[20px_3fr] grid-cols-[auto_1fr] gap-x-10 items-center w-full bg-gray-800 p-4 rounded-2xl shadow-lg border border-gray-700 md:(grid-rows-[1fr_3fr] grid-cols-[auto_1fr]) lg:(min-h-200px)"
+        class=" b b-amber grid grid-rows-[20px_3fr] grid-cols-[auto_1fr] gap-x-4 items-center w-full bg-gray-800 p-4 rounded-2xl shadow-lg  md:(grid-rows-[1fr_3fr] grid-cols-[auto_1fr] gap-x-10) lg:(min-h-200px )"
       >
         <!-- Joueur cible (celui qui a reçu des votes) -->
-        <div class="grid-row-start-1 grid-row-end-3">
+        <div class="grid-row-start-1 grid-row-end-3 ">
           <div class="relative w-fit">
             <div
               class="w-20 h-20 rounded-full overflow-hidden border-4 border-white shadow-md relative lg:(w-40 h-40)"

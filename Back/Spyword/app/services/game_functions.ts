@@ -6,9 +6,17 @@ import { getRandomAvatar } from './avatar/avatar.js'
 import { transmitUser } from './ws/ws.js'
 import words from '../assets/words.js'
 import type { Word } from '../assets/words.js'
+import levenshtein from '#services/levenshtein'
 
 export async function addPlayer(this: Game, user: User) {
   console.log('addPlayer')
+  await this.load('users')
+  await Promise.all(
+    this.users.map(async (el) => {
+      await el.load('gameStat')
+    })
+  )
+  const avatarAlreadyExist = this.users.map((el) => el.gameStat.urlAvatar)
   user.gameId = this.id
   await user.save()
   const existingGameStat = await GameStat.query()
@@ -18,10 +26,11 @@ export async function addPlayer(this: Game, user: User) {
   if (existingGameStat) {
     throw new Error('User already in game')
   }
+
   await GameStat.create({
     gameId: this.id,
     userId: user.id,
-    urlAvatar: `public/images/avatars/${getRandomAvatar()}`,
+    urlAvatar: `public/images/avatars/${getRandomAvatar(avatarAlreadyExist)}`,
   })
 }
 
@@ -88,6 +97,12 @@ export async function initGame(this: Game) {
     winner: 'none',
     winnersId: [],
   }
+  this.properties.whitePhase = {
+    word: null,
+    playersValidation: [],
+    whiteId: null,
+    validation: false,
+  }
   await this.save()
 }
 
@@ -106,7 +121,7 @@ function shuffleArray(array: User[]): number[] {
 export async function resetGame(this: Game) {
   this.inGame = false
   this.properties = {}
-  await this.load('users')
+  await this.getAllInfo()
   for (const user of this.users) {
     await user.load('gameStat')
     user.gameStat.resetStat()
@@ -126,7 +141,7 @@ export async function alert(this: Game, code: number, message: string) {
 export async function defineRoles(this: Game) {
   await this.load('users')
   await this.load('gameOption')
-  const word = await getWord()
+  const word = getWord()
   this.properties.words = {
     civil: word.word,
     spy: word.spy[Math.floor(Math.random() * word.spy.length)],
@@ -142,15 +157,19 @@ export async function defineRoles(this: Game) {
     user.gameStat.save()
   })
   if (this.gameOption.whiteIsPresent) {
-    const whiteIndex = Math.floor(Math.random() * this.users.length)
-    this.users[whiteIndex].gameStat.role = 'white'
-    this.users[whiteIndex].gameStat.word = ''
-    this.users[whiteIndex].gameStat.save()
+    const whiteId =
+      this.properties.orderGame![Math.floor(Math.random() * (this.users.length - 1)) + 1]
+    console.log('whiteId', whiteId)
+    console.log('ordergame', this.properties.orderGame)
+    const user = this.users.find((el) => el.id === whiteId)
+    user!.gameStat.role = 'white'
+    user!.gameStat.word = ''
+    user!.gameStat.save()
   }
+  this.refresh()
   const eligibleUsers = this.users.filter((user) => user.gameStat.role === 'civil')
   const spyIndex = Math.floor(Math.random() * eligibleUsers.length)
   console.log('spyIndex', spyIndex)
-  console.log('spy = ', eligibleUsers[spyIndex])
   eligibleUsers[spyIndex].gameStat.role = 'spy'
   eligibleUsers[spyIndex].gameStat.word = this.properties.words.spy
   eligibleUsers[spyIndex].gameStat.save()
@@ -179,7 +198,7 @@ export async function defineRoles(this: Game) {
   }
 }
 
-async function getWord(): Promise<Word> {
+function getWord(): Word {
   const index = Math.floor(Math.random() * words.length)
   return words[index]
 }
@@ -194,4 +213,22 @@ export async function nextRound(this: Game) {
     await user.gameStat.save()
   }
   await this.defineRole()
+}
+
+export async function calculateWhiteVote(this: Game): Promise<boolean> {
+  this.getAllInfo()
+  const wordOfCivil = this.properties.words?.civil
+  const whiteWord = this.properties.whitePhase?.word
+  const distance = levenshtein(wordOfCivil!, whiteWord!)
+  const numberOfCivil = this.users.filter((el) => el.gameStat.role === 'civil').length
+  const whiteVoteWithOnlyCivil = this.properties.whitePhase?.playersValidation.filter((el) => {
+    const role = this.users.find((user) => user.id === el.id)?.gameStat.role
+    if (role === 'civil') return true
+    return false
+  })
+  const numberOfPositiveVote = whiteVoteWithOnlyCivil?.filter((el) => el.vote).length
+  if (!numberOfPositiveVote || numberOfPositiveVote < numberOfCivil / 2) {
+    return false
+  }
+  return true
 }

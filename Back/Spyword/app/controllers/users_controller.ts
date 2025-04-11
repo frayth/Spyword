@@ -63,7 +63,6 @@ export default class UsersController {
     }
     try {
       const user = await auth.authenticate()
-      console.log(user.fullName, payload.name)
       if (user && user.fullName === payload.name) {
         await user.load('game')
         await user.load('gameStat')

@@ -4,12 +4,23 @@ import {
   kickGameValidator,
   propositionValidator,
   validateWordValidator,
+  whiteValidationValidator,
+  whiteGuessValidator,
 } from '#validators/game'
 import Game from '#models/game'
 import User from '#models/user'
 import gameResponse from '#services/responses/game'
 import { transmitGame, transmitUser } from '#services/ws/ws'
-import { nextPlayer, lauchPlay, lauchAnimation, lauchResultVote } from '#services/game/game'
+import {
+  nextPlayer,
+  lauchPlay,
+  lauchAnimation,
+  lauchResultVote,
+  handleEndVote,
+  checkForEndCondition,
+  nextTurn,
+  eliminationPlayer,
+} from '#services/game/game'
 
 export default class GamesController {
   /**
@@ -68,6 +79,7 @@ export default class GamesController {
       if (gameCurr?.inGame) {
         console.log('reset game')
         await gameCurr.resetGame()
+        await gameCurr.refresh()
       }
       // if game still exist
       if (gameCurr) {
@@ -125,12 +137,12 @@ export default class GamesController {
     }
 
     await user.game.getAllInfo()
-    // if (user.game.users.length < 3) {
-    //   return response.status(400).send({ message: 'not enough players', code: 4036 })
-    // }
-    // if (!user.game.checkForStart()) {
-    //   return response.status(400).send({ message: 'error Game Option', code: 4037 })
-    // }
+    if (user.game.users.length < 3) {
+      return response.status(400).send({ message: 'not enough players', code: 4036 })
+    }
+    if (!user.game.checkForStart()) {
+      return response.status(400).send({ message: 'error Game Option', code: 4037 })
+    }
     await user.game.initGame()
     await user.game.defineRole()
     lauchAnimation(user.game, 'start', () => {
@@ -290,7 +302,15 @@ export default class GamesController {
       return response.status(400).send({ message: 'not end phase', code: 4006 })
     }
     await user.game.resetGame()
-
+    await user.game.refresh()
+    await user.game.load('users')
+    await Promise.all(
+      user.game.users.map(async (el) => {
+        await el.load('gameStat')
+        el.gameStat.resetStat()
+        await el.gameStat.save()
+      })
+    )
     transmitGame(user.game.id, user.game)
     return response.status(200).send({ message: 'game reset', code: 200 })
   }
@@ -306,11 +326,102 @@ export default class GamesController {
       return response.status(400).send({ message: 'not end phase', code: 4006 })
     }
     await user.game.nextRound()
-    transmitGame(user.game.id, user.game)
+    lauchAnimation(user.game, 'newRound', () => {})
     return response.status(200).send({ message: 'next round', code: 200 })
   }
-  /**
-   * Handle form submission for the create action
-   */
-  async store({ request }: HttpContext) {}
+
+  async whiteGuess({ auth, response, request }: HttpContext) {
+    const user = auth.user!
+    const { word } = await request.validateUsing(whiteGuessValidator)
+    await user.load('game')
+    await user.game.getAllInfo()
+    if (user.game.properties.gamePhase !== 'white') {
+      return response.status(400).send({ message: 'not white phase', code: 4007 })
+    }
+    if (user.game.properties.whitePhase?.whiteId !== user.id) {
+      return response.status(403).send({ message: 'player cant play, not his turn', code: 4035 })
+    }
+    if (user.game.properties.whitePhase?.validation) {
+      return response.status(400).send({ message: 'already validated', code: 4008 })
+    }
+    user.game.properties.whitePhase.word = word
+    user.game.properties.whitePhase.validation = true
+    await user.game.save()
+    transmitGame(user.game.id, user.game)
+    return response.status(200).send({ message: 'white guess', code: 200 })
+  }
+
+  async whiteValidate({ auth, response, request }: HttpContext) {
+    const user = auth.user!
+    const { response: responseUser } = await request.validateUsing(whiteValidationValidator)
+    await user.load('game')
+    await user.game.getAllInfo()
+    await user.load('gameStat')
+    if (
+      user.game.properties.gamePhase !== 'white' &&
+      !user.game.properties.whitePhase?.validation
+    ) {
+      return response.status(400).send({ message: 'not validation white phase', code: 4007 })
+    }
+    if (user.game.properties.whitePhase?.playersValidation.find((el) => el.id === user.id)) {
+      return response.status(400).send({ message: 'already validated', code: 4008 })
+    }
+    if (user.gameStat.role === 'white') {
+      return response.status(400).send({ message: 'white cant validate', code: 4009 })
+    }
+    user.game.properties.whitePhase!.playersValidation.push({
+      id: user.id,
+      vote: responseUser,
+    })
+    await user.game.save()
+    transmitGame(user.game.id, user.game)
+    if (user.game.properties.whitePhase!.playersValidation.length === user.game.users.length - 1) {
+      const result = await user.game.calculateWhiteVote()
+      console.log('white a trouve le mot', result)
+      if (result) {
+        console.log('white a trouve le mot')
+        user.game.users.forEach((el) => {
+          if (el.gameStat.role !== 'white') el.gameStat.isAlive = false
+          el.gameStat.save()
+        })
+        user.game.properties.gamePhase = 'end'
+        const { winner, winnersId } = await checkForEndCondition(user.game)
+        user.game.properties.endDetails = { winner, winnersId }
+        user.game.save()
+        lauchAnimation(user.game, 'whiteWin', () => {})
+      } else {
+        const whitePlayer = user.game.users.find((el) => el.gameStat.role === 'white')
+        await eliminationPlayer(user.game, whitePlayer!)
+        await user.game.getAllInfo()
+        const { winner, gameIsOver, winnersId } = await checkForEndCondition(user.game)
+        if (gameIsOver) {
+          console.log('game is over')
+          user.game.properties.gamePhase = 'end'
+          user.game.properties.endDetails = { winner, winnersId }
+          lauchAnimation(user.game, 'whiteLose', () => {})
+          //lauch animation
+        } else {
+          console.log('game pas fini')
+          nextTurn(user.game)
+          await eliminationPlayer(user.game, whitePlayer!)
+          await user.game.getAllInfo()
+          user.game.properties.gamePhase = 'play'
+          user.game.properties.whitePhase = {
+            word: null,
+            playersValidation: [],
+            whiteId: null,
+            validation: false,
+          }
+          user.game.save()
+          lauchAnimation(user.game, 'whiteLose', () => {
+            lauchAnimation(user.game, 'nextTurn', () => {})
+          })
+
+          //lauch animation next turn
+        }
+      }
+    }
+
+    return response.status(200).send({ message: 'white validation', code: 200 })
+  }
 }

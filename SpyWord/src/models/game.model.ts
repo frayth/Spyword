@@ -20,6 +20,12 @@ export interface GameProperties {
   endDetails?: {
     winner: 'civil' | 'spy' | 'white' | 'none'
     winnersId: number[]
+  },
+  whitePhase?: {
+    word: string | null
+    playersValidation: { id: number; vote: boolean }[]
+    whiteId: number | null
+    validation: boolean
   }
 }
 
@@ -54,6 +60,7 @@ export interface GameStat {
   isAlive:boolean,
   vote:number |null,
   asVoted:boolean,
+  roleIfDead:string | null,
 }
 
 export interface GameOption {

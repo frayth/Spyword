@@ -1,6 +1,6 @@
 <template>
-  <div class="flex-center-col gap-2 justify-center">
-    <div class="flex justify-center p-2 bg-white rounded-3 shadow-amber-3 w-full shadow-md text-size-sm font-bold md:(px-5 w-75%)   lg:( p-5 w-60%)">
+  <div class="flex-center-col gap-2 p-2 justify-start w-full h-full overflow-auto">
+    <div class="flex justify-center p-2 bg-white rounded-3 shadow-amber-3 w-full shadow-md text-size-sm font-bold md:(px-5 w-75% m-b-50px )   lg:( p-5 w-60%)">
       <span class="text-2xl font-bold" >Tour&nbsp; </span> <span class="text-2xl font-bold">{{` ${currentGame.properties.round}`}} </span>
     </div>
     <div class="flex-center-col">
@@ -11,7 +11,7 @@
       }
       "
       @click="showWord" 
-      >{{infoUser.currentWord}}</span>
+      >{{ infoUser.currentWord===''?'Mr.white':infoUser.currentWord}}</span>
     </div>
     <div class="m-y-1 w-full flex-center justify-center">
       <playerFocus v-if="currentPlayer!.id!==infoUser.id" />

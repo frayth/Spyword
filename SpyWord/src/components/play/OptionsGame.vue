@@ -51,17 +51,17 @@
       <!-- Bouton "Lancer la partie" -->
       <div
         :class="{
-          'flex items-center justify-center':true,
-          'bg-amber h-12 rounded-xl text-center text-lg font-bold cursor-pointer hover:scale-105 transition': userIsOwner,
+          'flex items-center justify-center rounded-xl':true,
+          'bg-amber h-12  text-center text-lg font-bold cursor-pointer hover:scale-105 transition': userIsOwner,
           'cursor-not-allowed bg-gray-400': !userIsOwner,
         }"
         @click="lauchGame"
       >
         <p v-if="userIsOwner">Lancer la partie</p>
         <div v-else class="flex items-center justify-center space-x-2">
-          <div class="w-4 h-4 bg-amber rounded-full animate-bounce animate-delay-0 animate-duration-1000"></div>
-          <div class="w-4 h-4 bg-amber rounded-full animate-bounce animate-delay-100 animate-duration-1000"></div>
-          <div class="w-4 h-4 bg-amber rounded-full animate-bounce animate-delay-200 animate-duration-1000"></div>
+          <div class="w-3 h-3 bg-amber rounded-full animate-bounce animate-delay-0 animate-duration-1000"></div>
+          <div class="w-3 h-3 bg-amber rounded-full animate-bounce animate-delay-100 animate-duration-1000"></div>
+          <div class="w-3 h-3 bg-amber rounded-full animate-bounce animate-delay-200 animate-duration-1000"></div>
         </div>
       </div>
   

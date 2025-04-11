@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, hasOne } from '@adonisjs/lucid/orm'
-import { serialize } from 'node:v8'
+import { afterFind, BaseModel, belongsTo, column, computed } from '@adonisjs/lucid/orm'
+import Game from './game.js'
+import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 
 export default class GameStat extends BaseModel {
   @column({ isPrimary: true })
@@ -43,6 +44,12 @@ export default class GameStat extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
+
+  @computed() // Getter personnalisé
+  get roleIfDead() {
+    if (!this.isAlive) return this.role
+    return null
+  }
 
   public resetStat() {
     this.role = 'civil'

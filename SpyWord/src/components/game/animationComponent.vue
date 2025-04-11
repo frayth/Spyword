@@ -4,7 +4,7 @@
       :is="currentAnimation"
       v-if="animationStore.isVisible"
       :style="{ width: `${width}px`, height: `${height}px` }"
-      class="absolute top-0 left-0 z-20 bg-yellow-200 flex items-center justify-center"
+      class="absolute top-0 left-0 z-20  overflow-auto  "
     />
   </Transition>
 </template>
@@ -20,6 +20,10 @@ import { useAnimationStore } from '@/stores/animation'
 import nextMancheAnimation from '../animation/nextMancheAnimation.vue'
 import targetAnimation from '../animation/targetAnimation.vue'
 import nextTurnAnimation from '../animation/nextTurnAnimation.vue'
+import newRound from '../animation/newRound.vue'
+import whiteWinAnimation from '../animation/whiteWinAnimation.vue'
+import whiteLoseAnimation from '../animation/whiteLoseAnimation.vue'
+
 const animationStore = useAnimationStore()
 const animations = {
   start: startAnimation,
@@ -29,7 +33,10 @@ const animations = {
   resultVote: resultVoteAnimation,
   nextManche: nextMancheAnimation,
   target: targetAnimation,
-  nextTurn:nextTurnAnimation
+  nextTurn: nextTurnAnimation,
+  newRound: newRound,
+  whiteWin: whiteWinAnimation,
+  whiteLose: whiteLoseAnimation,
 }
 const currentAnimation = computed(() => {
   switch (animationStore.currentAnimation?.name) {
@@ -49,6 +56,12 @@ const currentAnimation = computed(() => {
       return animations.target
     case 'nextTurn':
       return animations.nextTurn
+    case 'newRound':
+      return animations.newRound
+    case 'whiteWin':
+      return animations.whiteWin
+    case 'whiteLose':
+      return animations.whiteLose
     default:
       return null
   }

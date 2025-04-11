@@ -1,11 +1,13 @@
 <template>
-  <div class="w-full p-1 bg-green lg:(p-4)">
+  <div class="w-full h-full  grid  ">
     <!--affiche liste si joueur n'a pas vote-->
-    <listForVote v-if="!playerHasVoted && playerIsAlive"></listForVote>
+    <listForVote v-if="!playerHasVoted && playerIsAlive" class="w-full p-4 "></listForVote>
+    
     <!--affiche ecran d'attente si joueur a vote-->
-    <div
-      class="flex flex-col items-center justify-center h-full w-full bg-gray-900 text-white p-10 animate-fade-in"
-      v-else-if="playerHasVoted && playerIsAlive"
+    <div v-else-if="playerHasVoted && playerIsAlive" class="bg-gray-900 h-full w-full flex flex-col items-center justify-center">
+      <div
+      class=" flex flex-col items-center justify-center   text-white p-10 animate-fade-in border b-amber rounded-2xl shadow-[0_0_20px_rgba(255,255,255,0.3)] lg:min-w-[400px] md:min-w-[400px]"
+      
     >
       <!-- Avatar -->
       <div
@@ -25,6 +27,8 @@
         En attente des votes...
       </p>
     </div>
+    </div>
+    
     <div v-else class="flex flex-col items-center justify-center h-full w-full bg-gray-900 text-white p-10 animate-fade-in">
       <p class="text-xl font-bold mt-4 text-center text-white text-shadow">
         Vous êtes mort

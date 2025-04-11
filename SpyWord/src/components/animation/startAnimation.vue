@@ -1,7 +1,7 @@
 <template>
-  <div >
-    <div class="bg-white w-90% h-50% grid px-15 py-10 items-center justify-center rounded-3 shadow-amber-3 bg shadow-lg text-size-sm font-bold md:(px-5 w-75%)   lg:( px-10 text-size-xl w-80%)">
-      <textTimer class="bg-white/50 rounded-3 p-6 " :timer="1500" value="La partie va commencer..."/>
+  <div class="grid place-items-center text-white p-6 w-full h-full bg-gray-950" >
+    <div class=" bg space-y-6 w-full text-center h-70% grid place-items-center  bg-black/60 backdrop-blur-md p-6 rounded-2xl border border-yellow-400 shadow-[0_0_20px_rgba(255,255,255,0.3)]">
+      <textTimer class="bg-white/50 rounded-3 p-6 w-90% m-t-20% c-black text-xl " :timer="1500" value="La partie va commencer..."/>
     </div>
      
   </div>
@@ -16,7 +16,7 @@ import textTimer from './assets/textTimer.vue';
   background-image: url('../../assets/images/start.jpg');
   background-size: cover;
   background-position: center;
- background-position: top left;
+  background-position: center;
   background-repeat: no-repeat;
 
 

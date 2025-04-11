@@ -23,3 +23,6 @@ export type AnimationName =
   | 'nextManche'
   | 'end'
   | 'nextTurn'
+  | 'newRound'
+  | 'whiteWin'
+  | 'whiteLose'

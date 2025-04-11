@@ -1,6 +1,6 @@
 <template>
-  <div class="flex items-center justify-center font-bold text-2xl lg:text-4xl text-gray-900">
-    <div class="flex items-center gap-3 bg-gray-100  p-x-10 p-y-5 rounded-lg shadow-xl">
+  <div class="grid place-items-center text-white p-6 w-full h-full bg-gray-950">
+    <div class="flex items-center gap-3 bg-gray-100  p-x-10 p-y-5 rounded-lg shadow-xl b b-amber">
       <!-- Libellé -->
       <span class="text-lg lg:text-xl text-gray-600 dark:text-gray-400">
         Tour numéro

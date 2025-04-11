@@ -1,47 +1,50 @@
 <template>
-  <div class="w-full h-full bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 p-3">
+  <div class="w-full h-full bg-gradient-to-br from-gray-800 via-gray-700 to-gray-900 p-6 flex flex-col items-center" ref="container">
     <Transition name="fade" mode="out-in">
-      <h1 v-if="!isSelected" class="text-3xl font-bold text-center mb-10 lg:text-4xl lg:mb-20 text-white tracking-wide">
+      <h1 v-if="!isSelected" class="text-4xl font-extrabold h-100px text-center mb-12 lg:text-4xl text-white tracking-wider drop-shadow-lg">
         Choisissez une enveloppe !
       </h1>
-      <div v-else class="flex justify-center mb-10 lg:mb-20">
-        <span class="text-2xl lg:text-3xl text-white" v-if="auth.infoUser.currentWord">
-          Votre mot est <span class="text-4xl lg:text-5xl font-semibold">{{ auth.infoUser.currentWord }}</span>
+      <div v-else class=" h-100px flex justify-center mb-12 lg:mb-20 text-white text-center">
+        <span class="text-2xl lg:text-3xl" v-if="auth.infoUser.currentWord">
+          Votre mot est <span class="text-5xl lg:text-6xl font-bold text-gray-300 drop-shadow-md">{{ auth.infoUser.currentWord }}</span>
         </span>
-        <span v-else class="text-2xl lg:text-3xl text-white">Vous êtes Mr White</span>
+        <span v-else class="text-2xl lg:text-3xl  font-semibold">Vous êtes Mr White</span>
       </div>
     </Transition>
-
-    <div class="flex flex-wrap justify-center mb-10 lg:mb-20">
-      <div v-for="i in numberOfIndex" :key="`enveloppe${i}`" class="transform transition-transform duration-300 hover:scale-105 w-fit h-fit">
+  
+    <div class="flex flex-wrap justify-center gap-6 mb-12 lg:mb-20">
+      <div v-for="i in numberOfIndex" :key="`enveloppe${i}`" class="transform transition-all duration-300 hover:scale-110">
         <EnveloppeSvg
-          :width="appli.infoWindow.width <= 1024 ? 100 : 200"
-          :open="open === i ? true : false"
+          :width="containerWidth <= 500 ? 150 : 220"
+          :open="open === i"
           @click="openEnveloppe(i)"
-          class="cursor-pointer  hover:shadow-2xl transition-all ease-in-out"
+          class="cursor-pointer hover:shadow-2xl transition-all ease-in-out drop-shadow-lg"
         />
       </div>
     </div>
-
+  
     <Transition name="fade">
-      <div v-if="isSelected" class="flex-center-col">
-        <div class="blink text-lg text-white font-semibold">En attente des autres joueurs...</div>
+      <div v-if="isSelected" class="flex flex-col items-center text-center">
+        <div class="animate-pulse text-lg text-white font-semibold">En attente des autres joueurs...</div>
       </div>
     </Transition>
   </div>
+  
 </template>
 
 <script setup lang="ts">
 import EnveloppeSvg from '@/assets/SVG/EnveloppeSvg.vue'
 import { useGameStore } from '@/stores/game'
-import { ref } from 'vue'
+import { ref, useTemplateRef } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useAppliStore } from '@/stores/appli'
 import { useAuthStore } from '@/stores/auth'
 import { useFetch } from '@/composable/useFetch'
+import { useElementBounding } from '@vueuse/core'
 const auth = useAuthStore()
-const appli=useAppliStore()
+
 const { currentGame } = storeToRefs(useGameStore())
+const container= useTemplateRef('container')
+const { width:containerWidth } = useElementBounding(container)
 const isSelected = ref(false)
 const open = ref<number | null>(null)
 const loadingOpening=ref(false)

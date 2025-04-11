@@ -20,6 +20,7 @@ const timerAnimation: Partial<Record<TimerAnimation, number>> = {
   resultVote: defaultAnimationTime * 2.2,
   target: defaultAnimationTime * 1.5,
   nextTurn: defaultAnimationTime * 1.7,
+  newRound: defaultAnimationTime * 1,
 }
 
 const wsURL = import.meta.env.VITE_WEBSOCKET_URL
@@ -76,6 +77,8 @@ export async function JoinUserChannel(id: number) {
     } else if (json.type === 'info') {
       if (json.data.word) {
         auth.infoUser.currentWord = json.data.word
+      }else{
+        auth.infoUser.currentWord = ''
       }
     } else if (json.type === 'animate') {
       console.log('ANIMATION',json.type)

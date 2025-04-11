@@ -1,7 +1,7 @@
 <template>
-  <div class="bg-white w-full h-screen lg:p-5">
+  <div class="bg-white w-full h-screen  lg:p-5" >
     <div
-      class="flex flex-col items-center justify-center w-full h-full border border-amber"
+      class="grid grid-rows-[auto_1fr]  w-full h-full border border-amber"
       ref="bandeau"
     >
       <!-- Bandeau supérieur -->
@@ -17,7 +17,7 @@
 
       <!-- Contenu principal -->
       <div
-      :class="`h-full w-full grid grid-rows-[auto_2px_3fr] lg:(grid-rows-1 grid-cols-[1fr_2px_2fr]) gap-2 lg:max-h-[calc(100vh-56px-42px)] relative bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 dark:from-gray-800 dark:via-gray-900 dark:to-black`"
+      :class="`h-full w-full grid grid-rows-[auto_2px_3fr] lg:(grid-rows-1 grid-cols-[1fr_2px_2fr])  lg:max-h-[calc(100vh-56px-42px)] relative bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 dark:from-gray-800 dark:via-gray-900 dark:to-black`"
       id="mainPanel"
     >
         <!-- Liste des joueurs -->
@@ -28,7 +28,7 @@
         <div id="separator" class="h-2px w-full bg-amber-300 lg:(h-full w-2px)"></div>
         <!-- Zone de jeu -->
         <div
-          class=" h-full p-2  overflow-auto relative  lg:p-5"
+          class=" h-full   overflow-auto relative   grid  "
           @click="animation = true"
           ref="mainPanel"
         >
@@ -45,7 +45,7 @@
             :test="{ width, height }"
             :isVisible="animation"
             @close="animation = false"
-          />
+          />        
         </div>
       </div>
     </div>
@@ -67,8 +67,11 @@ import gameComponent from '@/components/play/gameComponent.vue'
 const auth = useAuthStore()
 const game = useGameStore()
 const panel = useTemplateRef('mainPanel')
+const bodyElement = ref<HTMLElement | null>(null)
+onMounted(() => {
+  bodyElement.value = document.querySelector('body')
+})
 const { width, height } = useElementBounding(panel)
-
 const animation = ref(false)
 
 onMounted(() => {

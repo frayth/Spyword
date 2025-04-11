@@ -29,3 +29,14 @@ export const voteValidator = vine.compile(
     user_id: vine.number(),
   })
 )
+
+export const whiteGuessValidator = vine.compile(
+  vine.object({
+    word: vine.string(),
+  })
+)
+export const whiteValidationValidator = vine.compile(
+  vine.object({
+    response: vine.boolean(),
+  })
+)
