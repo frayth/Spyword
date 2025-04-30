@@ -74,7 +74,7 @@ onUnmounted(() => {
 async function lauchGame() {
   await fetchData()
   if(inError.value){
-    console.log(data.value?.code) // TODO HANDLE ERROR
+    //console.log(data.value?.code) // TODO HANDLE ERROR
   }else{
     currentGame.value=data.value!.data
     router.push(`/play/${currentGame.value.slug}`)

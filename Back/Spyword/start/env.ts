@@ -11,7 +11,12 @@
 
 import { Env } from '@adonisjs/core/env'
 
-export default await Env.create(new URL('../', import.meta.url), {
+const envPath =
+  process.env.NODE_ENV === 'production'
+    ? new URL('/home/ubuntu/configs/.env.prod', import.meta.url) // production
+    : new URL('../', import.meta.url) // dossier par défaut
+
+export default await Env.create(envPath, {
   NODE_ENV: Env.schema.enum(['development', 'production', 'test'] as const),
   PORT: Env.schema.number(),
   APP_KEY: Env.schema.string(),

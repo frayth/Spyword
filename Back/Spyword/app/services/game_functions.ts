@@ -6,10 +6,9 @@ import { getRandomAvatar } from './avatar/avatar.js'
 import { transmitUser } from './ws/ws.js'
 import words from '../assets/words.js'
 import type { Word } from '../assets/words.js'
-import levenshtein from '#services/levenshtein'
 
 export async function addPlayer(this: Game, user: User) {
-  console.log('addPlayer')
+  //console.log('addPlayer')
   await this.load('users')
   await Promise.all(
     this.users.map(async (el) => {
@@ -67,11 +66,11 @@ export async function getAllInfo(this: Game) {
 
 export function checkForStart(this: Game) {
   if (this.gameOption.whiteIsPresent && this.users.length <= 3) {
-    console.log('return false for white')
+    //console.log('return false for white')
     return false
   }
   if (this.users.length < 3) {
-    console.log('return false for players')
+    //console.log('return false for players')
     return false
   }
   return true
@@ -159,8 +158,8 @@ export async function defineRoles(this: Game) {
   if (this.gameOption.whiteIsPresent) {
     const whiteId =
       this.properties.orderGame![Math.floor(Math.random() * (this.users.length - 1)) + 1]
-    console.log('whiteId', whiteId)
-    console.log('ordergame', this.properties.orderGame)
+    //console.log('whiteId', whiteId)
+    //console.log('ordergame', this.properties.orderGame)
     const user = this.users.find((el) => el.id === whiteId)
     user!.gameStat.role = 'white'
     user!.gameStat.word = ''
@@ -169,7 +168,7 @@ export async function defineRoles(this: Game) {
   this.refresh()
   const eligibleUsers = this.users.filter((user) => user.gameStat.role === 'civil')
   const spyIndex = Math.floor(Math.random() * eligibleUsers.length)
-  console.log('spyIndex', spyIndex)
+  //console.log('spyIndex', spyIndex)
   eligibleUsers[spyIndex].gameStat.role = 'spy'
   eligibleUsers[spyIndex].gameStat.word = this.properties.words.spy
   eligibleUsers[spyIndex].gameStat.save()
@@ -217,9 +216,6 @@ export async function nextRound(this: Game) {
 
 export async function calculateWhiteVote(this: Game): Promise<boolean> {
   this.getAllInfo()
-  const wordOfCivil = this.properties.words?.civil
-  const whiteWord = this.properties.whitePhase?.word
-  const distance = levenshtein(wordOfCivil!, whiteWord!)
   const numberOfCivil = this.users.filter((el) => el.gameStat.role === 'civil').length
   const whiteVoteWithOnlyCivil = this.properties.whitePhase?.playersValidation.filter((el) => {
     const role = this.users.find((user) => user.id === el.id)?.gameStat.role

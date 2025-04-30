@@ -1,7 +1,11 @@
 <template>
-  <div class="w-full m-y-2 p-x-2 grid place-items-center ">
+  <div class="w-full m-y-2 p-x-2 grid place-items-center " >
+      <!--verifVisibilité-->
+
+    <!-- Liste des joueurs -->
     <div
       class="flex gap-2 overflow-auto  items-center lg:flex-col lg:grid-cols-3 lg:gap-4 w-full h-full"
+      ref="userList"
     >
       <div
         @click="selectPlayer($event, player.id)"
@@ -104,6 +108,7 @@
         </div>
       </div>
     </div>
+
   </div>
 </template>
 
@@ -115,11 +120,13 @@ import { useFetch } from '@/composable/useFetch'
 import { useAppliStore } from '@/stores/appli'
 import { useAnimationStore } from '@/stores/animation'
 import portraitComp from '../animation/assets/portraitComp.vue'
-import { computed, ref, shallowRef, watchEffect, type Ref } from 'vue'
+import { computed, ref, shallowRef, useTemplateRef, watchEffect, type Ref } from 'vue'
 import { useElementBounding } from '@vueuse/core'
-
 import bulleComp from '../game/bulleComp.vue'
 import type { User } from '@/models/user.model'
+
+
+
 
 const { infoWindow } = useAppliStore()
 const { currentGame } = storeToRefs(useGameStore())
@@ -134,7 +141,7 @@ async function kick(isOwner: boolean, playerId: number) {
 }
 const userIsOwner = currentGame.value.ownerId === infoUser.value.id
 const selectedPlayer = ref<number | null>(null)
-
+const userList=useTemplateRef('userList')
 const parentRef = shallowRef<HTMLElement | null>(null) // Référence réactive pour le parent
 const bounding = ref<{
   height: Ref<number, number>
@@ -169,6 +176,7 @@ watchEffect(() => {
     selectedPlayer.value = null
   }
 })
+
 function deleteModal() {
   selectedPlayer.value = null
 }

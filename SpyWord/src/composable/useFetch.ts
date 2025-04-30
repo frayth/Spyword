@@ -50,7 +50,7 @@ export function useFetch<T>(url: string, options: FetchOptions) {
       data.value = await res.json()
       isComplete.value = true
     } catch (err) {
-      console.log(err)
+      //console.log(err)
       isComplete.value = false
     } finally {
       loading.value = false

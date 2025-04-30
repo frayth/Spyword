@@ -1,13 +1,15 @@
 import app from '@adonisjs/core/services/app'
 import { defineConfig } from '@adonisjs/lucid'
-
+const isProd = process.env.NODE_ENV === 'production'
 const dbConfig = defineConfig({
   connection: 'sqlite',
   connections: {
     sqlite: {
       client: 'better-sqlite3',
       connection: {
-        filename: app.tmpPath('db.sqlite3'),
+        filename: isProd
+          ? app.makePath('../production/db/prod.sqlite3')
+          : app.tmpPath('dev.sqlite3'),
       },
       useNullAsDefault: true,
       migrations: {

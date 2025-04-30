@@ -1,7 +1,7 @@
 <template>
   <div class="w-full h-full  grid  ">
     <!--affiche liste si joueur n'a pas vote-->
-    <listForVote v-if="!playerHasVoted && playerIsAlive" class="w-full p-4 "></listForVote>
+    <listForVote v-if="!playerHasVoted && playerIsAlive" class="w-full  "></listForVote>
     
     <!--affiche ecran d'attente si joueur a vote-->
     <div v-else-if="playerHasVoted && playerIsAlive" class="bg-gray-900 h-full w-full flex flex-col items-center justify-center">

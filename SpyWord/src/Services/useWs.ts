@@ -45,8 +45,8 @@ export async function JoinChanel(id: number) {
   await subscription.create()
 
   subscription.onMessage(async (message: GameWSMessage) => {
-    console.log('message de la partie')
-    console.log(message)
+    //console.log('message de la partie')
+    //console.log(message)
     const json = JSON.parse(message as unknown as string) as WsMessages
     if (json.type === 'game') {
       const data = json.data as Game
@@ -69,7 +69,7 @@ export async function JoinUserChannel(id: number) {
 
   userSubscription.onMessage(async (message: UserWSMessages) => {
     const json = JSON.parse(message as unknown as string) as UserWSMessages
-    console.log(message)
+    //console.log(message)
     if (json.type === 'action') {
       handleUserAction(json.data, gameStore)
     } else if (json.type === 'alert') {
@@ -81,15 +81,15 @@ export async function JoinUserChannel(id: number) {
         auth.infoUser.currentWord = ''
       }
     } else if (json.type === 'animate') {
-      console.log('ANIMATION',json.type)
+      //console.log('ANIMATION',json.type)
       if (json.data === 'resultVote') {
-        console.log('ANIMATION TARGET')
+        //console.log('ANIMATION TARGET')
         addAnimation({
           name: 'target',
           duration:timerAnimation.target!
         })
       }
-      console.log('ANIMATION', json.data)
+      //console.log('ANIMATION', json.data)
       addAnimation({
         name: json.data,
         duration: timerAnimation[json.data as TimerAnimation]! || timerAnimation.default!,

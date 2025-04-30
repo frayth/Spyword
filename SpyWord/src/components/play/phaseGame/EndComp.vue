@@ -1,13 +1,13 @@
 <template>
   <div 
-  class="flex flex-col items-center j gap-4 p-4 bg-gray-900 text-white rounded-lg shadow-lg w-full max-w-md mx-auto transition-all duration-300"
+  class="flex flex-col items-center justify-center  gap-4 p-10 bg-gray-900 text-white rounded-lg  min-h-50% shadow-lg w-full max-w-md mx-auto transition-all duration-300"
   :class="{
     'text-green-400': isVictory,
     'text-red-400 shadow-bloody': !isVictory
   }"
 >
   <!-- Titre de la victoire ou défaite -->
-  <div class="text-2xl font-bold">
+  <div class="  text-3xl font-bold lg:text-5xl">
     {{ isVictory ? 'Victoire 🎉' : 'Défaite 😔' }}
   </div>
 
@@ -16,7 +16,7 @@
     <div 
       v-for="user in winners" 
       :key="user?.id" 
-      class="w-16 h-16 rounded-full overflow-hidden border-4 shadow-md transition-all duration-300"
+      class="w-24 h-24 lg:(w-32 h-32) rounded-full overflow-hidden border-4 shadow-md transition-all duration-300"
       :class="isVictory ? 'border-yellow-400 hover:scale-110' : 'border-gray-400 hover:opacity-80'"
     >
       <portraitComp :url="user?.gameStat?.urlAvatar!" />
@@ -24,7 +24,7 @@
   </div>
 
   <!-- Phrase de fin -->
-  <div class="text-center text-lg italic text-gray-300">
+  <div class="text-center  italic text-gray-300 text-2xl">
     {{ victorySentence }}
   </div>
 

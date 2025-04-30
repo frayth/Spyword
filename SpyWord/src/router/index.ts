@@ -81,7 +81,7 @@ router.beforeEach((to, from) => {
   }
 })
 router.onError(() => {
-  console.log('error router')
+  //console.log('error router')
   router.go(0)
 })
 

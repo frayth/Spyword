@@ -13,6 +13,7 @@
       <button 
         @click="validateWord" 
         class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg transition flex gap-3"
+        ref="validationButton"
       >
         <span>✅</span><span>Oui</span>
       </button>
@@ -28,6 +29,17 @@
 
 <script setup lang="ts">
 import { useFetch } from '@/composable/useFetch';
+import { onMounted, useTemplateRef } from 'vue';
+const validationButton = useTemplateRef('validationButton');
+onMounted(() => {
+  if (validationButton.value) {
+    validationButton.value.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+      inline: 'nearest',
+    });
+  }
+});
 type currentPlayerType = {
   name: string;
   word: string | undefined;

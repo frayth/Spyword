@@ -4,7 +4,7 @@
       :is="currentAnimation"
       v-if="animationStore.isVisible"
       :style="{ width: `${width}px`, height: `${height}px` }"
-      class="absolute top-0 left-0 z-20  overflow-auto  "
+      class="absolute top-0 left-0 z-20  overflow-auto "
     />
   </Transition>
 </template>

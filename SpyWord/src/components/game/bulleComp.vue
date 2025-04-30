@@ -85,7 +85,6 @@ const {
 const {
   width: bulleWidth,
   x: xBulle,
-  y: yBulle,
   height: bulleHeight,
 } = useElementBounding(bulle)
 type Bounding = {
@@ -212,11 +211,6 @@ watchEffect(() => {
     deleteModal()
   }
   nextTick(() => {
-    console.log(
-      'bulle',
-      yBulle.value + bulleHeight.value,
-      mainPanelHeight.value + mainPanelY.value,
-    )
     if (
       Number(props.bounding.y) + Number(props.bounding.height) >
       mainPanelHeight.value + mainPanelY.value
@@ -226,7 +220,7 @@ watchEffect(() => {
   })
 })
 watch(bodyWidth, (oldValue, newValue) => {
-  console.log(oldValue, newValue)
+  //console.log(oldValue, newValue)
   if (oldValue === 0 || newValue === 0) return
   if (
     xBulle.value < 0 ||

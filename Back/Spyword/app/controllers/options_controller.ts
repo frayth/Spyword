@@ -61,17 +61,17 @@ export default class OptionsController {
   /**
    * Handle form submission for the create action
    */
-  async store({ request }: HttpContext) {}
+  async store({}: HttpContext) {}
 
   /**
    * Show individual record
    */
-  async show({ params }: HttpContext) {}
+  async show({}: HttpContext) {}
 
   /**
    * Edit individual record
    */
-  async edit({ params }: HttpContext) {}
+  async edit({}: HttpContext) {}
 
   /**
    * Handle form submission for the edit action
@@ -81,5 +81,5 @@ export default class OptionsController {
   /**
    * Delete record
    */
-  async destroy({ params }: HttpContext) {}
+  async destroy({}: HttpContext) {}
 }

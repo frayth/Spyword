@@ -32,8 +32,8 @@
   
         <!-- Cartes des rôles -->
         <div id="card-container" class="w-full flex flex-wrap justify-center gap-6 p-1 lg:gap-7 lg:p-5">
-          <cardRole is-present locked name="Civil" img="civilianHd.jpg" />
-          <cardRole is-present locked name="Espion" img="spyHd.jpg" />
+          <cardRole is-present locked :action="()=>{}" name="Civil" img="civilianHd.jpg" />
+          <cardRole is-present locked :action="()=>{}" name="Espion" img="spyHd.jpg" />
           <cardRole 
             :is-present="currentGame.gameOption.whiteIsPresent"
             :locked="false"
@@ -46,13 +46,13 @@
     </div>
   
     <!-- Boutons de validation -->
-    <div class="grid grid-cols-2 gap-4">
+    <div class="grid grid-cols-2 gap-4 p-4">
       
       <!-- Bouton "Lancer la partie" -->
       <div
         :class="{
           'flex items-center justify-center rounded-xl':true,
-          'bg-amber h-12  text-center text-lg font-bold cursor-pointer hover:scale-105 transition': userIsOwner,
+          'bg-amber h-12  text-center text-lg font-bold cursor-pointer hover:scale-101 transition': userIsOwner,
           'cursor-not-allowed bg-gray-400': !userIsOwner,
         }"
         @click="lauchGame"
@@ -67,7 +67,7 @@
   
       <!-- Bouton "Copier le lien" -->
       <div 
-        class="bg-amber h-12 flex items-center justify-center rounded-xl text-center text-lg font-bold cursor-pointer hover:scale-105 transition"
+        class="bg-amber h-12 flex items-center justify-center rounded-xl text-center text-lg font-bold cursor-pointer hover:scale-101 transition"
         @click="copyLink"
       >
         <p>{{ copyTextButton }}</p>
@@ -103,7 +103,7 @@ watch(
 )
 watch(numberOfPlayer, (newValue, old) => {
   if (newValue < currentGame.value.users.length) {
-    console.log('inferieur')
+    //console.log('inferieur')
     numberOfPlayer.value = old
   }
 })

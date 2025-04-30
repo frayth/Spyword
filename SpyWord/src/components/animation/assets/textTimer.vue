@@ -10,7 +10,7 @@ const index=ref(0)
 onMounted(() => {
   event.value = setInterval(() => {
     index.value++
-  }, Math.floor(props.timer/props.value.length));
+  }, Math.floor(props.timer/props.value.length<5?5:props.timer/props.value.length));
 });
 onUnmounted(() => {
   clearInterval(event.value)

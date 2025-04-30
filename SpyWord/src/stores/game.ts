@@ -25,9 +25,9 @@ export const useGameStore = defineStore('game', () => {
   })
   async function fetchUserInfo() {
     await fetchData()
-    console.log('fetch data')
+    //console.log('fetch data')
     if (data.value === null || data.value.data.game === null) return //TODO handle error
-    console.log('not return')
+    //console.log('not return')
     currentGame.value = data.value.data.game
   }
   function resetGame() {
@@ -49,7 +49,7 @@ export const useGameStore = defineStore('game', () => {
     }
   }
   function add(){
-    console.log('add')
+    //console.log('add')
   }
   return { currentGame, fetchUserInfo, resetGame,add }
 })

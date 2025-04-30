@@ -51,16 +51,19 @@ type Error = {
 const { currentGame } = useGameStore()
 const { infoUser } = useAuthStore()
 const event = ref<number | null>(null)
-  type Props = {
+  type Props = LockedCardProps | UnlockedCardProps
+  type LockedCardProps = {
   name: string
   isPresent: boolean
   locked: true
   img: 'civilianHd.jpg' | 'spyHd.jpg' | 'mrwhiteHd.jpg'
-} | {
+}
+
+type UnlockedCardProps = {
   name: string
   isPresent: boolean
   locked: false
-  action: () => Promise<boolean> // Obligatoire quand locked = false
+  action: () => Promise<boolean>
   img: 'civilianHd.jpg' | 'spyHd.jpg' | 'mrwhiteHd.jpg'
 }
 const props = defineProps<Props>()

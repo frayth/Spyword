@@ -19,6 +19,7 @@
       >
       <Transition name="down" appear
         ><verificationComp
+        ref="verification"
           v-if="currentGame.properties.verifyPhase && userIsOwner"
         ></verificationComp
       ></Transition>
@@ -38,6 +39,7 @@ const { currentGame } = storeToRefs(useGameStore())
 const userIsOwner = computed(() => {
   return currentGame.value.ownerId === infoUser.value.id
 })
+
 const currentPlayer = computed(() =>
   currentGame.value.users.find(
     user =>

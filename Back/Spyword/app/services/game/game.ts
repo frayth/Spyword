@@ -59,7 +59,7 @@ export async function lauchResultVote(game: Game) {
     eliminatedRole = player.gameStat.role
   }
   if (isAnEgality) {
-    console.log("égalité personne n'est eliminé")
+    //console.log("égalité personne n'est eliminé")
     game.properties.resultRound = {
       egalite: true,
       eliminated: null,

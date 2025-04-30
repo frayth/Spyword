@@ -7,20 +7,20 @@ import { userResponse } from '#services/responses/user'
 export default class UsersController {
   @inject()
   async create({ request, response, auth }: HttpContext, { createUser, find, deleteToken }: db) {
-    console.log('create user')
+    ////console.log('create user')
     const payload = await request.validateUsing(createUserValidator)
     //essaye de creer un utilisateur si aucune authentification n'est presente
     if (
       !request.headers().authorization ||
       !request.headers().authorization?.startsWith('Bearer ')
     ) {
-      console.log('no auth')
+      ////console.log('no auth')
       try {
         const token = await createUser(payload)
         return response.status(201).send(token)
       } catch (e) {
         //si utilisateur existe deja test le mot de passe fournis
-        console.log('user already exist')
+        ////console.log('user already exist')
         const user = await find(payload.name)
         if (user) {
           const checkPassword = await hash.verify(user.password, payload.password)
@@ -36,15 +36,15 @@ export default class UsersController {
         }
       }
     } else {
-      console.log('auth')
+      //console.log('auth')
       //si authentification presente verifie que le token correspond a l'utilisateur
       try {
         const user = await auth.authenticate()
         if (user.fullName === payload.name) {
-          console.log('auth ok')
+          //console.log('auth ok')
           return response.status(200)
         } else {
-          console.log('auth nok')
+          //console.log('auth nok')
           deleteToken(user)
           return response.status(401).send({ message: 'error between token and data', code: 4011 })
         }
@@ -77,7 +77,7 @@ export default class UsersController {
     }
   }
 
-  async info({ auth, response, request }: HttpContext) {
+  async info({ auth, response }: HttpContext) {
     const user = auth.user!
     if (user.gameId === null) {
       return response.status(403).send({ message: 'not in the game', code: 4032 })

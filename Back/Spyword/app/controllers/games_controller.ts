@@ -16,7 +16,6 @@ import {
   lauchPlay,
   lauchAnimation,
   lauchResultVote,
-  handleEndVote,
   checkForEndCondition,
   nextTurn,
   eliminationPlayer,
@@ -77,13 +76,13 @@ export default class GamesController {
       await user.leaveGame()
       let gameCurr = await Game.findBy('id', gameid)
       if (gameCurr?.inGame) {
-        console.log('reset game')
+        ////console.log('reset game')
         await gameCurr.resetGame()
         await gameCurr.refresh()
       }
       // if game still exist
       if (gameCurr) {
-        console.log('transmit game')
+        ////console.log('transmit game')
         await gameResponse(gameCurr)
         transmitGame(gameCurr.id, gameCurr)
         transmitUser(user.id, 'action', 'leave')
@@ -377,9 +376,9 @@ export default class GamesController {
     transmitGame(user.game.id, user.game)
     if (user.game.properties.whitePhase!.playersValidation.length === user.game.users.length - 1) {
       const result = await user.game.calculateWhiteVote()
-      console.log('white a trouve le mot', result)
+      ////console.log('white a trouve le mot', result)
       if (result) {
-        console.log('white a trouve le mot')
+        ////console.log('white a trouve le mot')
         user.game.users.forEach((el) => {
           if (el.gameStat.role !== 'white') el.gameStat.isAlive = false
           el.gameStat.save()
@@ -395,13 +394,13 @@ export default class GamesController {
         await user.game.getAllInfo()
         const { winner, gameIsOver, winnersId } = await checkForEndCondition(user.game)
         if (gameIsOver) {
-          console.log('game is over')
+          ////console.log('game is over')
           user.game.properties.gamePhase = 'end'
           user.game.properties.endDetails = { winner, winnersId }
           lauchAnimation(user.game, 'whiteLose', () => {})
           //lauch animation
         } else {
-          console.log('game pas fini')
+          ////console.log('game pas fini')
           nextTurn(user.game)
           await eliminationPlayer(user.game, whitePlayer!)
           await user.game.getAllInfo()

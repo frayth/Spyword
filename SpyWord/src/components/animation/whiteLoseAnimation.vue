@@ -11,7 +11,7 @@
         class="relative w-full aspect-video rounded-xl overflow-hidden shadow-2xl border-2 border-gray-700"
       >
         <img
-          src="/public/img/defeatMrWhite.png"
+          src="/img/defeatMrWhite.png"
           alt="Mr. White victoire"
           class="object-cover w-full h-full"
         />

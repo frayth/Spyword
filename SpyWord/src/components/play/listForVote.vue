@@ -1,24 +1,27 @@
 <template>
-  <div class="flex flex-col gap-4 p-x-4 w-full">
+  <div class="flex flex-col items-center gap-4 overflow-auto p-4  w-full">
     <!--Liste des portrait-->
-    <div class="flex gap-4 justify-center w-full">
-      <div
-        v-for="player in currentGame.users.filter(
-          user => user.id != infoUser.id && user.gameStat?.isAlive,
-        )"
-        :key="player.id"
-        class="w-70px h-70px rounded-full overflow-hidden"
-        @click="selectPlayer(player)"
-      >
-        <portraitComp
-          :selected="playerSelected?.id == player.id"
-          :url="player.gameStat?.urlAvatar!"
-        ></portraitComp>
+    <div class="w-full overflow-x-auto">
+      <div class="flex gap-4 justify-center w-max mx-auto p-4">
+        <div
+          v-for="player in currentGame.users.filter(
+            user => user.id != infoUser.id && user.gameStat?.isAlive,
+          )"
+          :key="player.id"
+          class="w-70px h-70px rounded-full overflow-hidden flex-shrink-0  lg:(w-100px h-100px) cursor-pointer transition-transform duration-300 transform hover:scale-105"
+          @click="selectPlayer(player)"
+        >
+          <portraitComp
+            :selected="playerSelected?.id == player.id"
+            :url="player.gameStat?.urlAvatar!"
+          ></portraitComp>
+        </div>
       </div>
     </div>
     <div
       id="selectZone"
-      class="w-full max-w-md mx-auto bg-blue-500 text-white shadow-lg rounded-lg p-6 flex flex-col items-center gap-4 lg:min-w-[400px] md:min-w-[400px]"
+      ref="selectZone"
+      class="w-full max-w-md  bg-blue-500 text-white shadow-lg rounded-lg p-6 flex flex-col items-center gap-4 lg:min-w-[400px] md:min-w-[400px]"
       v-if="playerSelected"
     >
       <!-- Avatar -->
@@ -76,11 +79,23 @@
 import { useGameStore } from '@/stores/game'
 import { storeToRefs } from 'pinia'
 import portraitComp from '../animation/assets/portraitComp.vue'
-import { ref } from 'vue'
+import { ref, useTemplateRef, watch } from 'vue'
 import type { User } from '@/models/user.model'
 import { useFetch } from '@/composable/useFetch'
 import { useAuthStore } from '@/stores/auth'
-
+const selectZone=useTemplateRef('selectZone')
+watch(
+ selectZone,
+  () => {
+    if (selectZone.value) {
+      selectZone.value.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+        inline: 'nearest',
+      })
+    }
+  },
+)
 const { currentGame } = storeToRefs(useGameStore())
 const { infoUser } = storeToRefs(useAuthStore())
 const playerSelected = ref<null | User>()
@@ -95,7 +110,7 @@ async function validate() {
   )
   await fetchData()
   if (inError.value) {
-    console.log('error')
+    //console.log('error')
   } else {
     playerSelected.value = null
   }

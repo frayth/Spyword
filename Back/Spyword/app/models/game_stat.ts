@@ -1,7 +1,5 @@
 import { DateTime } from 'luxon'
-import { afterFind, BaseModel, belongsTo, column, computed } from '@adonisjs/lucid/orm'
-import Game from './game.js'
-import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+import { BaseModel, column, computed } from '@adonisjs/lucid/orm'
 
 export default class GameStat extends BaseModel {
   @column({ isPrimary: true })
