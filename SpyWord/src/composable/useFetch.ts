@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
-const urlServeur=import.meta.env.VITE_URL_API
+const urlServeur=import.meta.env.VITE_WEBSOCKET_URL
 interface FetchOptions {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
   body?: object
@@ -35,7 +35,7 @@ export function useFetch<T>(url: string, options: FetchOptions) {
         headers['Authorization'] = `${credentials.token.type} ${credentials.token.value}`
       }
 
-      const res = await fetch(`${urlServeur}${url}`, {
+      const res = await fetch(`${urlServeur}/${url}`, {
         method: options.method || 'GET',
         headers,
         body: options.body ? JSON.stringify(options.body) : null,

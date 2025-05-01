@@ -8,7 +8,11 @@ import { defineConfig } from '@adonisjs/cors'
  */
 const corsConfig = defineConfig({
   enabled: true,
-  origin: ['http://maison.laurisceresoli.fr'],
+  origin: [
+    'http://maison.laurisceresoli.fr',
+    'http://www.spyword.laurisceresoli.fr',
+    'http://spyword.laurisceresoli.fr',
+  ],
   methods: ['GET', 'HEAD', 'POST', 'PUT', 'DELETE'],
   headers: true,
   exposeHeaders: [],
