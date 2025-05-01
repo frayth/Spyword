@@ -35,7 +35,7 @@ export function useFetch<T>(url: string, options: FetchOptions) {
         headers['Authorization'] = `${credentials.token.type} ${credentials.token.value}`
       }
 
-      const res = await fetch(`${urlServeur}/${url}`, {
+      const res = await fetch(`${urlServeur}${url}`, {
         method: options.method || 'GET',
         headers,
         body: options.body ? JSON.stringify(options.body) : null,
