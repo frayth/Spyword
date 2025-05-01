@@ -23,7 +23,7 @@ const timerAnimation: Partial<Record<TimerAnimation, number>> = {
   newRound: defaultAnimationTime * 1,
 }
 
-const wsURL = 'http://apispyword.laurisceresoli.fr'
+const wsURL = import.meta.env.VITE_WEBSOCKET_URL
 
 export let subscription: null | Subscription = null
 
