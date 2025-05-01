@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
-
+const urlServeur=import.meta.env.VITE_URL_API
 interface FetchOptions {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
   body?: object
@@ -35,7 +35,7 @@ export function useFetch<T>(url: string, options: FetchOptions) {
         headers['Authorization'] = `${credentials.token.type} ${credentials.token.value}`
       }
 
-      const res = await fetch(`http://maison.laurisceresoli.fr:5003/${url}`, {
+      const res = await fetch(`${urlServeur}/${url}`, {
         method: options.method || 'GET',
         headers,
         body: options.body ? JSON.stringify(options.body) : null,
@@ -50,7 +50,7 @@ export function useFetch<T>(url: string, options: FetchOptions) {
       data.value = await res.json()
       isComplete.value = true
     } catch (err) {
-      //console.log(err)
+      console.log(err)
       isComplete.value = false
     } finally {
       loading.value = false

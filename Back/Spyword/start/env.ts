@@ -10,7 +10,6 @@
 */
 
 import { Env } from '@adonisjs/core/env'
-
 const envPath =
   process.env.NODE_ENV === 'production'
     ? new URL('../../production', import.meta.url) // production
