@@ -12,6 +12,8 @@ const corsConfig = defineConfig({
     'http://maison.laurisceresoli.fr',
     'http://www.spyword.laurisceresoli.fr',
     'http://spyword.laurisceresoli.fr',
+    'https://spyword.laurisceresoli.fr',
+    'https://www.spyword.laurisceresoli.fr',
   ],
   methods: ['GET', 'HEAD', 'POST', 'PUT', 'DELETE'],
   headers: true,
