@@ -1,7 +1,7 @@
 <template>
   <div
     v-on-click-outside="deleteModal"
-    class="z-1000 absolute gap-3 flex flex-col p-1 top-50% left-0% rounded-3xl max-w-200px w-[calc(100%-10%)] lg:(max-w-700px p-4) shadow-[4px_4px_0px_rgba(0,0,0,1)] border-4 border-black text-gray-800 bg-white"
+    class=" absolute gap-3 flex flex-col p-1 top-50% left-0% rounded-3xl max-w-200px w-[calc(100%-10%)] lg:(max-w-700px p-4) shadow-[4px_4px_0px_rgba(0,0,0,1)] border-4 border-black text-gray-800 bg-white"
     :style
     ref="bulle"
   >

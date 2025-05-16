@@ -1,10 +1,10 @@
 <template>
-  <div class="w-full m-y-2 p-x-2 grid place-items-center " >
+  <div class="w-full m-y-2 p-x-2 grid place-items-center overflow-visible " >
       <!--verifVisibilité-->
 
     <!-- Liste des joueurs -->
     <div
-      class="flex gap-2 overflow-auto  items-center lg:flex-col lg:grid-cols-3 lg:gap-4 w-full h-full"
+      class="flex gap-2 z-1000000  items-center lg:flex-col lg:grid-cols-3 lg:gap-4 w-full h-full overflow-visible"
       ref="userList"
     >
       <div
@@ -12,7 +12,7 @@
         v-for="player in sortedUsers"
         :key="player.id"
         :class="{
-          'container-player cursor-pointer transform scale-90 lg:(scale-100 scale-x-95 origin-left)   p-3 flex flex-col items-center gap-3 bg-gradient-to-b from-cyan-600 to-cyan-800 shadow-lg rounded-lg transition-all  lg:grid lg:grid-cols-[100px_auto_50px] lg:items-center lg:w-full': true,
+          ' overflow-visible container-player cursor-pointer transform scale-90 lg:(scale-100 scale-x-95 origin-left)   p-3 flex flex-col items-center gap-3 bg-gradient-to-b from-cyan-600 to-cyan-800 shadow-lg rounded-lg transition-all  lg:grid lg:grid-cols-[100px_auto_50px] lg:items-center lg:w-full': true,
           'scale-100! cursor-default! from-cyan-600! to-cyan-800! ':!currentGame.inGame || currentGame.properties?.gamePhase === 'end' || currentGame.properties?.gamePhase === 'vote' ,
           'transform scale-100! from-amber-600! to-amber-800!  ': currentGame.inGame &&
             player.id ===
@@ -21,13 +21,15 @@
             ],
         }"
       >
-        <Teleport to="body" v-if="selectedPlayer === player.id">
+      
+        
           <bulleComp
+          v-if="selectedPlayer === player.id"
             :selected-player="selectedPlayer"
             :bounding="bounding!"
             @click-outside="deleteModal"
           ></bulleComp>
-        </Teleport>
+
 
         <!-- Avatar -->
         <div class="relative w-20 h-20 lg:col-start-1">
