@@ -1,7 +1,7 @@
 <template>
   <div
     v-on-click-outside="deleteModal"
-    class=" z-1000 absolute gap-3 flex flex-col p-1 top-50% left-0% rounded-3xl max-w-200px w-[calc(100%-10%)] lg:(max-w-700px p-4) shadow-[4px_4px_0px_rgba(0,0,0,1)] border-4 border-black text-gray-800 bg-white"
+    class="z-1000 absolute gap-3 flex flex-col p-1 top-50% left-0% rounded-3xl max-w-200px w-[calc(100%-10%)] lg:(max-w-700px p-4) shadow-[4px_4px_0px_rgba(0,0,0,1)] border-4 border-black text-gray-800 bg-white"
     :style
     ref="bulle"
   >
@@ -15,25 +15,77 @@
     <div
       class="p-1 bg-white rounded-lg shadow-md flex flex-center-col gap-2 lg:(flex-row p-4 items-center)"
     >
-      <p class="text-sm text-gray-600 font-semibold italic">Mon rôle {{ selectedPlayerInfo?.gameStat?.isAlive? 'est' : 'était' }} :</p>
-      <p class="text-xl lg:(text-2xl) font-medium text-gray-800 transform-translate-y--3px ">
-        <span :class="{
-          'font-bold':true,
-          'text-green-500': selectedPlayerInfo?.gameStat?.roleIfDead === 'civil',
-          'text-red-500': selectedPlayerInfo?.gameStat?.roleIfDead !== 'civil',
-        }">{{ selectedPlayerInfo?.gameStat?.roleIfDead=== null ? 'Inconnue' : selectedPlayerInfo?.gameStat?.roleIfDead }}</span>
+      <p class="text-sm text-gray-600 font-semibold italic">
+        Mon rôle {{ selectedPlayerInfo?.gameStat?.isAlive ? 'est' : 'était' }} :
+      </p>
+      <p
+        class="text-xl lg:(text-2xl) font-medium text-gray-800 transform-translate-y--3px"
+      >
+        <span
+          :class="{
+            'font-bold': true,
+            'text-green-500':
+              selectedPlayerInfo?.gameStat?.roleIfDead === 'civil',
+            'text-red-500':
+              selectedPlayerInfo?.gameStat?.roleIfDead !== 'civil',
+          }"
+          >{{
+            selectedPlayerInfo?.gameStat?.roleIfDead === null
+              ? 'Inconnue'
+              : selectedPlayerInfo?.gameStat?.roleIfDead
+          }}</span
+        >
       </p>
     </div>
+    <!-- History -->
+    <div class="p2 rounded-xl shadow bg-white dark:bg-gray-800  w-full flex-center-col">
+      <!-- Contrôles de navigation -->
+      <div class="flex items-center justify-between gap-5">
+        <button
+          @click="decrementCurrentManche"
+          class="p-2 bg-gray-200 dark:bg-gray-700 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 transition-all"
+        >
+          ‹
+        </button>
+        <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
+          Tour {{ currentMancheHistory }}
+        </p>
+        <button
+          @click="incrementCurrentManche"
+          class="text-xl px3 py1 bg-gray-200 dark:bg-gray-700 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 transition-all"
+        >
+          ›
+        </button>
+      </div>
 
+      <!-- Historique -->
+      <div class="overflow-hidden p-y-2">
+
+          <div v-if="historyVote.length > 0 && currentGame.properties.round !== currentMancheHistory" :key="`histo-${animateKey}`" :class="`animate-fade-in-${historySens} animate-duration-300`">
+            <HistoryComp :event="historyVote[0]" />
+          </div>
+
+          <div v-else class="text-align-center py5">
+            <p class="text-gray-500 italic text-sm">Tour en cours de jeu.</p>
+          </div>
+
+      </div>
+
+      <!-- Aucun historique -->
+    </div>
+    <!-- Liste des mots -->
     <div
       class="p-1 bg-white rounded-lg gap-2 shadow-md flex-center-col lg:(flex-center-col flex-row p-4)"
     >
       <p class="text-lg text-gray-600 font-semibold flex-shrink-0">
         J'ai dit :
       </p>
-      <div class=" text-lg flex flex-wrap gap-2 max-h-[300px] overflow-auto break-words"  v-if="selectedPlayerInfo?.gameStat?.words.length! > 0">
+      <div
+        class="text-lg flex flex-wrap gap-2 max-h-[300px] overflow-auto break-words"
+        v-if="selectedPlayerInfo?.gameStat?.words.length! > 0"
+      >
         <p
-          v-for="word in selectedPlayerInfo?.gameStat?.words "
+          v-for="word in selectedPlayerInfo?.gameStat?.words"
           :key="word"
           class="text-white font-medium bg-indigo-600 rounded-full py-1 px-3 transition-all transform hover:bg-indigo-700 hover:scale-101"
           :style="{
@@ -54,6 +106,7 @@
 import { useGameStore } from '@/stores/game'
 import { storeToRefs } from 'pinia'
 import { vOnClickOutside } from '@vueuse/components'
+import HistoryComp from './HistoryComp.vue'
 import {
   computed,
   nextTick,
@@ -67,6 +120,37 @@ import {
 } from 'vue'
 import { useElementBounding } from '@vueuse/core'
 const { currentGame } = storeToRefs(useGameStore())
+const historySens = ref<'left' | 'right'>('left')
+const animateKey=ref(0)
+const currentMancheHistory = ref(currentGame.value.properties.round! - 1)
+const historyVote = computed(() => {
+  return currentGame.value.properties.history![
+    currentMancheHistory.value! - 1
+  ].events.filter(
+    el =>
+      el.type === 'vote' && el.event.player === selectedPlayerInfo?.value?.id,
+  )
+})
+
+const decrementCurrentManche = () => {
+  historySens.value = 'left'
+  animateKey.value=Math.random() * (10000 - 0) + 0;
+  if (currentMancheHistory.value && currentMancheHistory.value > 1) {
+    currentMancheHistory.value = currentMancheHistory.value - 1
+  }
+}
+const incrementCurrentManche = () => {
+  animateKey.value=Math.random() * (21000 - 11000) + 11000;
+  historySens.value = 'right'
+  if (
+    currentMancheHistory.value &&
+    currentMancheHistory.value < currentGame.value.properties.history!.length
+  ) {
+    currentMancheHistory.value = currentMancheHistory.value + 1
+  }
+}
+
+
 const bodyElement = ref<HTMLElement | null>(null)
 const mainPanelElement = ref<HTMLElement | null>(null)
 
@@ -158,6 +242,7 @@ const leftPosition = computed(() => {
     return `${Number(props.bounding.left) + Number(props.bounding.width)}px`
   }
 })
+
 const style = computed((): StyleValue => {
   return {
     top: topPosition.value,
@@ -231,4 +316,24 @@ watch(bodyWidth, (oldValue, newValue) => {
 })
 </script>
 
-<style scoped></style>
+<style scoped>
+  .slide-left-enter-active,
+  .slide-left-leave-active {
+    transition: all 0.3s ease;
+  }
+  .slide-left-enter,
+  .slide-right-leave-to  {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  .slide-right-enter-active,
+  .slide-right-leave-active {
+    transition: all 0.3s ease;
+  }
+  .slide-right-enter,
+  .slide-left-leave-to
+  {
+    transform: translateX(+100%);
+    opacity: 0;
+  }
+</style>

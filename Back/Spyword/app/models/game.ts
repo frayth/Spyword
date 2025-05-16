@@ -25,7 +25,9 @@ import {
   nextRound,
   alert,
   calculateWhiteVote,
+  addEvent,
 } from '#services/game_functions'
+import type { GameEvent } from '#services/game_functions'
 interface GameProperties {
   gamePhase?: 'choose' | 'play' | 'vote' | 'white' | 'end' | 'resultVote'
   verifyPhase?: boolean
@@ -53,6 +55,10 @@ interface GameProperties {
     playersValidation: { id: number; vote: boolean }[]
     validation: boolean
   }
+  history?: {
+    round: number
+    events: GameEvent[]
+  }[]
 }
 export default class Game extends BaseModel {
   @column({ isPrimary: true })
@@ -75,6 +81,7 @@ export default class Game extends BaseModel {
           resultRound: value.resultRound,
           endDetails: value.endDetails,
           whitePhase: value.whitePhase,
+          history: value.history,
         }
       } else {
         return null
@@ -157,4 +164,5 @@ export default class Game extends BaseModel {
   public alert = alert
   public nextRound = nextRound
   public calculateWhiteVote = calculateWhiteVote
+  public addEvent = addEvent
 }

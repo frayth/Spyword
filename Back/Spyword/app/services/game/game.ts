@@ -72,6 +72,7 @@ export async function lauchResultVote(game: Game) {
       }),
     }
     await game.save()
+    await game.addEvent({ type: 'elimination', event: { player: -1 } }, game.properties.round!)
   } else {
     game.properties.resultRound = {
       egalite: false,
@@ -86,6 +87,10 @@ export async function lauchResultVote(game: Game) {
     }
     if (player.gameStat.role !== 'white') {
       await eliminationPlayer(game, player!)
+      await game.addEvent(
+        { type: 'elimination', event: { player: player.id } },
+        game.properties.round!
+      )
       await game.refresh()
     }
   }
@@ -145,6 +150,10 @@ export async function nextTurn(game: Game): Promise<void> {
   await game.load('users')
   game.properties.indexCurrentPlayer = 0
   game.properties.round!++
+  game.properties.history!.push({
+    round: game.properties.round!,
+    events: [],
+  })
   game.users.forEach(async (el) => {
     await el.load('gameStat')
     el.gameStat.vote = null

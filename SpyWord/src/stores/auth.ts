@@ -8,6 +8,7 @@ import { initialRoute } from '@/router'
 import type { UserResponse, User, WordResponse } from '@/models/user.model'
 import { useGameStore } from './game'
 import { JoinUserChannel } from '@/Services/useWs'
+
 export const useAuthStore = defineStore('auth', () => {
   const gameStore = useGameStore()
   const infoUser = ref<User & { isConnect: boolean ,currentWord:string | null }>({
@@ -56,7 +57,11 @@ export const useAuthStore = defineStore('auth', () => {
     })
     return { data, error, loading, getErrorMessage }
   }
-
+  function logout(){
+    setCredentials({ name: '', token: { type: '', value: '' } })
+    infoUser.value.isConnect = false
+    router.replace('/login')
+  }
   async function connect() {
     const { data, error, loading, fetchData, getErrorMessage, isComplete } =
       useFetch<UserResponse>(
@@ -105,5 +110,6 @@ export const useAuthStore = defineStore('auth', () => {
     credentials,
     isCredentials,
     connect,
+    logout
   }
 })

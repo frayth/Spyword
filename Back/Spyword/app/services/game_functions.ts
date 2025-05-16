@@ -6,6 +6,10 @@ import { getRandomAvatar } from './avatar/avatar.js'
 import { transmitUser } from './ws/ws.js'
 import words from '../assets/words.js'
 import type { Word } from '../assets/words.js'
+export type GameEvent =
+  | { type: 'vote'; event: { player: number; target: number } }
+  | { type: 'proposition'; event: { player: number; word: string } }
+  | { type: 'elimination'; event: { player: number } }
 
 export async function addPlayer(this: Game, user: User) {
   //console.log('addPlayer')
@@ -75,7 +79,15 @@ export function checkForStart(this: Game) {
   }
   return true
 }
-
+export async function addEvent(this: Game, event: GameEvent, round: number) {
+  const roundEvent = this.properties.history?.find((el) => el.round === round)
+  if (roundEvent) {
+    roundEvent.events.push(event)
+  } else {
+    console.log('round Not find')
+  }
+  await this.save()
+}
 export async function initGame(this: Game) {
   await this.getAllInfo()
   const arrayIndex = shuffleArray(this.users)
@@ -102,6 +114,12 @@ export async function initGame(this: Game) {
     whiteId: null,
     validation: false,
   }
+  this.properties.history = [
+    {
+      round: 1,
+      events: [],
+    },
+  ]
   await this.save()
 }
 

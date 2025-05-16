@@ -210,6 +210,10 @@ export default class GamesController {
       await user.game.save()
       transmitGame(user.game.id, user.game)
     } else {
+      await user.game.addEvent(
+        { type: 'proposition', event: { player: user.id, word: word } },
+        user.game.properties.round!
+      )
       nextPlayer(user.game)
       transmitGame(user.game.id, user.game)
       //change the phase
@@ -228,6 +232,18 @@ export default class GamesController {
     if (value) {
       user.game.properties.verifyPhase = false
       await user.game.save()
+      if (currentPlayer) {
+        await user.game.addEvent(
+          {
+            type: 'proposition',
+            event: {
+              player: currentPlayer.id!,
+              word: currentPlayer.gameStat.words[currentPlayer?.gameStat.words.length - 1],
+            },
+          },
+          user.game.properties.round!
+        )
+      }
       nextPlayer(user.game)
     } else {
       user.game.properties.verifyPhase = false
@@ -279,6 +295,11 @@ export default class GamesController {
     await user.gameStat.save()
     await user.load('game')
     await user.game.getAllInfo()
+    await user.game.addEvent(
+      { type: 'vote', event: { player: user.id, target: +payload.user_id } },
+      user.game.properties.round!
+    )
+    await user.game.refresh()
     transmitGame(user.game.id, user.game)
     if (
       user.game.users
@@ -412,6 +433,13 @@ export default class GamesController {
             validation: false,
           }
           user.game.save()
+          if (whitePlayer) {
+            await user.game.addEvent(
+              { type: 'elimination', event: { player: whitePlayer.id } },
+              user.game.properties.round!
+            )
+          }
+
           lauchAnimation(user.game, 'whiteLose', () => {
             lauchAnimation(user.game, 'nextTurn', () => {})
           })

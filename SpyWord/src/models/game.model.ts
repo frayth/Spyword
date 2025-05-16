@@ -26,8 +26,17 @@ export interface GameProperties {
     playersValidation: { id: number; vote: boolean }[]
     whiteId: number | null
     validation: boolean
-  }
+  },  
+  history?: {
+    round: number
+    events: GameEvent[]
+  }[]
 }
+export type GameEventType = 'vote' | 'proposition' | 'elimination'
+export type GameEvent =
+  | { type: 'vote'; event: { player: number; target: number } }
+  | { type: 'proposition'; event: { player: number; word: string } }
+  | { type: 'elimination'; event: { player: number } }
 
 export interface Game {
   id: number,
