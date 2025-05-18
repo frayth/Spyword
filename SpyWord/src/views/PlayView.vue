@@ -21,7 +21,7 @@
       id="mainPanel"
     >
         <!-- Liste des joueurs -->
-        <div class="overflow-visible">
+        <div >
           <playerList />
         </div>
 

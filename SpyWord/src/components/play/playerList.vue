@@ -1,36 +1,44 @@
 <template>
-  <div class="w-full m-y-2 p-x-2 grid place-items-center overflow-visible " >
-      <!--verifVisibilité-->
+  <div
+    class="w-full m-y-2 p-x-2 grid place-items-center "
+    ref="userList"
+  > 
+  <Teleport to="body">
+            <bulleComp
+            ref="bulle"
+            :class="`absolute  w-full z-1000000`  "
+            :style="positionStyle"
+            v-if="selectedPlayer !== null"
+            :selected-player="selectedPlayer"
+            @click="console.log('info',bulle?.bulleBounding)"
+            @click-outside="deleteModal"
+            :arrow-position="{ side: `${infoWindow.width<1024?'top':'left'}`,offset:12}"
+          ></bulleComp>
+  </Teleport>
 
     <!-- Liste des joueurs -->
     <div
-      class="flex gap-2 z-1000000  items-center lg:flex-col lg:grid-cols-3 lg:gap-4 w-full h-full overflow-visible"
-      ref="userList"
+      class="flex gap-2  items-center lg:flex-col lg:grid-cols-3 lg:gap-4 w-full h-full "
     >
+
       <div
         @click="selectPlayer($event, player.id)"
-        v-for="player in sortedUsers"
+        v-for="(player) in sortedUsers"        
         :key="player.id"
         :class="{
           ' overflow-visible container-player cursor-pointer transform scale-90 lg:(scale-100 scale-x-95 origin-left)   p-3 flex flex-col items-center gap-3 bg-gradient-to-b from-cyan-600 to-cyan-800 shadow-lg rounded-lg transition-all  lg:grid lg:grid-cols-[100px_auto_50px] lg:items-center lg:w-full': true,
-          'scale-100! cursor-default! from-cyan-600! to-cyan-800! ':!currentGame.inGame || currentGame.properties?.gamePhase === 'end' || currentGame.properties?.gamePhase === 'vote' ,
-          'transform scale-100! from-amber-600! to-amber-800!  ': currentGame.inGame &&
+          'scale-100! cursor-default! from-cyan-600! to-cyan-800! ':
+            !currentGame.inGame ||
+            currentGame.properties?.gamePhase === 'end' ||
+            currentGame.properties?.gamePhase === 'vote',
+          'transform scale-100! from-amber-600! to-amber-800!  ':
+            currentGame.inGame &&
             player.id ===
-            currentGame.properties?.orderGame![
-              currentGame.properties?.indexCurrentPlayer!
-            ],
+              currentGame.properties?.orderGame![
+                currentGame.properties?.indexCurrentPlayer!
+              ],
         }"
       >
-      
-        
-          <bulleComp
-          v-if="selectedPlayer === player.id"
-            :selected-player="selectedPlayer"
-            :bounding="bounding!"
-            @click-outside="deleteModal"
-          ></bulleComp>
-
-
         <!-- Avatar -->
         <div class="relative w-20 h-20 lg:col-start-1">
           <div
@@ -110,7 +118,6 @@
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -122,13 +129,17 @@ import { useFetch } from '@/composable/useFetch'
 import { useAppliStore } from '@/stores/appli'
 import { useAnimationStore } from '@/stores/animation'
 import portraitComp from '../animation/assets/portraitComp.vue'
-import { computed, ref, shallowRef, useTemplateRef, watchEffect, type Ref } from 'vue'
+import {
+  computed,
+  ref,
+  shallowRef,
+  useTemplateRef,
+  watchEffect,
+  type Ref,
+} from 'vue'
 import { useElementBounding } from '@vueuse/core'
 import bulleComp from '../game/bulleComp.vue'
 import type { User } from '@/models/user.model'
-
-
-
 
 const { infoWindow } = useAppliStore()
 const { currentGame } = storeToRefs(useGameStore())
@@ -143,9 +154,27 @@ async function kick(isOwner: boolean, playerId: number) {
 }
 const userIsOwner = currentGame.value.ownerId === infoUser.value.id
 const selectedPlayer = ref<number | null>(null)
-const userList=useTemplateRef('userList')
-const parentRef = shallowRef<HTMLElement | null>(null) // Référence réactive pour le parent
-const bounding = ref<{
+const userList = useTemplateRef('userList')
+const bulle=useTemplateRef('bulle')
+const positionStyle= computed(()=>{
+  if(infoWindow.width<1024){
+    return {
+      top: `${userBounding.value?.y + userBounding.value?.height +10}px`,
+      left: `${userBounding.value?.x}px`,
+      width: `${userBounding.value?.width}px`,
+    }
+  }else{
+  return {
+    top: `${userBounding.value?.y  }px`,
+    left: `${userBounding.value?.x + userBounding.value?.width +10 }px`,
+    width: `${userBounding.value?.width}px`,
+  }
+  }
+
+})
+ // Récupère les dimensions de la liste des utilisateurs
+const parentRef = shallowRef<HTMLElement | null>(null) // Référence réactive pour le parent // Récupère les dimensions de la bulle
+const userBounding = ref<{
   height: Ref<number, number>
   bottom: Ref<number, number>
   left: Ref<number, number>
@@ -155,7 +184,19 @@ const bounding = ref<{
   x: Ref<number, number>
   y: Ref<number, number>
   update: () => void
-}>() // Stocke les dimensions
+}>(
+  {
+    height: ref(0),
+    bottom: ref(0),
+    left: ref(0),
+    right: ref(0),
+    top: ref(0),
+    width: ref(0),
+    x: ref(0),
+    y: ref(0),
+    update: () => {},
+  },
+) // Stocke les dimensions
 
 const selectPlayer = (event: MouseEvent, id: number) => {
   if (!currentGame.value.inGame) return
@@ -168,12 +209,12 @@ const selectPlayer = (event: MouseEvent, id: number) => {
   if (parent) {
     // Fait défiler l'élément dans la vue
     parentRef.value = parent // Stocke la référence du parent
-    bounding.value = useElementBounding(parentRef) // Met à jour le bounding
+    userBounding.value = useElementBounding(parentRef) // Met à jour le bounding
   }
 }
 
 watchEffect(() => {
-  if (Number(bounding.value?.y) < 0) {
+  if (Number(userBounding.value?.y) < 0) {
     parentRef.value = null
     selectedPlayer.value = null
   }
@@ -214,5 +255,4 @@ const sortedUsers = computed(() => {
 })
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
