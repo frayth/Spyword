@@ -54,7 +54,7 @@
             @click="decrementCurrentManche"
             class="h-fit flex justify-center items-center"
           >
-            <chevronLeftSvg :stroke-width="2" />
+            <chevronLeftSvg :stroke-width="2" :size="18" />
           </button>
         </div>
 
@@ -66,7 +66,7 @@
             @click="incrementCurrentManche"
             class=" h-fit flex justify-center items-center "
           >
-           <chevronLeftSvg :stroke-width="2" class="rotate-180deg" />
+           <chevronLeftSvg :stroke-width="2" :size="18" class="rotate-180deg" />
           </button>
         </div>
       </div>

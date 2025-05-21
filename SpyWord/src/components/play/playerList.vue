@@ -207,16 +207,6 @@ const positionStyle = computed(() => {
           (bulle.value?.bulleBounding.height - (botLimit - initialValue))
       }
     }
-    console.log('initialValue', initialValue)
-    console.log('userTop', userBounding.value?.y)
-    console.log('userHeight', userBounding.value?.height)
-    console.log('tailleBulle', bulle.value?.bulleBounding.height)
-    console.log(
-      'offset',
-      Math.abs(
-        initialValue - (userBounding.value?.y + userBounding.value?.height / 2),
-      ),
-    )
     return {
       top: `${initialValue}px`,
       left: `${userBounding.value?.x + userBounding.value?.width + 10}px`,
