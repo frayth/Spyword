@@ -83,6 +83,7 @@ import { ref, useTemplateRef, watch } from 'vue'
 import type { User } from '@/models/user.model'
 import { useFetch } from '@/composable/useFetch'
 import { useAuthStore } from '@/stores/auth'
+
 const selectZone=useTemplateRef('selectZone')
 watch(
  selectZone,

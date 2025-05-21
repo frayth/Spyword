@@ -26,6 +26,14 @@ const {infoWindow} = useAppliStore()
       ></iframe>
     </div>
 
+    <RouterLink
+    v-if="infoWindow.width < 660"
+    to="game"
+    class="bg-amber-600 hover:bg-amber-500 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 ease-in-out flex items-center rounded-xl px-10 py-5 font-bold text-xl text-white"
+  >
+    Lancer une partie
+  </RouterLink>
+
     <!-- Sections de jeu -->
     <section class="w-full flex flex-col items-center px-5 py-4">
       <h2 class="text-xl font-bold">Rôle et but</h2>

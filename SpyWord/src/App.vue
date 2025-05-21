@@ -25,6 +25,7 @@ const { alerts, alertIsVisible } = storeToRefs(useAlertStore())
   </div>
 
   <RouterView
+  ref="app"
     :class="{
       'scrollbar scrollbar-thumb-color-bluegray font-default font-size-3   sm:(font-size-4)': true,
       'blur-1': alertIsVisible,

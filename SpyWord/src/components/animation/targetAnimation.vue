@@ -1,19 +1,44 @@
 <template>
   <div class="grid place-items-center text-white p-6 w-full h-full bg-gray-950">
+    <Teleport to="body">
+      <transition name="fade-slide">
+        <div
+          v-if="currentOverPortrait !== null"
+          class="absolute z-[1200000] px-4 py-3 rounded-xl bg-white border border-black text-black text-sm pointer-events-none"
+          :style="{
+            top: `${y}px`,
+            left: `${x + 20}px`,
+            boxShadow: '2px 2px 0 #000, 4px 4px 0 #555',
+          }"
+        >
+          <div class="relative">
+            <div class="text-sm leading-tight">
+              <div class="font-bold text-pink-700 tracking-wide lg:(text-4)">
+                {{ nameOver }}
+              </div>
+              <div class="text-pink-400 italic">{{currentOverPortrait.role==='target'?'Cible':'Agent Secret'}}</div>
+            </div>
+          </div>
+        </div>
+      </transition>
+    </Teleport>
     <div class="flex flex-col gap-6 w-full lg:w-90%">
       <div
         v-for="{ target, idList } in game.currentGame.properties.resultRound
           ?.history"
         :key="target"
-        class=" b b-amber grid grid-rows-[20px_3fr] grid-cols-[auto_1fr] gap-x-4 items-center w-full bg-gray-800 p-4 rounded-2xl shadow-lg  md:(grid-rows-[1fr_3fr] grid-cols-[auto_1fr] gap-x-10) lg:(min-h-200px )"
+        class="b b-amber grid grid-rows-[20px_3fr] grid-cols-[auto_1fr] gap-x-4 items-center w-full bg-gray-800 p-4 rounded-2xl shadow-lg md:(grid-rows-[1fr_3fr] grid-cols-[auto_1fr] gap-x-10) lg:(min-h-200px )"
       >
         <!-- Joueur cible (celui qui a reçu des votes) -->
-        <div class="grid-row-start-1 grid-row-end-3 ">
+        <div class="grid-row-start-1 grid-row-end-3">
           <div class="relative w-fit">
             <div
               class="w-20 h-20 rounded-full overflow-hidden border-4 border-white shadow-md relative lg:(w-40 h-40)"
             >
               <portraitComp
+                  @mouseenter="handleNameShow($event, target, 'target')"
+                  @mouseleave="currentOverPortrait = null"
+                  @click.stop="mobileHandleNameShow($event, target, 'target')"
                 :url="
                   game.currentGame.users.find(el => el.id === target)?.gameStat
                     ?.urlAvatar!
@@ -46,8 +71,12 @@
             >
               <div
                 class="w-full h-full rounded-full overflow-hidden border-2 border-red-500 shadow-md"
+                :id="`ennemy-${id}`"
               >
                 <portraitComp
+                  @mouseenter="handleNameShow($event, id, 'ennemy')"
+                  @mouseleave="handleLeave()"
+                  @click.stop="mobileHandleNameShow($event, id, 'ennemy')"
                   :url="
                     game.currentGame.users.find(el => el.id === id)?.gameStat
                       ?.urlAvatar!
@@ -64,17 +93,33 @@
 
 <script setup lang="ts">
 import { useGameStore } from '@/stores/game'
+import { useMouse } from '@vueuse/core'
 import portraitComp from '@/components/animation/assets/portraitComp.vue'
+import { computed, ref, watchEffect } from 'vue'
+const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0
+
+const { x, y } = useMouse()
 const game = useGameStore()
+const currentOverPortrait = ref<null | {
+  id:number,
+  role:'target'|'ennemy'
+  position:{x:number,y:number}
+}>(null)
 
 const beforeEnter = (el: Element) => {
   ;(el as HTMLElement).style.opacity = '0'
   ;(el as HTMLElement).style.transform = 'translateY(-5px)'
 }
 
+const nameOver = computed(() => {
+  const target = game.currentGame.users.find(
+    el => el.id === currentOverPortrait.value?.id,
+  )
+  return target?.fullName
+})
+
 const enter = (el: Element, done: () => void) => {
   const delay = (Array.from(el.parentNode!.children).indexOf(el) + 1) * 500
-
   setTimeout(() => {
     ;(el as HTMLElement).style.transition = 'all 0.5s'
     ;(el as HTMLElement).style.opacity = '1'
@@ -82,6 +127,26 @@ const enter = (el: Element, done: () => void) => {
     done()
   }, delay)
 }
+
+const handleNameShow = (event: MouseEvent, id: number ,role: 'target' | 'ennemy') => {
+  if(isMobile) return
+  currentOverPortrait.value ={id,role,position:{x:x.value,y:y.value}}
+}
+watchEffect(()=>{
+  if(!isMobile || currentOverPortrait.value === null)return
+  if(Math.abs(currentOverPortrait.value.position.x! - x.value) > 50 || Math.abs(currentOverPortrait.value.position.y! - y.value) > 50){
+    currentOverPortrait.value = null
+  }
+})
+const mobileHandleNameShow = (event: MouseEvent, id: number ,role: 'target' | 'ennemy') => {
+  if( currentOverPortrait.value !== null) return
+  currentOverPortrait.value ={id,role,position:{x:x.value,y:y.value}} 
+}
+const handleLeave = () => {
+  if(isMobile) return
+  currentOverPortrait.value = null
+}
+
 </script>
 
 <style scoped>
@@ -113,5 +178,17 @@ const enter = (el: Element, done: () => void) => {
     opacity: 0;
     transform: translateY(-10px);
   }
+}
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: all 0.2s ease-out;
+}
+.fade-slide-enter-from {
+  opacity: 0;
+  transform: translateY(5px);
+}
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(5px);
 }
 </style>
