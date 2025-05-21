@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white w-full h-screen  lg:p-5" >
+  <div class="bg-white w-full h-screen  lg:p-5"  >
     <div
       class="grid grid-rows-[auto_1fr]  w-full h-full border border-amber"
       ref="bandeau"
@@ -19,6 +19,7 @@
       <div
       :class="`h-full w-full grid grid-rows-[auto_2px_3fr] lg:(grid-rows-1 grid-cols-[1fr_2px_2fr])  lg:max-h-[calc(100vh-56px-42px)] relative bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 dark:from-gray-800 dark:via-gray-900 dark:to-black`"
       id="mainPanel"
+      ref="gameView"
     >
         <!-- Liste des joueurs -->
         <div class="overflow-auto">
@@ -54,6 +55,7 @@
 
 <script setup lang="ts">
 import OptionsGame from '@/components/play/OptionsGame.vue'
+import { useAppliStore } from '@/stores/appli'
 import { useElementBounding } from '@vueuse/core'
 import playerList from '@/components/play/playerList.vue'
 import { useGameStore } from '@/stores/game'
@@ -63,7 +65,9 @@ import { onMounted, ref, useTemplateRef } from 'vue'
 import Animation from '@/components/game/animationComponent.vue'
 import { useAuthStore } from '@/stores/auth'
 import gameComponent from '@/components/play/gameComponent.vue'
-
+const appli = useAppliStore()
+const gameView=useTemplateRef('gameView')
+appli.setGameWindowBoundaries(gameView)
 const auth = useAuthStore()
 const game = useGameStore()
 const panel = useTemplateRef('mainPanel')

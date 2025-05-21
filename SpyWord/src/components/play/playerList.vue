@@ -1,29 +1,28 @@
 <template>
-  <div
-    class="w-full m-y-2 p-x-2 grid place-items-center "
-    ref="userList"
-  > 
-  <Teleport to="body">
-            <bulleComp
-            ref="bulle"
-            :class="`absolute  w-full z-1000000`  "
-            :style="positionStyle"
-            v-if="selectedPlayer !== null"
-            :selected-player="selectedPlayer"
-            @click="console.log('info',bulle?.bulleBounding)"
-            @click-outside="deleteModal"
-            :arrow-position="{ side: `${infoWindow.width<1024?'top':'left'}`,offset:12}"
-          ></bulleComp>
-  </Teleport>
+  <div class="w-full m-y-2 p-x-2 grid place-items-center" ref="userList">
+    <Teleport to="body">
+      <bulleComp
+        ref="bulle"
+        :class="`absolute  w-full z-1000000`"
+        :style="positionStyle"
+        v-if="selectedPlayer !== null"
+        :selected-player="selectedPlayer"
+        @click="console.log('info', bulle?.bulleBounding)"
+        @click-outside="deleteModal"
+        :arrow-position="{
+          side: `${infoWindow.width < 1024 ? 'top' : 'left'}`,
+          offset: positionStyle.offset!,
+        }"
+      ></bulleComp>
+    </Teleport>
 
     <!-- Liste des joueurs -->
     <div
-      class="flex gap-2  items-center lg:flex-col lg:grid-cols-3 lg:gap-4 w-full h-full "
+      class="flex gap-2 items-center lg:flex-col lg:grid-cols-3 lg:gap-4 w-full h-full"
     >
-
       <div
         @click="selectPlayer($event, player.id)"
-        v-for="(player) in sortedUsers"        
+        v-for="player in sortedUsers"
         :key="player.id"
         :class="{
           ' overflow-visible container-player cursor-pointer transform scale-90 lg:(scale-100 scale-x-95 origin-left)   p-3 flex flex-col items-center gap-3 bg-gradient-to-b from-cyan-600 to-cyan-800 shadow-lg rounded-lg transition-all  lg:grid lg:grid-cols-[100px_auto_50px] lg:items-center lg:w-full': true,
@@ -141,7 +140,7 @@ import { useElementBounding } from '@vueuse/core'
 import bulleComp from '../game/bulleComp.vue'
 import type { User } from '@/models/user.model'
 
-const { infoWindow } = useAppliStore()
+const { infoWindow, gameWindowBoundaries } = storeToRefs(useAppliStore())
 const { currentGame } = storeToRefs(useGameStore())
 const { infoUser } = storeToRefs(useAuthStore())
 const { isVisible: animationIsVisible } = storeToRefs(useAnimationStore())
@@ -155,24 +154,82 @@ async function kick(isOwner: boolean, playerId: number) {
 const userIsOwner = currentGame.value.ownerId === infoUser.value.id
 const selectedPlayer = ref<number | null>(null)
 const userList = useTemplateRef('userList')
-const bulle=useTemplateRef('bulle')
-const positionStyle= computed(()=>{
-  if(infoWindow.width<1024){
-    return {
-      top: `${userBounding.value?.y + userBounding.value?.height +10}px`,
-      left: `${userBounding.value?.x}px`,
-      width: `${userBounding.value?.width}px`,
+const bulle = useTemplateRef('bulle')
+const positionStyle = computed(() => {
+  if (infoWindow.value.width < 1024) {
+    let initialValue = 0
+    let additionalOffset = 0
+    const leftlimit = 0
+    const rightLimit = Number(gameWindowBoundaries.value?.width)
+    if (bulle.value?.bulleBounding) {
+      initialValue =
+        userBounding.value?.x -
+        bulle.value?.bulleBounding.width / 2 +
+        userBounding.value?.width / 2
+      if (initialValue < leftlimit) {
+        initialValue = leftlimit
+      }
+      if (initialValue + bulle.value?.bulleBounding.width > rightLimit) {
+        additionalOffset = -50
+        initialValue =
+          initialValue -
+          (bulle.value?.bulleBounding.width - (rightLimit - initialValue))
+      }
     }
-  }else{
-  return {
-    top: `${userBounding.value?.y  }px`,
-    left: `${userBounding.value?.x + userBounding.value?.width +10 }px`,
-    width: `${userBounding.value?.width}px`,
-  }
-  }
+    return {
+      top: `${userBounding.value?.y + userBounding.value?.height + 10}px`,
+      left: `${initialValue}px`,
+      width: `${userBounding.value?.width}px`,
+      offset:         Math.abs(
+          initialValue -
+            (userBounding.value?.x + userBounding.value?.width / 2),
+        ) + additionalOffset,
+    }
+  } else {
+    let initialValue = 0
+    let additionalOffset = 0
+    const toplimit = Number(gameWindowBoundaries.value?.y)
+    const botLimit = Number(gameWindowBoundaries.value?.bottom)
+    if (bulle.value?.bulleBounding) {
+      initialValue =
+        userBounding.value?.y -
+        bulle.value?.bulleBounding.height / 2 +
+        userBounding.value?.height / 2
 
+      if (initialValue < toplimit) {
+        additionalOffset = 10
+        initialValue = toplimit
+      }
+      if (initialValue + bulle.value?.bulleBounding.height > botLimit) {
+        additionalOffset = -30
+        initialValue =
+          initialValue -
+          (bulle.value?.bulleBounding.height - (botLimit - initialValue))
+      }
+    }
+    console.log('initialValue', initialValue)
+    console.log('userTop', userBounding.value?.y)
+    console.log('userHeight', userBounding.value?.height)
+    console.log('tailleBulle', bulle.value?.bulleBounding.height)
+    console.log(
+      'offset',
+      Math.abs(
+        initialValue - (userBounding.value?.y + userBounding.value?.height / 2),
+      ),
+    )
+    return {
+      top: `${initialValue}px`,
+      left: `${userBounding.value?.x + userBounding.value?.width + 10}px`,
+      width: `${userBounding.value?.width}px`,
+      offset:
+        Math.abs(
+          initialValue -
+            (userBounding.value?.y + userBounding.value?.height / 2),
+        ) + additionalOffset,
+    }
+  }
 })
- // Récupère les dimensions de la liste des utilisateurs
+// Récupère les dimensions de la liste des utilisateurs
 const parentRef = shallowRef<HTMLElement | null>(null) // Référence réactive pour le parent // Récupère les dimensions de la bulle
 const userBounding = ref<{
   height: Ref<number, number>
@@ -184,19 +241,17 @@ const userBounding = ref<{
   x: Ref<number, number>
   y: Ref<number, number>
   update: () => void
-}>(
-  {
-    height: ref(0),
-    bottom: ref(0),
-    left: ref(0),
-    right: ref(0),
-    top: ref(0),
-    width: ref(0),
-    x: ref(0),
-    y: ref(0),
-    update: () => {},
-  },
-) // Stocke les dimensions
+}>({
+  height: ref(0),
+  bottom: ref(0),
+  left: ref(0),
+  right: ref(0),
+  top: ref(0),
+  width: ref(0),
+  x: ref(0),
+  y: ref(0),
+  update: () => {},
+}) // Stocke les dimensions
 
 const selectPlayer = (event: MouseEvent, id: number) => {
   if (!currentGame.value.inGame) return
@@ -214,7 +269,15 @@ const selectPlayer = (event: MouseEvent, id: number) => {
 }
 
 watchEffect(() => {
-  if (Number(userBounding.value?.y) < 0) {
+  if (
+    Number(userBounding.value?.x + userBounding.value.width / 2) < 0 ||
+    Number(userBounding.value?.x + userBounding.value?.width / 2) >
+      infoWindow.value.width ||
+    Number(userBounding.value?.y + userBounding.value.height / 2) <
+      Number(gameWindowBoundaries.value!.y) ||
+    userBounding.value?.bottom - userBounding.value.height / 2 >
+      Number(gameWindowBoundaries.value?.bottom)
+  ) {
     parentRef.value = null
     selectedPlayer.value = null
   }

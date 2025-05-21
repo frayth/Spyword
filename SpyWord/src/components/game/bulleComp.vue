@@ -8,9 +8,8 @@
     <div
       v-show="props.arrowPosition.side !== 'none'"
       :class="{
-        'absolute w-6 h-6 bg-white border-l-4 border-b-4 border-black':true,
-        'transition-left-100':props.arrowPosition.side === 'top' || props.arrowPosition.side === 'bottom',
-        'transition-top-100':props.arrowPosition.side === 'left' || props.arrowPosition.side === 'right',
+        'absolute w-6 h-6 bg-white border-l-4 border-b-4 border-black': true,
+
       }"
       :style="arrowStyle"
     ></div>
@@ -50,21 +49,26 @@
     >
       <!-- Contrôles de navigation -->
       <div class="flex items-center justify-between gap-5">
-        <button
-          @click="decrementCurrentManche"
-          class="p-2 bg-gray-200 dark:bg-gray-700 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 transition-all"
-        >
-          ‹
-        </button>
+        <div class=" cursor-pointer p-2  rounded-full flex justify-center items-center text-2xl bg-gray-200 dark:bg-gray-700 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 transition-all">
+          <button
+            @click="decrementCurrentManche"
+            class="h-fit flex justify-center items-center"
+          >
+            <chevronLeftSvg :stroke-width="2" />
+          </button>
+        </div>
+
         <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
           Tour {{ currentMancheHistory }}
         </p>
-        <button
-          @click="incrementCurrentManche"
-          class="text-xl px3 py1 bg-gray-200 dark:bg-gray-700 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 transition-all"
-        >
-          ›
-        </button>
+        <div class="cursor-pointer text-2xl  p-2 rounded-full flex justify-center items-center  bg-gray-200 dark:bg-gray-700 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 transition-all">
+          <button
+            @click="incrementCurrentManche"
+            class=" h-fit flex justify-center items-center "
+          >
+           <chevronLeftSvg :stroke-width="2" class="rotate-180deg" />
+          </button>
+        </div>
       </div>
 
       <!-- Historique -->
@@ -122,7 +126,7 @@ import { storeToRefs } from 'pinia'
 import { vOnClickOutside } from '@vueuse/components'
 import HistoryComp from './HistoryComp.vue'
 import type { UseElementBoundingReturn } from '@vueuse/core'
-
+import chevronLeftSvg from '@/assets/SVG/chevronLeftSvg.vue'
 import {
   computed,
   onMounted,
@@ -135,7 +139,11 @@ import { useElementBounding } from '@vueuse/core'
 const { currentGame } = storeToRefs(useGameStore())
 const historySens = ref<'left' | 'right'>('left')
 const animateKey = ref(0)
-const currentMancheHistory = ref(currentGame.value.properties.round! - 1)
+const currentMancheHistory = ref(
+  currentGame.value.properties.round! === 1
+    ? 1
+    : currentGame.value.properties.round! - 1,
+)
 const historyVote = computed(() => {
   return currentGame.value.properties.history![
     currentMancheHistory.value! - 1
@@ -208,14 +216,14 @@ const props = withDefaults(
   },
 )
 defineExpose({
-  bulleBounding
+  bulleBounding,
 })
 const emits = defineEmits(['clickOutside', 'infoBulle'])
 const selectedPlayerInfo = computed(() => {
   return currentGame.value.users.find(user => user.id === props.selectedPlayer)
 })
 const validOffset = computed(() => {
-  return props.arrowPosition.offset! >= 0 ? props.arrowPosition.offset! : 0
+  return props.arrowPosition.offset! >= 0 || props.arrowPosition.offset!<= bulleBounding.value.height ? props.arrowPosition.offset! : 0
 })
 
 const arrowStyle = computed(() => {
@@ -224,26 +232,26 @@ const arrowStyle = computed(() => {
     case 'right':
       return {
         right: `-6px`,
-        top: `${validOffset.value > bulleBounding.value.height.value ? bulleBounding.value.height.value - 50 : validOffset.value + 10}px`,
+        top: `${validOffset.value > bulleBounding.value.height ? bulleBounding.value.height - 50 : validOffset.value + 10}px`,
         transform: 'rotate(225deg) translateX(-50%)',
       }
     case 'left':
       return {
         left: `-6px`,
-        top: `${validOffset.value > bulleBounding.value.height.value ? bulleBounding.value.height.value - 35 : validOffset.value + 25}px`,
+        top: `${validOffset.value > bulleBounding.value.height ? bulleBounding.value.height - 35 : validOffset.value }px`,
         transform: 'rotate(45deg) translateX(-50%)',
       }
 
     case 'bottom':
       return {
         bottom: `-6px`,
-        left: `${validOffset.value > bulleBounding.value.width.value ? bulleBounding.value.width.value - 50 : validOffset.value + 25}px`,
+        left: `${validOffset.value > bulleBounding.value.width ? bulleBounding.value.width - 50 : validOffset.value + 25}px`,
         transform: 'rotate(315deg) translateX(-50%)',
       }
     default:
       return {
         top: `-6px`,
-        left: `${validOffset.value > bulleBounding.value.width.value ? bulleBounding.value.width.value - 50 : validOffset.value}px`,
+        left: `${validOffset.value > bulleBounding.value.width ? bulleBounding.value.width - 50 : validOffset.value}px`,
         transform: 'rotate(135deg) translateX(-50%)',
       }
   }
