@@ -53,7 +53,7 @@
         :class="{
           'flex items-center justify-center rounded-xl':true,
           'bg-amber h-12  text-center text-lg font-bold cursor-pointer hover:scale-101 transition': userIsOwner,
-          'cursor-not-allowed bg-gray-400': !userIsOwner,
+          'cursor-not-allowed bg-gray-400': !userIsOwner || !gameisready,
         }"
         @click="lauchGame"
       >
@@ -94,7 +94,11 @@ const optionsLoading = ref({
 const userIsOwner = computed(
   () => currentGame.value.ownerId === infoUser.value.id,
 )
-
+const gameisready = computed(() => {
+  return (
+    currentGame.value.users.length >= 3 
+  )
+})
 watch(
   () => currentGame.value.gameOption.maxPlayers,
   value => {
