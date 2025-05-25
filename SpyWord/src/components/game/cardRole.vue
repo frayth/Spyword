@@ -30,7 +30,7 @@
           'line-through': !isPresent,
         }"
       >
-        <p>{{ name }}</p>
+        <p class="select-none">{{ name }}</p>
       </div>
       <img
         :class="{
