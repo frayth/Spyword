@@ -1,6 +1,6 @@
 <template>
   <div class="w-full h-full flex flex-col gap-5">
-    <div v-if="helpBox.statut" class=" z-11 bg-black/20 absolute backdrop-blur-1 top-0 left-0 w-full h-full  overflow-auto grid justify-center   px-4 color-white" @click="closeHelp">
+    <div v-if="helpBox.statut" id="helpBox" class=" z-11 bg-black/20 absolute backdrop-blur-1 top-0 left-0 w-full h-full  overflow-auto grid justify-center   px-4 color-white" @click="closeHelp">
       <helpBoxComp
       class=""
         :name="helpBox.role.name"
@@ -88,7 +88,7 @@
 
 <script setup lang="ts">
 import { useFetch } from '@/composable/useFetch'
-import { computed, ref, watch } from 'vue'
+import { computed, nextTick, ref, watch, watchEffect } from 'vue'
 import { useGameStore } from '@/stores/game'
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/auth'
@@ -98,6 +98,7 @@ const { infoUser } = storeToRefs(useAuthStore())
 const { currentGame } = storeToRefs(useGameStore())
 const numberOfPlayer = ref(currentGame.value.gameOption.maxPlayers)
 const copyTextButton = ref('Copier le Code')
+
 
 const helpBox = ref({
   statut:false,
@@ -129,6 +130,19 @@ watch(numberOfPlayer, (newValue, old) => {
   if (newValue < currentGame.value.users.length) {
     //console.log('inferieur')
     numberOfPlayer.value = old
+  }
+})
+watchEffect(async () => {
+  if (helpBox.value.statut) {
+    await nextTick()
+    const helpBoxElement = document.getElementById('helpBox')
+    if (helpBoxElement) {
+      helpBoxElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+        inline: 'nearest',
+      })
+    }
   }
 })
 async function changeNumberOfPlayer() {
