@@ -1,7 +1,7 @@
 <template>
   <div
     :class="{
-      'w-150px h-100px bg-white cursor-pointer rounded-xl relative lg:(w-200px h150px)': true,
+      'w-150px h-100px select-none bg-white cursor-pointer rounded-xl relative lg:(w-200px h150px)': true,
       'cursor-default!': props.locked || !userIsOwner,
     }"
     @click="handleclick"
