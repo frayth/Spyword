@@ -32,9 +32,9 @@
   
         <!-- Cartes des rôles -->
         <div id="card-container" class="w-full flex flex-wrap justify-center gap-6 p-1 lg:gap-7 lg:p-5">
-          <cardRole is-present locked :action="()=>{}" name="Civil" img="civilianHd.jpg" />
-          <cardRole is-present locked :action="()=>{}" name="Espion" img="spyHd.jpg" />
-          <cardRole 
+          <cardRole @help="handleHelp" is-present locked :action="()=>{}" name="Civil" img="civilianHd.jpg" />
+          <cardRole @help="handleHelp" is-present locked :action="()=>{}" name="Espion" img="spyHd.jpg" />
+          <cardRole @help="handleHelp"
             :is-present="currentGame.gameOption.whiteIsPresent"
             :locked="false"
             name="Mr.White"
@@ -170,6 +170,10 @@ async function lauchGame() {
   if (currentGame.value.ownerId !== infoUser.value.id) return
   const { fetchData } = useFetch(`api/games/start`, { method: 'PUT' })
   await fetchData()
+}
+
+function handleHelp(role:{name:string, isPresent:boolean, locked:boolean, img:string}) {
+  console.log(role)
 }
 </script>
 

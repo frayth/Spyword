@@ -6,6 +6,10 @@
     }"
     @click="handleclick"
   >
+  <div class="absolute top-1 right-1 z-10 bg-black/50 rounded-full cursor-pointer hover:(scale-105) transition-all" @click.stop="handleHelp">
+    <helpSvg class="" :size="30"></helpSvg>
+  </div>
+  
     <Transition name="down" appear>
       <div
         v-if="error.value"
@@ -44,6 +48,8 @@
 import { useGameStore } from '@/stores/game'
 import { useAuthStore } from '@/stores/auth'
 import { computed, ref, watchEffect } from 'vue'
+import helpSvg from '@/assets/SVG/helpSvg.vue'
+const emits=defineEmits(['help'])
 type Error = {
   value: boolean
   message: string
@@ -97,6 +103,14 @@ watchEffect(() => {
 const userIsOwner=computed(()=>{
   return currentGame.ownerId === infoUser.id
 })
+const handleHelp=()=>{
+  emits('help', {
+    name: props.name,
+    isPresent: props.isPresent,
+    locked: props.locked,
+    img: props.img,
+  })
+}
 </script>
 
 <style scoped>
