@@ -6,7 +6,7 @@
     <p class="text-xl font-semibold tracking-wide">{{ name }}</p>
 
     <p class="text-sm italic opacity-80">
-      {{ isPresent ? 'Présent' : 'Absent' }}
+      {{presenceText}} 
     </p>
 
     <p class="text-sm italic opacity-80">
@@ -24,7 +24,8 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-
+import { useGameStore } from '@/stores/game'
+const gameStore = useGameStore()
 type Props = {
   name: string
   isPresent: boolean
@@ -60,6 +61,22 @@ const helpText=computed(() => {
       return ['Role inconnu, veuillez consulter les règles du jeu pour plus d’informations.']
     }
     })
+const numberOfPlayers=computed(()=>{
+  const optionalRoles = gameStore.currentGame.gameOption.whiteIsPresent ? 1 : 0;
+  switch (props.name) {
+    case 'Civil':
+      return gameStore.currentGame.users.length - 1 - optionalRoles; // Exclude the spy
+    case 'Espion':
+      return 1; // Exclude the spy
+    case 'Mr.White':
+      return gameStore.currentGame.gameOption.whiteIsPresent? 1 : 0; // Exclude the spy and Mr. White if present
+    default:
+      return gameStore.currentGame.users.length; // Default case, should not happen
+  }
+})
+const presenceText =computed(() => {
+ return `${props.name}${numberOfPlayers.value > 1 ? 's' : ''} présent${numberOfPlayers.value > 1 ? 's' : ''}: ${numberOfPlayers.value}`
+})
 </script>
 
 <style scoped>
