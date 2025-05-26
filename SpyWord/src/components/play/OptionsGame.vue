@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-full flex flex-col gap-5">
+  <div class="w-full h-full flex flex-col gap-5 relative">
     <div v-if="helpBox.statut" id="helpBox" class=" z-11 bg-black/20 absolute backdrop-blur-1 top-0 left-0 w-full h-full  overflow-auto grid justify-center   px-4 color-white" @click="closeHelp">
       <helpBoxComp
       class=""

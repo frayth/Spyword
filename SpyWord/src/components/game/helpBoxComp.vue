@@ -2,16 +2,21 @@
 <div class="w-full max-w-300px   grid items-center justify-center justify-items-center  lg:( max-w-4xl)">
 
   <!-- Contenu texte -->
-  <div class="w-full h-fit lg:w-1/2 p-6 text-black space-y-3 relative z-20 bg-white/100 rounded-2xl border border-white/20 shadow-xl">
+  <div class="w-full h-fit lg:w-1/2 p-3 lg:p-6 text-black space-y-3 relative z-20 bg-white/100 rounded-2xl border border-white/20 shadow-xl">
     <p class="text-xl font-semibold tracking-wide">{{ name }}</p>
 
     <p class="text-sm italic opacity-80">
       {{presenceText}} 
     </p>
-
-    <p class="text-sm italic opacity-80">
+    <div class="flex items-center justify-between">
+          <p class="text-sm italic opacity-80">
       {{ locked ? 'Rôle Obligatoire' : 'Rôle Optionnel' }}
     </p>
+    <p v-if="condition" class="text-sm italic opacity-80 color-red-500">
+      {{ condition }}
+    </p>
+    </div>
+
 
     <div class="pt-4 text-sm leading-relaxed opacity-90 ">
       <p v-for="(text, index) in helpText" :key="index">
@@ -76,6 +81,13 @@ const numberOfPlayers=computed(()=>{
 })
 const presenceText =computed(() => {
  return `${props.name}${numberOfPlayers.value > 1 ? 's' : ''} présent${numberOfPlayers.value > 1 ? 's' : ''}: ${numberOfPlayers.value}`
+})
+const condition=computed(() => {
+  if (!props.locked) {
+    return '4 joueurs min'
+  } else {
+    return false
+  }
 })
 </script>
 
