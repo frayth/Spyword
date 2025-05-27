@@ -1,12 +1,13 @@
 <template>
+  <div v-if="animationStore.isVisible" class="absolute top-0 left-0 z-20  overflow-auto bg-black " :style="{ width: `${width}px`, height: `${height}px` }">
   <Transition name="fade">
     <component
       :is="currentAnimation"
-      v-if="animationStore.isVisible"
-      :style="{ width: `${width}px`, height: `${height}px` }"
-      class="absolute top-0 left-0 z-20  overflow-auto "
+      
+      class="w-full h-full"
     />
   </Transition>
+  </div>
 </template>
 
 <script setup lang="ts">
