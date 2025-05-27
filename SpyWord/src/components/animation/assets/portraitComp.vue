@@ -3,7 +3,7 @@
     <div v-if="eliminated" class="absolute top-0 right-6px z-10 w-full h-full">
       <img src="/img/crossRed.png" alt="">
     </div>
-    <div v-if="selected" class="absolute w-full h-full bg-black/40"></div>
+   <div v-if="selected" class=" border-red border-2 rounded-full absolute w-full h-full bg-red-500/20 "></div>
     <img
       :src="`${urlApi}${url}`"
       :class="{
@@ -12,6 +12,7 @@
     }"
       alt=""
     />
+     
   </div>
 </template>
 

@@ -1,5 +1,14 @@
 <template>
-  <div class="w-full h-full flex flex-col gap-5">
+  <div class="w-full h-full flex flex-col gap-5 relative">
+    <div v-if="helpBox.statut" id="helpBox" class=" z-11 bg-black/20 absolute backdrop-blur-1 top-0 left-0 w-full h-full  overflow-auto grid justify-center   px-4 color-white" @click="closeHelp">
+      <helpBoxComp
+      class=""
+        :name="helpBox.role.name"
+        :isPresent="helpBox.role.isPresent"
+        :locked="helpBox.role.locked"
+        :img="`/img/${helpBox.role.img}`"
+      />
+    </div>
     <!-- Titre -->
     <p class="self-center font-black text-lg lg:text-2xl">
       PARAMÈTRES DE LA PARTIE
@@ -32,9 +41,9 @@
   
         <!-- Cartes des rôles -->
         <div id="card-container" class="w-full flex flex-wrap justify-center gap-6 p-1 lg:gap-7 lg:p-5">
-          <cardRole is-present locked :action="()=>{}" name="Civil" img="civilianHd.jpg" />
-          <cardRole is-present locked :action="()=>{}" name="Espion" img="spyHd.jpg" />
-          <cardRole 
+          <cardRole @help="handleHelp" is-present locked :action="()=>{}" name="Civil" img="civilianHd.jpg" />
+          <cardRole @help="handleHelp" is-present locked :action="()=>{}" name="Espion" img="spyHd.jpg" />
+          <cardRole @help="handleHelp"
             :is-present="currentGame.gameOption.whiteIsPresent"
             :locked="false"
             name="Mr.White"
@@ -79,15 +88,27 @@
 
 <script setup lang="ts">
 import { useFetch } from '@/composable/useFetch'
-import { computed, ref, watch } from 'vue'
+import { computed, nextTick, ref, watch, watchEffect } from 'vue'
 import { useGameStore } from '@/stores/game'
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/auth'
 import cardRole from '@/components/game/cardRole.vue'
+import helpBoxComp from '../game/helpBoxComp.vue'
 const { infoUser } = storeToRefs(useAuthStore())
 const { currentGame } = storeToRefs(useGameStore())
 const numberOfPlayer = ref(currentGame.value.gameOption.maxPlayers)
 const copyTextButton = ref('Copier le Code')
+
+
+const helpBox = ref({
+  statut:false,
+  role: {
+    name: '',
+    isPresent: false,
+    locked: false,
+    img: '',
+  },
+})
 const optionsLoading = ref({
   players: false,
 })
@@ -109,6 +130,19 @@ watch(numberOfPlayer, (newValue, old) => {
   if (newValue < currentGame.value.users.length) {
     //console.log('inferieur')
     numberOfPlayer.value = old
+  }
+})
+watchEffect(async () => {
+  if (helpBox.value.statut) {
+    await nextTick()
+    const helpBoxElement = document.getElementById('helpBox')
+    if (helpBoxElement) {
+      helpBoxElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+        inline: 'nearest',
+      })
+    }
   }
 })
 async function changeNumberOfPlayer() {
@@ -170,6 +204,15 @@ async function lauchGame() {
   if (currentGame.value.ownerId !== infoUser.value.id) return
   const { fetchData } = useFetch(`api/games/start`, { method: 'PUT' })
   await fetchData()
+}
+
+function handleHelp(role:{name:string, isPresent:boolean, locked:boolean, img:string}) {
+  helpBox.value.statut = true
+  helpBox.value.role = role
+}
+function closeHelp() {
+  console.log('close help')
+  helpBox.value.statut = false
 }
 </script>
 

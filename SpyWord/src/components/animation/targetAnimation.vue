@@ -1,5 +1,6 @@
 <template>
   <div class="grid place-items-center text-white p-6 w-full h-full bg-gray-950">
+    
     <Teleport to="body">
       <transition name="fade-slide">
         <div
@@ -22,7 +23,21 @@
         </div>
       </transition>
     </Teleport>
-    <div class="flex flex-col gap-6 w-full lg:w-90%">
+      <div v-if="introIsOpen" class="fixed inset-0 flex items-center justify-center z-50">
+    <div
+      class="bg-white text-black border border-gray-200 shadow-lg rounded-2xl p-6 max-w-sm w-full text-center animate-fade-in"
+    >
+      <div class="flex flex-col items-center space-y-4">
+        <svg class="w-12 h-12 text-green-500" fill="none" stroke="currentColor" stroke-width="1.5"
+          viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M4.5 12.75l6 6 9-13.5" />
+        </svg>
+        <p class="text-gray-600">Les votes sont maintenant terminés.</p>
+      </div>
+    </div>
+  </div>
+    <div v-else class="flex flex-col gap-6 w-full lg:w-90%">
       <div
         v-for="{ target, idList } in game.currentGame.properties.resultRound
           ?.history"
@@ -97,7 +112,10 @@ import { useMouse } from '@vueuse/core'
 import portraitComp from '@/components/animation/assets/portraitComp.vue'
 import { computed, ref, watchEffect } from 'vue'
 const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0
-
+const introIsOpen = ref(true)
+setTimeout(() => {
+  introIsOpen.value = false
+}, 2000) // Adjust the duration as needed
 const { x, y } = useMouse()
 const game = useGameStore()
 const currentOverPortrait = ref<null | {

@@ -1,5 +1,13 @@
 <template>
   <div class="flex flex-col items-center gap-4 overflow-auto p-4  w-full">
+    <div>
+      <h1 class="text-xl font-bold text-center mb-2 lg:(text-2xl mb-4)">
+        Sélectionne un joueur à éliminer
+      </h1>
+      <p class="text-center text-gray-500">
+        Clique sur le portrait d'un joueur pour voter contre lui.
+      </p>
+    </div>
     <!--Liste des portrait-->
     <div class="w-full overflow-x-auto">
       <div class="flex gap-4 justify-center w-max mx-auto p-4">
