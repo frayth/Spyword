@@ -18,15 +18,18 @@
 
     <!-- Liste des joueurs -->
     <div
-      class="flex gap-2 items-center lg:flex-col lg:grid-cols-3 lg:gap-4 w-full h-full"
+      :class="{ 
+        'flex gap-2 items-center  lg:flex-col lg:grid-cols-3 lg:gap-4 w-full h-full':true,
+      } "
     >
       <div
         @click="selectPlayer($event, player.id)"
         v-for="player in sortedUsers"
         :key="player.id"
         :class="{
-          ' overflow-visible container-player cursor-pointer transform scale-90 lg:(scale-100 scale-x-95 origin-left)   p-3 flex flex-col items-center gap-3 bg-gradient-to-b from-cyan-600 to-cyan-800 shadow-lg rounded-lg transition-all  lg:grid lg:grid-cols-[100px_auto_50px] lg:items-center lg:w-full': true,
-          'scale-100! cursor-default! from-cyan-600! to-cyan-800! ':
+          ' overflow-visible container-player  transform scale-90 lg:(scale-100 scale-x-95 origin-left)   p-3 flex flex-col items-center gap-3 bg-gradient-to-b from-cyan-600 to-cyan-800 shadow-lg rounded-lg transition-all  lg:grid lg:grid-cols-[100px_auto_50px] lg:items-center lg:w-full': true,
+          'cursor-pointer': currentGame.inGame,
+          'scale-100!  from-cyan-600! to-cyan-800! ':
             !currentGame.inGame ||
             currentGame.properties?.gamePhase === 'end' ||
             currentGame.properties?.gamePhase === 'vote',

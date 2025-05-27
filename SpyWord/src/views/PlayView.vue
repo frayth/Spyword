@@ -56,15 +56,16 @@
 <script setup lang="ts">
 import OptionsGame from '@/components/play/OptionsGame.vue'
 import { useAppliStore } from '@/stores/appli'
-import { useElementBounding } from '@vueuse/core'
+import { useElementBounding,useWakeLock } from '@vueuse/core'
 import playerList from '@/components/play/playerList.vue'
 import { useGameStore } from '@/stores/game'
 import LeaveGame from '@/components/play/LeaveGame.vue'
 import { JoinChanel } from '@/Services/useWs'
-import { onMounted, ref, useTemplateRef } from 'vue'
+import { onMounted, reactive, ref, useTemplateRef } from 'vue'
 import Animation from '@/components/game/animationComponent.vue'
 import { useAuthStore } from '@/stores/auth'
 import gameComponent from '@/components/play/gameComponent.vue'
+const wakeLock = reactive(useWakeLock())
 const appli = useAppliStore()
 const gameView=useTemplateRef('gameView')
 appli.setGameWindowBoundaries(gameView)
@@ -80,6 +81,8 @@ const animation = ref(false)
 
 onMounted(() => {
   JoinChanel(game.currentGame.id)
+  wakeLock.request('screen')
+  
 })
 </script>
 

@@ -2,9 +2,10 @@
 import Alert from '@/components/alert/alertComponent.vue'
 import { useAlertStore } from '@/stores/alert'
 import { storeToRefs } from 'pinia'
-
+import { useWakeLock } from '@vueuse/core'
 
 const { alerts, alertIsVisible } = storeToRefs(useAlertStore())
+const {}=useWakeLock()
 </script>
 
 <template>
