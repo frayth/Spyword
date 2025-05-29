@@ -122,8 +122,7 @@ const menu = useTemplateRef('menu')
 const burger = useTemplateRef('burger')
 onClickOutside(
   menu,
-  target => {
-    console.log(target.target)
+  () => {
     menuIsOpen.value = false
   },
   {

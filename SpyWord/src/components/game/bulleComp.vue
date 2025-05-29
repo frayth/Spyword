@@ -59,7 +59,7 @@
         </div>
 
         <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
-          Tour <span :key="animateKey" class="roll-animation ">{{ currentMancheHistory }}</span>
+          Tour <span :key="animateKey" :class="{'roll-animation':animationLoad} ">{{ currentMancheHistory }}</span>
         </p>
         <div @click="incrementCurrentManche" class="cursor-pointer text-2xl  p-2 rounded-full flex justify-center items-center  bg-gray-200 dark:bg-gray-700 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 transition-all">
           <button
@@ -81,8 +81,8 @@
           :key="`histo-${animateKey}`"
           :class="{
             'animate-duration-200':true,
-            'animate-fade-in-left': historySens === 'left',
-            'animate-fade-in-right': historySens === 'right',
+            'animate-fade-in-left': historySens === 'left' && animationLoad,
+            'animate-fade-in-right': historySens === 'right' && animationLoad,
           }"
         >
           <HistoryComp :event="historyVote[0]" />
@@ -143,6 +143,7 @@ import { useElementBounding } from '@vueuse/core'
 const { currentGame } = storeToRefs(useGameStore())
 const historySens = ref<'left' | 'right'>('left')
 const animateKey = ref(0)
+const animationLoad=ref(false)
 const currentMancheHistory = ref(
   currentGame.value.properties.round! === 1
     ? 1
@@ -158,6 +159,7 @@ const historyVote = computed(() => {
 })
 
 const decrementCurrentManche = () => {
+  if(!animationLoad.value)animationLoad.value = true
   historySens.value = 'left'
   
   if (currentMancheHistory.value && currentMancheHistory.value > 1) {
@@ -166,7 +168,7 @@ const decrementCurrentManche = () => {
   }
 }
 const incrementCurrentManche = () => {
-  
+  if(!animationLoad.value)animationLoad.value = true
   historySens.value = 'right'
   if (
     currentMancheHistory.value &&
@@ -201,8 +203,9 @@ onUpdated(() => {
 })
 
 onMounted(async () => {
-  bulleBounding.value = useElementBounding(bulle)
+  bulleBounding.value = useElementBounding(bulle) 
 })
+
 type ArrowPosition = {
   side: 'left' | 'right' | 'top' | 'bottom' | 'none'
   offset?: number

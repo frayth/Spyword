@@ -211,7 +211,6 @@ function handleHelp(role:{name:string, isPresent:boolean, locked:boolean, img:st
   helpBox.value.role = role
 }
 function closeHelp() {
-  console.log('close help')
   helpBox.value.statut = false
 }
 </script>

@@ -7,7 +7,6 @@
         :style="positionStyle"
         v-if="selectedPlayer !== null"
         :selected-player="selectedPlayer"
-        @click="console.log('info', bulle?.bulleBounding)"
         @click-outside="deleteModal"
         :arrow-position="{
           side: `${infoWindow.width < 1024 ? 'top' : 'left'}`,
