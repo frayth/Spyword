@@ -21,6 +21,7 @@
         >
           <portraitComp
             :selected="playerSelected?.id == player.id"
+            :target="playerSelected?.id == player.id"
             :url="player.gameStat?.urlAvatar!"
           ></portraitComp>
         </div>
