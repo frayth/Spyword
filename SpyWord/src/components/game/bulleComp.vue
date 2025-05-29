@@ -49,9 +49,9 @@
     >
       <!-- Contrôles de navigation -->
       <div class="flex items-center justify-between gap-5">
-        <div class=" cursor-pointer p-2  rounded-full flex justify-center items-center text-2xl bg-gray-200 dark:bg-gray-700 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 transition-all">
+        <div @click="decrementCurrentManche" class=" cursor-pointer p-2  rounded-full flex justify-center items-center text-2xl bg-gray-200 dark:bg-gray-700 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 transition-all">
           <button
-            @click="decrementCurrentManche"
+            
             class="h-fit flex justify-center items-center"
           >
             <chevronLeftSvg :stroke-width="2" :size="18" />
@@ -59,12 +59,12 @@
         </div>
 
         <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
-          Tour {{ currentMancheHistory }}
+          Tour <span :key="animateKey" class="roll-animation ">{{ currentMancheHistory }}</span>
         </p>
-        <div class="cursor-pointer text-2xl  p-2 rounded-full flex justify-center items-center  bg-gray-200 dark:bg-gray-700 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 transition-all">
+        <div @click="incrementCurrentManche" class="cursor-pointer text-2xl  p-2 rounded-full flex justify-center items-center  bg-gray-200 dark:bg-gray-700 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 transition-all">
           <button
-            @click="incrementCurrentManche"
-            class=" h-fit flex justify-center items-center "
+            
+            class=" h-fit flex justify-center items-center  "
           >
            <chevronLeftSvg :stroke-width="2" :size="18" class="rotate-180deg" />
           </button>
@@ -79,7 +79,11 @@
             currentGame.properties.round !== currentMancheHistory
           "
           :key="`histo-${animateKey}`"
-          :class="`animate-fade-in-${historySens} animate-duration-300`"
+          :class="{
+            'animate-duration-200':true,
+            'animate-fade-in-left': historySens === 'left',
+            'animate-fade-in-right': historySens === 'right',
+          }"
         >
           <HistoryComp :event="historyVote[0]" />
         </div>
@@ -155,18 +159,20 @@ const historyVote = computed(() => {
 
 const decrementCurrentManche = () => {
   historySens.value = 'left'
-  animateKey.value = Math.random() * (10000 - 0) + 0
+  
   if (currentMancheHistory.value && currentMancheHistory.value > 1) {
+    animateKey.value = Date.now()
     currentMancheHistory.value = currentMancheHistory.value - 1
   }
 }
 const incrementCurrentManche = () => {
-  animateKey.value = Math.random() * (21000 - 11000) + 11000
+  
   historySens.value = 'right'
   if (
     currentMancheHistory.value &&
     currentMancheHistory.value < currentGame.value.properties.history!.length
   ) {
+    animateKey.value = Date.now()
     currentMancheHistory.value = currentMancheHistory.value + 1
   }
 }
@@ -280,5 +286,21 @@ function deleteModal() {
 .slide-left-leave-to {
   transform: translateX(+100%);
   opacity: 0;
+}
+
+@keyframes roll {
+  0% {
+    transform: rotateX(90deg);
+    opacity: 0;
+  }
+  100% {
+    transform: rotateX(0deg);
+    opacity: 1;
+  }
+}
+
+.roll-animation {
+  animation: roll 0.3s ease-in-out;
+  display:inline-block;
 }
 </style>
