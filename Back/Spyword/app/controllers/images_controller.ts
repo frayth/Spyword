@@ -4,8 +4,8 @@ import fs from 'node:fs'
 import { getNumberOfAvatars } from '#services/avatar/avatar'
 export default class ImagesController {
   async show({ response, params }: HttpContext) {
-    const baseURl =
-      process.env.node_env === 'development' ? `${process.cwd()}` : `${process.cwd()}/..`
+    const baseURl = `${process.cwd()}`
+    //process.env.node_env === 'development' ? `${process.cwd()}` : `${process.cwd()}`// /..
     console.log(baseURl)
     const imageName = params.name
     const folderName = params.folder
