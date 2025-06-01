@@ -6,7 +6,6 @@ import hash from '@adonisjs/core/services/hash'
 import { userResponse } from '#services/responses/user'
 import { getAvatarUrl } from '#services/avatar/avatar'
 import { transmitGame } from '#services/ws/ws'
-import transmit from '#config/transmit'
 export default class UsersController {
   @inject()
   async create({ request, response, auth }: HttpContext, { createUser, find, deleteToken }: db) {
