@@ -6,7 +6,7 @@
       </div>
     </div>
     <div v-if="eliminated" class="absolute top-0 right-6px z-10 w-full h-full">
-      <img src="/img/crossRed.png" alt="">
+      <img src="/img/crossRed.png" alt="" loading="lazy">
     </div>
    <div v-if="selected" class=" border-red border-2 rounded-full absolute w-full h-full bg-red-500/20 "></div>
     <img
