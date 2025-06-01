@@ -3,7 +3,7 @@
     <div
       class="p-x3 p-y1 bg-gray-800 text-white rounded-lg shadow-lg w-full max-w-md text-center "
     >
-      <h3 class="text-sm md:(text-lg)">Selectionner votre avatar</h3>
+      <h3 class="text-sm md:(text-lg)" @click="openPanel" >Selectionner votre avatar</h3>
     </div>
 
     <div class="flex flex-center">
