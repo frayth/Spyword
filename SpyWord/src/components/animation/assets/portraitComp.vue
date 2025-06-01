@@ -10,7 +10,7 @@
     </div>
    <div v-if="selected" class=" border-red border-2 rounded-full absolute w-full h-full bg-red-500/20 "></div>
     <img
-      :src="`${urlApi}${url}`"
+      :src="srcImage"
       :class="{
       'h-full object-cover':true,
       'filter grayscale':eliminated,
@@ -22,7 +22,9 @@
 </template>
 
 <script setup lang="ts">
-defineProps({
+import { computed } from 'vue'
+
+const prod=defineProps({
   url: {
     type: String,
     required: true,
@@ -40,7 +42,15 @@ defineProps({
     default: false,
   },
 })
-
+const prodUrl= computed(()=>prod.url.replace('public/images/',''))
+const prodUrlApi='https://apispyword.laurisceresoli.fr/'
+const srcImage=computed(()=>{
+  if(import.meta.env.MODE === 'development') {
+    return `${urlApi}${prod.url}`
+  }else{
+    return `${prodUrlApi}${prodUrl.value}`
+  }
+})
 const urlApi = import.meta.env.VITE_URL_API
 </script>
 
