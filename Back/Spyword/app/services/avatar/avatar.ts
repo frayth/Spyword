@@ -9,7 +9,6 @@ export function getAvatarUrl(
   id: number,
   option?: { mode: 'increment' | 'decrement' | 'choose' }
 ): string {
-  console.log(id)
   if (option) {
     if (option.mode === 'increment') {
       id + 1 >= avatars.length ? (id = 0) : (id += 1)
@@ -21,7 +20,6 @@ export function getAvatarUrl(
     id = 1
   }
 
-  console.log(id, avatars[id])
   return `${avatars[id]}`
 }
 
