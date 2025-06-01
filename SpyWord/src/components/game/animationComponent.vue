@@ -1,5 +1,5 @@
 <template>
-  <div v-if="animationStore.isVisible" class="absolute top-0 left-0 z-20  overflow-auto bg-black " :style="{ width: `${width}px`, height: `${height}px` }">
+  <div v-if="animationStore.isVisible" class="absolute top-0 left-0 z-20 overflow-auto bg-black " :style="{ width: `${width}px`, height: `${height}px` }">
   <Transition name="fade">
     <component
       :is="currentAnimation"

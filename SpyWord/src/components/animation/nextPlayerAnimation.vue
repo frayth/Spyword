@@ -1,6 +1,6 @@
 <template>
   <div
-    class="grid place-items-center text-white p-1 w-full h-full lg:p-6 bg-gray-950"
+    class="grid place-items-center text-white p-3 w-full h-full lg:p-6 bg-gray-950"
   >
     <div
       class="backdrop-blur-md rounded-2xl border border-yellow-400 shadow-[0_0_20px_rgba(255,255,255,0.3)] bg-gradient-to-br from-[#0f172a] to-[#1e293b] w-full md:w-3/4 lg:w-4/5  grid grid-cols-20 grid-rows-11 lg:g items-center justify-center  shadow-2xl backdrop-blur-lg p-3 lg:p-6"
@@ -33,7 +33,7 @@
         </p>
 
         <textTimer
-          class="bg-white/10 text-white/90 backdrop-blur-md rounded-xl px-6 py-4 h-60px w-full text-center text-2xl lg:text-3xl font-bold shadow-inner"
+          class="bg-white/100 text-black/90 backdrop-blur-md rounded-xl px-6 py-4 h-60px w-full text-center text-2xl lg:text-3xl font-bold shadow-inner"
           :timer="1500"
           :value="
             currentPlayer?.gameStat?.words[

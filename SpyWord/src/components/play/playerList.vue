@@ -93,30 +93,13 @@
 
         <!-- Nom du joueur -->
         <div
-          class="text-white text-sm font-medium truncate lg:col-start-2 lg:text-center"
+          class="text-white text-sm font-medium truncate lg:col-start-2 lg:(text-center text-lg font-semibold) "
         >
           {{ player.fullName }}
         </div>
 
         <!-- Icône Propriétaire (Desktop) -->
-        <div v-if="infoWindow.width > 1025" class="lg:col-start-3">
-          <img
-            v-if="player.id === currentGame.ownerId"
-            src="../../assets/images/superUser.png"
-            class="w-6 h-6"
-          />
-          <img
-            v-else-if="
-              !currentGame.inGame &&
-              !animationIsVisible &&
-              player.id !== infoUser.id &&
-              userIsOwner
-            "
-            src="../../assets/images/delete.png"
-            class="w-6 h-6 cursor-pointer hover:scale-110 transition-all"
-            @click="kick(player.id === currentGame.ownerId, player.id)"
-          />
-        </div>
+
       </div>
     </div>
   </div>

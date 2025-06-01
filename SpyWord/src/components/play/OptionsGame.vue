@@ -9,13 +9,17 @@
         :img="`/img/${helpBox.role.img}`"
       />
     </div>
+    <div v-if="selectAvatarPanelOpen" class="absolute top-0 left-0 w-full h-full z-1000000 bg-gray-900/50 grid justify-center items-center">
+      <AvatarPanel @close=" closeAvatarPanel" />
+    </div>
     <!-- Titre -->
     <p class="self-center font-black text-lg lg:text-2xl">
       PARAMÈTRES DE LA PARTIE
     </p>
-  
+    <!-- Avatar de l'utilisateur -->
+    <changeAvatar class="self-center" @open="selectAvatarPanelOpen=true" ref="changeAvatarElement" />
     <!-- Conteneur principal -->
-    <div class="w-full h-full mt-4 grid grid-rows-[auto_1fr_1fr_auto] grid-cols-2 gap-4 grow overflow-auto">
+    <div class="w-full h-full mt-2 grid grid-rows-[auto_1fr_1fr_auto] grid-cols-2 gap-4 grow overflow-auto">
       
       <!-- Sélection du nombre de joueurs -->
       <select
@@ -66,7 +70,7 @@
         }"
         @click="lauchGame"
       >
-        <p v-if="userIsOwner">Lancer la partie</p>
+        <button :class="{'select-none font-100':true,'cursor-not-allowed bg-gray-400': !userIsOwner || !gameisready,}" v-if="userIsOwner">Lancer la partie</button>
         <div v-else class="flex items-center justify-center space-x-2">
           <div class="w-3 h-3 bg-amber rounded-full animate-bounce animate-delay-0 animate-duration-1000"></div>
           <div class="w-3 h-3 bg-amber rounded-full animate-bounce animate-delay-100 animate-duration-1000"></div>
@@ -79,7 +83,7 @@
         class="bg-amber h-12 flex items-center justify-center rounded-xl text-center text-lg font-bold cursor-pointer hover:scale-101 transition"
         @click="copyLink"
       >
-        <p>{{ copyTextButton }}</p>
+        <p class="select-none">{{ copyTextButton }}</p>
       </div>
     </div>
   </div>
@@ -88,17 +92,20 @@
 
 <script setup lang="ts">
 import { useFetch } from '@/composable/useFetch'
-import { computed, nextTick, ref, watch, watchEffect } from 'vue'
+import { computed, nextTick, ref, useTemplateRef, watch, watchEffect } from 'vue'
 import { useGameStore } from '@/stores/game'
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/auth'
 import cardRole from '@/components/game/cardRole.vue'
 import helpBoxComp from '../game/helpBoxComp.vue'
+import changeAvatar from './changeAvatar.vue'
+import AvatarPanel from './AvatarPanel.vue'
 const { infoUser } = storeToRefs(useAuthStore())
 const { currentGame } = storeToRefs(useGameStore())
 const numberOfPlayer = ref(currentGame.value.gameOption.maxPlayers)
 const copyTextButton = ref('Copier le Code')
-
+const selectAvatarPanelOpen = ref(false)
+const changeAvatarElement = useTemplateRef('changeAvatarElement')
 
 const helpBox = ref({
   statut:false,
@@ -212,6 +219,14 @@ function handleHelp(role:{name:string, isPresent:boolean, locked:boolean, img:st
 }
 function closeHelp() {
   helpBox.value.statut = false
+}
+
+function closeAvatarPanel() {
+  selectAvatarPanelOpen.value = false
+  changeAvatarElement.value?.mainChangeAvatar?.scrollIntoView({
+    behavior: 'smooth',
+    block: 'center',
+  })
 }
 </script>
 

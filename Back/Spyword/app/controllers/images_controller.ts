@@ -1,7 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import path from 'node:path'
 import fs from 'node:fs'
-
+import { getNumberOfAvatars } from '#services/avatar/avatar'
 export default class ImagesController {
   async show({ response, params }: HttpContext) {
     const baseURl =
@@ -16,5 +16,10 @@ export default class ImagesController {
     } else {
       response.status(404).send({ error: 'image not found' })
     }
+  }
+
+  async getNumbersOfAvatars({ response }: HttpContext) {
+    const avatars = getNumberOfAvatars()
+    response.status(200).send(avatars)
   }
 }

@@ -17,6 +17,7 @@ router
   .group(() => {
     router.post('/create', [UsersController, 'create'])
     router.get('/connect', [UsersController, 'connect'])
+    router.post('/changeAvatar', [UsersController, 'changeAvatar']).use([middleware.auth()])
     router.get('/info', [UsersController, 'info']).use([middleware.auth()])
     router.get('/word', [UsersController, 'getWord']).use([middleware.auth()])
   })
@@ -54,3 +55,9 @@ router
     router.get('/images/:folder/:name', [ImagesController, 'show'])
   })
   .prefix('api/public')
+
+router
+  .group(() => {
+    router.get('/avatars', [ImagesController, 'getNumbersOfAvatars'])
+  })
+  .prefix('api/divers')

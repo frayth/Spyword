@@ -5,8 +5,8 @@
         Choisissez une enveloppe !
       </h1>
       <div v-else class=" h-100px flex justify-center mb-12 lg:mb-20 text-white text-center">
-        <span class="text-2xl lg:text-3xl" v-if="auth.infoUser.currentWord">
-          Votre mot est <span class="text-5xl lg:text-6xl font-bold text-gray-300 drop-shadow-md">{{ auth.infoUser.currentWord }}</span>
+        <span class="text-2xl lg:text-3xl gap-4 flex-center-col" v-if="auth.infoUser.currentWord">
+          <span>Votre mot est</span><span class="text-5xl inline-block lg:text-6xl font-bold text-gray-300 drop-shadow-md">{{ auth.infoUser.currentWord }}</span>
         </span>
         <span v-else class="text-2xl lg:text-3xl  font-semibold">Vous êtes Mr White</span>
       </div>

@@ -16,8 +16,8 @@ const defaultAnimationTime = 3000
 type TimerAnimation = AnimationName | 'default'
 const timerAnimation: Partial<Record<TimerAnimation, number>> = {
   default: defaultAnimationTime,
-  nextPlayer : defaultAnimationTime * 2.2,
-  resultVote: defaultAnimationTime * 2.2,
+  nextPlayer : defaultAnimationTime * 2.2, //2.2,
+  resultVote: defaultAnimationTime * 2.2, //2.2,
   target: defaultAnimationTime * 7.5,//,
   nextTurn: defaultAnimationTime * 1.7,
   newRound: defaultAnimationTime * 1,

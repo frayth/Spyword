@@ -1,5 +1,5 @@
 <template>
-  <div class="grid place-items-center text-white p-6 w-full h-full bg-gray-950">
+  <div class="grid place-items-center text-white p-2 w-full h-full bg-gray-950">
       <EliminatedComp v-if="gameStore.currentGame.properties.resultRound?.egalite===false" />
       <egaliteComp v-else />
   </div>

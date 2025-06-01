@@ -1,6 +1,6 @@
 <template>
   <div
-    class="grid grid-rows-[repeat(4,auto)_60px] p-6 gap-5 bg-gray-900 text-white rounded-2xl shadow-lg w-full max-w-md mx-auto text-center animate-fade-in"
+    class="grid grid-rows-[repeat(4,auto)_60px] p-x-2 p-y-5 gap-5 bg-gray-900 text-white rounded-2xl shadow-lg w-full max-w-lg  text-center animate-fade-in"
   >
     <Transition name="smoothReveal" appear>
       <div v-if="revelation.title" class="text-2xl font-bold text-red-500">
@@ -14,7 +14,7 @@
       >
         <portraitComp
           :url="eliminatedPlayer?.gameStat?.urlAvatar!"
-          class="w-24 h-24 rounded-full border-4 border-red-500 shadow-lg animate-pulse overflow-hidden"
+          class="w-50 h-50 rounded-full border-4 border-red-500 shadow-lg animate-pulse overflow-hidden"
         ></portraitComp>
         <div class="text-xl font-semibold text-gray-200">
           {{ eliminatedPlayer?.fullName }}
@@ -30,7 +30,7 @@
       </div>
     </Transition>
     <Transition name="smoothReveal" appear>
-      <div v-if="revelation.title" class="text-gray-400 mt-4">
+      <div v-if="revelation.title" class="text-gray-400  text-size-5">
         Son rôle était...
       </div>
     </Transition>

@@ -1,9 +1,12 @@
 import { HttpContext } from '@adonisjs/core/http'
 import db from '#services/use_database'
-import { createUserValidator, connectUserValidator } from '#validators/user'
+import { createUserValidator, connectUserValidator, changeAvatarValidator } from '#validators/user'
 import { inject } from '@adonisjs/core'
 import hash from '@adonisjs/core/services/hash'
 import { userResponse } from '#services/responses/user'
+import { getAvatarUrl } from '#services/avatar/avatar'
+import { transmitGame } from '#services/ws/ws'
+import transmit from '#config/transmit'
 export default class UsersController {
   @inject()
   async create({ request, response, auth }: HttpContext, { createUser, find, deleteToken }: db) {
@@ -90,5 +93,42 @@ export default class UsersController {
     const user = auth.user!
     await user.load('gameStat')
     return response.status(200).send({ message: 'word', data: user.gameStat?.word, code: 200 })
+  }
+
+  async changeAvatar({ request, response, auth }: HttpContext) {
+    const payload = await request.validateUsing(changeAvatarValidator)
+    const user = auth.user!
+    await user.load('game')
+    await user.load('gameStat')
+    await user.game?.getAllInfo()
+    if (!user.game) {
+      return response.status(403).send({ message: 'not in the game', code: 4032 })
+    }
+    if (user.game.inGame) {
+      return response.status(403).send({ message: 'game already started', code: 4034 })
+    }
+    const avatarId = user.gameStat.urlAvatar.match(/(?<=avatar)\d+(?=\.jpg)/)
+    if (!avatarId || !avatarId[0]) {
+      return response.status(400).send({ message: 'invalid avatar url', code: 4001 })
+    }
+    console.log('avatarId', user.gameStat.urlAvatar, avatarId[0])
+    user.gameStat.urlAvatar = `public/images/avatars/${getAvatarUrl(
+      payload.mode === 'choose' ? payload.avatar! : +avatarId[0],
+      {
+        mode: payload.mode,
+      }
+    )}`
+    await user.gameStat.save()
+    await user.game.getAllInfo()
+    transmitGame(user.game.id, user.game)
+    return response.status(200).send({
+      message: user.gameStat.urlAvatar,
+    })
+    //   if (!payload.avatar) {
+    //     return response.status(400).send({ message: 'avatar is required', code: 4001 })
+    //   }
+    //   user.avatar = payload.avatar
+    //   await user.save()
+    //   return response.status(200).send({ message: 'avatar changed', data: user, code: 200 })
   }
 }
