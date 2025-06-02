@@ -45,6 +45,7 @@ const prod=defineProps({
 const prodUrl= computed(()=>prod.url.replace('public/images/',''))
 const prodUrlApi='https://apispyword.laurisceresoli.fr/'
 const srcImage=computed(()=>{
+  if(prod.url.startsWith('/img'))return prod.url
   if(import.meta.env.MODE === 'development') {
     return `${urlApi}${prod.url}`
   }else{
