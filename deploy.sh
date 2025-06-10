@@ -29,9 +29,6 @@ if ask_user "Construction du backend"; then
   echo "▶️ Construction du backend"
   cd /home/ubuntu/projets/Spyword/Back/Spyword || handle_error "cd /home/ubuntu/projets/back/Spyword"
   node ace build || handle_error "node ace build"
-fi
-
-if ask_user "Installation des dépendances Adonis en production"; then
   echo "▶️ Adonis : Mise à jour des dépendances"
   cd build || handle_error "cd build"
   npm ci --omit="dev" || handle_error "npm ci"
