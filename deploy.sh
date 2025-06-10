@@ -21,13 +21,13 @@ cd build || handle_error "cd build"
 npm ci --omit="dev" || handle_error "dépendences fail"
 
 
-echo "▶️ Vérification du port 3003"
-pid=$(lsof -ti tcp:3003)
-
 if [ -n "$pid" ]; then
-  echo "⚠️ Port 3003 occupé par le process PID $pid, arrêt en cours..."
-  kill "$pid" || handle_error "kill process $pid"
-  echo "✅ Processus $pid arrêté."
+  echo "⚠️ Port 3003 occupé par le(s) process PID(s) $pid, arrêt en cours..."
+  for p in $pid; do
+    echo "🔪 Tentative d'arrêt du process $p"
+    kill "$p" || echo "❌ Erreur lors de l'arrêt du process $p"
+  done
+  echo "✅ Processus arrêté(s)."
 else
   echo "✅ Port 3003 est libre."
 fi
