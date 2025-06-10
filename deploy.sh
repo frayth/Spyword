@@ -46,9 +46,7 @@ if ask_user "Arrêt des processus sur le port 3003"; then
   else
     echo "✅ Port 3003 est libre."
   fi
-fi
-
-if ask_user "Lancement du serveur Adonis"; then
+  
   echo "▶️ Lancement du serveur Adonis"
   nohup env ENV_PATH=/home/ubuntu/projets/Spyword/Back/Spyword NODE_ENV=production node /home/ubuntu/projets/Spyword/Back/Spyword/build/bin/server.js > /home/ubuntu/projets/Spyword/Back/Spyword/production/server.log 2>&1 & disown || handle_error "lancement du serveur failed"
   echo "✅ Serveur Adonis lancé avec succès."
