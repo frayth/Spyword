@@ -30,7 +30,7 @@
         !currentGame.inGame || currentGame.properties?.gamePhase === 'end' || currentGame.properties?.gamePhase === 'vote'
           ? 'scale-100! from-cyan-600! to-cyan-800!'
           : '',
-        currentGame.inGame && player.id === currentGame.properties?.orderGame?.[currentGame.properties?.indexCurrentPlayer!]
+        currentGame.inGame && player.id === currentGame.properties?.orderGame?.[currentGame.properties?.indexCurrentPlayer!] && currentGame.properties.gamePhase === 'play'
           ? 'scale-100! from-amber-600! to-amber-800!'
           : '',
       ]"

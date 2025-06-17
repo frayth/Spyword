@@ -1,9 +1,14 @@
 <template>
   <div v-if="event.type === 'vote'" class="w-full h-full">
-    <div class="flex items-center" >
-      <PortraitComp class="overflow-hidden max-w-200px max-h-200px  rounded-full" :url="sourcePlayer!.gameStat!.urlAvatar" ></PortraitComp>
-      <p class="text-align-center">A voté contre</p>
-      <PortraitComp class="overflow-hidden max-w-200px max-h-200px  rounded-full" :url="targetPlayer!.gameStat!.urlAvatar" ></PortraitComp>
+    <div class="flex items-center md:gap-2" >
+      <div class="overflow-hidden max-w-100px max-h-100px rounded-full md:(max-w-150px max-h-150px)">
+        <PortraitComp class="" :url="sourcePlayer!.gameStat!.urlAvatar" ></PortraitComp>
+      </div>
+      <p class="text-align-center text-xs lg:text-lg">A voté contre</p>
+      <div class="overflow-hidden max-w-150px max-h-150px rounded-full lg:(max-w-150px max-h-150px)">
+         <PortraitComp class="" :url="targetPlayer!.gameStat!.urlAvatar" ></PortraitComp>
+      </div>
+
     </div>
   </div>
 </template>

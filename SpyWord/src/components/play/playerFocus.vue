@@ -1,14 +1,10 @@
 <template>
-  <div class=" w-full  md:min-w-500px lg:min-w-700px ">
+  <div class="w-full md:min-w-500px lg:min-w-700px">
     <div class="flex-center-col justify-center gap-10 w-full">
-      <div
-        :class="`w-200px h150px rounded-full overflow-hidden flex-center portrait `"
-        :style="{
-          backgroundImage: `url(${url}${currentPlayer?.gameStat?.urlAvatar})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }"
-      ></div>
+      <div class="flex-center-col justify-center gap-4 w-200px overflow-hidden rounded-full">
+        <portraitComp :url="currentPlayer?.gameStat?.urlAvatar!"></portraitComp>
+      </div>
+
       <span
         ><span class="font-bold text-size-lg">{{
           currentPlayer?.fullName
@@ -19,7 +15,7 @@
       >
       <Transition name="down" appear
         ><verificationComp
-        ref="verification"
+          ref="verification"
           v-if="currentGame.properties.verifyPhase && userIsOwner"
         ></verificationComp
       ></Transition>
@@ -32,9 +28,9 @@ import { useGameStore } from '@/stores/game'
 import { storeToRefs } from 'pinia'
 import verificationComp from '../verification/verificationComp.vue'
 import { useAuthStore } from '@/stores/auth'
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
+import portraitComp from '../animation/assets/portraitComp.vue'
 const { infoUser } = storeToRefs(useAuthStore())
-const url = ref(import.meta.env.VITE_URL_API)
 const { currentGame } = storeToRefs(useGameStore())
 const userIsOwner = computed(() => {
   return currentGame.value.ownerId === infoUser.value.id
