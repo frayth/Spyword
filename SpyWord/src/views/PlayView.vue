@@ -1,23 +1,15 @@
 <template>
   <div class="bg-white w-full h-screen lg:p-5">
     <div
-      class="grid grid-rows-[auto_1fr] w-full h-full border border-amber"
+      class="grid grid-rows-[1fr] w-full h-full border border-amber"
       ref="bandeau"
     >
       <!-- Bandeau supérieur -->
-      <div class="w-full grid grid-cols-3 items-center p-2">
-        <LeaveGame />
-        <h1
-          class="font-black text-xl md:text-2xl text-center cursor-pointer hover:scale-105 transition-transform grid-col-span-2"
-        >
-          SpyWord
-        </h1>
-        <div></div>
-      </div>
+
 
       <!-- Contenu principal -->
       <div
-        :class="`h-full w-full grid grid-rows-[auto_2px_3fr] lg:(grid-rows-1 grid-cols-[1fr_2px_2fr])  lg:max-h-[calc(100vh-56px-42px)] relative bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 dark:from-gray-800 dark:via-gray-900 dark:to-black`"
+        :class="`h-full w-full grid grid-rows-[auto_2px_3fr] lg:(grid-rows-1 grid-cols-[1fr_2px_2fr])  lg:max-h-[calc(100vh)] relative bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 dark:from-gray-800 dark:via-gray-900 dark:to-black`"
         id="mainPanel"
         ref="gameView"
       >
