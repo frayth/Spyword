@@ -24,10 +24,11 @@
         ></div>
         <!-- Zone de jeu -->
         <div
-          class="h-full overflow-auto relative grid"
+          class="h-full overflow-auto relative grid grid-rows-[auto_1fr]"
           @click="animation = true"
           ref="mainPanel"
         >
+        <div class="w-full flex justify-end py-2 px-3"><optionSvg class="cursor-pointer" @click="optionIsOpen=true"></optionSvg></div>
           <OptionsGame
             v-if="!game.currentGame.inGame"
             :game="game.currentGame"
@@ -35,6 +36,9 @@
           <gameComponent v-else>
             {{ auth.infoUser.currentWord }}
           </gameComponent>
+          <div class=" w-fit h-fit absolute top-50% left-50% translate--50% shadow-2xl" v-if="optionIsOpen">
+            <optionGameComp @close="optionIsOpen = false" />
+          </div>
           <Animation
             :width="width"
             :height="height"
@@ -54,7 +58,8 @@ import { useAppliStore } from '@/stores/appli'
 import { useElementBounding, useWakeLock } from '@vueuse/core'
 import playerList from '@/components/play/playerList.vue'
 import { useGameStore } from '@/stores/game'
-import LeaveGame from '@/components/play/LeaveGame.vue'
+import optionGameComp from '@/components/game/optionGameComp.vue'
+import optionSvg from '@/assets/SVG/optionSvg.vue'
 import { JoinChanel } from '@/Services/useWs'
 import { onMounted, reactive, ref, useTemplateRef } from 'vue'
 import Animation from '@/components/game/animationComponent.vue'
@@ -68,6 +73,7 @@ const auth = useAuthStore()
 const game = useGameStore()
 const panel = useTemplateRef('mainPanel')
 const bodyElement = ref<HTMLElement | null>(null)
+const optionIsOpen = ref(false)
 onMounted(() => {
   bodyElement.value = document.querySelector('body')
 })

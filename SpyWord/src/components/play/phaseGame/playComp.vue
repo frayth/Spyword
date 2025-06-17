@@ -10,14 +10,14 @@
         'blur-7px':!seeWord
       }
       "
-      @click="showWord" 
+      @click="showWord"
       >{{ infoUser.currentWord===''?'Mr.white':infoUser.currentWord}}</span>
     </div>
     <div class="m-y-1 w-full flex-center justify-center">
       <playerFocus v-if="currentPlayer!.id!==infoUser.id" />
       <wordProposition v-else></wordProposition>
     </div>
-    
+
   </div>
 </template>
 

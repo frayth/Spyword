@@ -3,15 +3,15 @@
     class="grid place-items-center text-white p-3 w-full h-full lg:p-6 bg-gray-950"
   >
     <div
-      class="backdrop-blur-md rounded-2xl border border-yellow-400 shadow-[0_0_20px_rgba(255,255,255,0.3)] bg-gradient-to-br from-[#0f172a] to-[#1e293b] w-full md:w-3/4 lg:w-4/5  grid grid-cols-20 grid-rows-11 lg:g items-center justify-center  shadow-2xl backdrop-blur-lg p-3 lg:p-6"
+      class="flex flex-col gap-4 backdrop-blur-md rounded-2xl border border-yellow-400 shadow-[0_0_20px_rgba(255,255,255,0.3)] bg-gradient-to-br from-[#0f172a] to-[#1e293b] w-full md:w-3/4 lg:w-4/5     items-center justify-center  shadow-2xl backdrop-blur-lg p-3 lg:p-6"
     >
       <!-- Image du joueur -->
       <div
-        class="flex justify-center items-center w-full h-full p-2 overflow-hidden rounded-full grid-row-start-1 grid-row-end-5 grid-col-start-5 grid-col-end-17"
+        class=" w-200px h-200px  overflow-hidden rounded-full ring-4 ring-blue-500"
       >
-        <img
-          class="object-cover w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 rounded-full shadow-2xl ring-4 ring-white/40"
-          :src="urlPortrait"
+        <portraitComp
+        class="rounded-full"
+          :url="currentPlayer?.gameStat?.urlAvatar!"
           alt="Portrait du joueur"
         />
       </div>
@@ -34,7 +34,7 @@
 
         <textTimer
           class="bg-white/100 text-black/90 backdrop-blur-md rounded-xl px-6 py-4 h-60px w-full text-center text-2xl lg:text-3xl font-bold shadow-inner"
-          :timer="1500"
+          :timer="1000"
           :value="
             currentPlayer?.gameStat?.words[
               currentPlayer?.gameStat?.words.length - 1
@@ -49,19 +49,22 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import textTimer from './assets/textTimer.vue'
-import { useGameStore } from '@/stores/game'
-import { ref, unref } from 'vue'
+import { useAnimationStore } from '@/stores/animation'
+import { computed } from 'vue'
+import portraitComp from './assets/portraitComp.vue'
 
-const { currentGame } = storeToRefs(useGameStore())
-const idCurrentPlayer =
-  unref(currentGame).properties.orderGame![
-    unref(currentGame).properties.indexCurrentPlayer!
+const { currentAnimation } = storeToRefs(useAnimationStore())
+const idCurrentPlayer =computed(()=>{
+  return currentAnimation.value?.gameSnapshot?.properties.orderGame![
+    currentAnimation.value.gameSnapshot.properties.indexCurrentPlayer!
   ]
-const currentPlayer = currentGame.value.users.find(
-  user => user.id === idCurrentPlayer,
+})
+
+const currentPlayer =computed(()=>{
+  return  currentAnimation.value?.gameSnapshot?.users.find(
+  user => user.id === idCurrentPlayer.value,
 )
-const url = import.meta.env.VITE_URL_API
-const urlPortrait = ref(`${url}${currentPlayer?.gameStat?.urlAvatar}`)
+})
 </script>
 
 <style scoped>

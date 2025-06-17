@@ -5,7 +5,7 @@
     >
       <textTimer
         class="bg-white/30 backdrop-blur-sm rounded-xl p-5 text-lg lg:text-2xl font-semibold shadow-inner animate-pulse text-gray-900"
-        :timer="1500"
+        :timer="1000"
         value="C'est l'heure des votes"
       />
     </div>
