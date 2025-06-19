@@ -15,6 +15,7 @@ const timerAnimation = computed<Partial<Record<AnimationName, number>>>(() => {
     target: base * 5,
     nextTurn: base * 1.7 < 1500 ? 2000 : base * 1.7,
     newRound: base * 1 < 2000 ? 2000 : base * 1,
+    start: base * 1.5 < 2000 ? 2000 : base * 1.5,
   };
 });
   const currentAnimation = ref<Animation | null>(null)

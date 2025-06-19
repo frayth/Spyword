@@ -15,6 +15,7 @@ const corsConfig = defineConfig({
     'https://spyword.laurisceresoli.fr',
     'https://www.spyword.laurisceresoli.fr',
     'http://localhost:5173',
+    'http://192.168.1.62:5173',
   ],
   methods: ['GET', 'HEAD', 'POST', 'PUT', 'DELETE'],
   headers: true,

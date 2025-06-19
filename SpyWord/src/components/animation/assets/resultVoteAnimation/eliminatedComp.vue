@@ -78,7 +78,7 @@ const revelation = ref({
 onMounted(() => {
   setTimeout(() => {
     revelation.value.role = true
-  }, +defaultAnimationTime.value >= 2500 ? 2500 : +defaultAnimationTime.value)
+  }, +defaultAnimationTime.value < 2500 ? 2500 : +defaultAnimationTime.value)
 })
 </script>
 

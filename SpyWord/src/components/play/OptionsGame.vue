@@ -16,7 +16,7 @@
     </div>
     <div
       v-if="selectAvatarPanelOpen"
-      class="absolute top-0 left-0 w-full h-full  z-1000000 bg-gray-900/50 grid justify-center items-center"
+      class="absolute top-0 left-0 w-full h-full z-1000000 bg-gray-900/50 grid justify-center items-center"
     >
       <AvatarPanel @close="closeAvatarPanel" />
     </div>
@@ -29,20 +29,19 @@
     <hr class="border-gray-300 dark:border-gray-600 my-2" />
     <!-- Conteneur principal -->
     <div
-      class="w-full h-full mt-2  grid grid-rows-[auto_auto_1fr_1fr_auto] grid-cols-2 md:gap-4 grow overflow-auto"
+      class="w-full h-full mt-2 grid grid-rows-[auto_auto_1fr_1fr_auto] grid-cols-2 md:gap-4 grow overflow-auto"
     >
       <!-- Sélection du nombre de joueurs -->
       <div
-        class="w-full md:(max-w-md p-4) p-1   grid-col-start-1 grid-col-span-2 justify-self-center   dark:bg-gray-800  rounded-xl "
+        class="w-full md:(max-w-md p-4) p-1 grid-col-start-1 grid-col-span-2 justify-self-center dark:bg-gray-800 rounded-xl"
       >
-      <label for="nbPlayer">
-        <h2
-          class="text-sm md:(text-lg) font-bold text-center mb-3 text-gray-800 dark:text-white"
-        >
-          Sélectionner le nombre de joueurs max
-        </h2>
-      </label>
-
+        <label for="nbPlayer">
+          <h2
+            class="text-sm md:(text-lg) font-bold text-center mb-3 text-gray-800 dark:text-white"
+          >
+            Sélectionner le nombre de joueurs max
+          </h2>
+        </label>
 
         <div class="relative">
           <select
@@ -50,7 +49,7 @@
             id="nbPlayer"
             v-model="numberOfPlayer"
             @change="changeNumberOfPlayer"
-            class="appearance-none w-full h-12 md:h-14 text-base text-center font-medium text-gray-700 dark:text-gray-100 bg-white  border-yellow-400  rounded-lg px-4 pr-10 cursor-pointer transition-all duration-200 ease-in-out hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            class="appearance-none w-full h-12 md:h-14 text-base text-center font-medium text-gray-700 dark:text-gray-100 bg-white border-yellow-400 rounded-lg px-4 pr-10 cursor-pointer transition-all duration-200 ease-in-out hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <option
               v-for="n in [3, 4, 5, 6, 7, 8, 9, 10, 15, 20]"
@@ -80,7 +79,6 @@
             </svg>
           </div>
         </div>
-        
       </div>
       <hr class="border-gray-300 dark:border-gray-600 my-2 grid-col-span-2" />
       <!-- Sélection des rôles -->
@@ -151,16 +149,44 @@
         >
           Lancer la partie
         </button>
-        <div v-else class="flex items-center justify-center space-x-2">
+        <div
+          v-else
+          class="flex justify-center space-x-3 px-4 py-2 bg-white/5 rounded-xl w-full h-full shadow-md border border-white/10 backdrop-blur-md"
+        >
           <div
-            class="w-3 h-3 bg-amber rounded-full animate-bounce animate-delay-0 animate-duration-1000"
-          ></div>
+            v-if="timerButton"
+            class="flex items-center justify-center gap-1 space-x-1"
+          >
+            <div
+              :class="{
+                'w-3 h-3 bg-white rounded-full animate-bounce animate-delay-0! animate-duration-1000': true,
+                'w-2! h-2!': activeBreakPoint === 'mobile',
+              }"
+            ></div>
+            <div
+              :class="{
+                'w-3 h-3 bg-white rounded-full animate-bounce animate-delay-150! animate-duration-1000': true,
+                'w-2! h-2!': activeBreakPoint === 'mobile',
+              }"
+            ></div>
+            <div
+              :class="{
+                'w-3 h-3 bg-white rounded-full animate-bounce animate-delay-300! animate-duration-1000': true,
+                'w-2! h-2!': activeBreakPoint === 'mobile',
+              }"
+            ></div>
+          </div>
           <div
-            class="w-3 h-3 bg-amber rounded-full animate-bounce animate-delay-100 animate-duration-1000"
-          ></div>
-          <div
-            class="w-3 h-3 bg-amber rounded-full animate-bounce animate-delay-200 animate-duration-1000"
-          ></div>
+            v-else
+            class="flex items-center space-x-2 text-sm text-white/80 font-medium"
+          >
+            <span
+              :class="{
+                'text-0.58rem text-center': activeBreakPoint === 'mobile',
+              }"
+              >En attente du Propriétaire...</span
+            >
+          </div>
         </div>
       </div>
 
@@ -177,9 +203,11 @@
 
 <script setup lang="ts">
 import { useFetch } from '@/composable/useFetch'
+import { useAppliStore } from '@/stores/appli'
 import {
   computed,
   nextTick,
+  onUnmounted,
   ref,
   useTemplateRef,
   watch,
@@ -192,13 +220,20 @@ import cardRole from '@/components/game/cardRole.vue'
 import helpBoxComp from '../game/helpBoxComp.vue'
 import changeAvatar from './changeAvatar.vue'
 import AvatarPanel from './AvatarPanel.vue'
+const { activeBreakPoint } = storeToRefs(useAppliStore())
 const { infoUser } = storeToRefs(useAuthStore())
 const { currentGame } = storeToRefs(useGameStore())
 const numberOfPlayer = ref(currentGame.value.gameOption.maxPlayers)
 const copyTextButton = ref('Copier le Code')
 const selectAvatarPanelOpen = ref(false)
 const changeAvatarElement = useTemplateRef('changeAvatarElement')
-
+const timerButton = ref(false)
+const timerButtonEvent = setInterval(() => {
+  timerButton.value = !timerButton.value
+}, 5000)
+onUnmounted(() => {
+  clearInterval(timerButtonEvent)
+})
 const helpBox = ref({
   statut: false,
   role: {

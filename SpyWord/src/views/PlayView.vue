@@ -36,7 +36,7 @@
           <gameComponent v-else>
             {{ auth.infoUser.currentWord }}
           </gameComponent>
-          <div class=" w-fit h-fit absolute top-50% left-50% translate--50% shadow-2xl" v-if="optionIsOpen">
+          <div class=" w-fit h-fit min-w-200px absolute top-50% left-50% translate--50% shadow-2xl z-10 rounded-2xl" v-if="optionIsOpen">
             <optionGameComp @close="optionIsOpen = false" />
           </div>
           <Animation

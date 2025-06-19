@@ -51,7 +51,7 @@
       <div class="flex items-center justify-between gap-5">
         <div @click="decrementCurrentManche" class=" cursor-pointer p-2  rounded-full flex justify-center items-center text-2xl bg-gray-200 dark:bg-gray-700 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 transition-all">
           <button
-            
+
             class="h-fit flex justify-center items-center"
           >
             <chevronLeftSvg :stroke-width="2" :size="18" />
@@ -63,7 +63,7 @@
         </p>
         <div @click="incrementCurrentManche" class="cursor-pointer text-2xl  p-2 rounded-full flex justify-center items-center  bg-gray-200 dark:bg-gray-700 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 transition-all">
           <button
-            
+
             class=" h-fit flex justify-center items-center  "
           >
            <chevronLeftSvg :stroke-width="2" :size="18" class="rotate-180deg" />
@@ -72,7 +72,7 @@
       </div>
 
       <!-- Historique -->
-      <div class="overflow-hidden p-y-2">
+      <div class="overflow-hidden pt-5">
         <div
           v-if="
             historyVote.length > 0 &&
@@ -107,15 +107,19 @@
         v-if="selectedPlayerInfo?.gameStat?.words.length! > 0"
       >
         <p
-          v-for="word in selectedPlayerInfo?.gameStat?.words"
-          :key="word"
-          class="text-white font-medium bg-indigo-600 rounded-full py-1 px-3 transition-all transform hover:bg-indigo-700 hover:scale-101"
-          :style="{
-            fontSize: `${Math.max(0.8, Math.min(1.2, 1 - word.length / 15))}rem`,
-          }"
-        >
-          {{ word }}
-        </p>
+  v-for="(word, index) in selectedPlayerInfo?.gameStat?.words"
+  :key="word"
+  class="inline-block m-2 px-4 py-2 rounded shadow-md cursor-default transition-all duration-200 font-semibold text-gray-800 font-handwriting hover:scale-105"
+  :class="[
+    ['bg-yellow-200', 'bg-pink-200', 'bg-green-200', 'bg-blue-200', 'bg-orange-200'][index % 5]
+  ]"
+  :style="{
+    fontSize: `${Math.max(0.8, Math.min(1.2, 1 - word.length / 15))}rem`,
+    transform: `rotate(${(index % 3 - 1) * 3}deg)`,
+  }"
+>
+  {{ word }}
+</p>
       </div>
       <div v-else class="text-gray-500 italic text-sm">
         <p class="text-gray-500 italic text-sm">Aucun mot prononcé</p>
@@ -161,7 +165,7 @@ const historyVote = computed(() => {
 const decrementCurrentManche = () => {
   if(!animationLoad.value)animationLoad.value = true
   historySens.value = 'left'
-  
+
   if (currentMancheHistory.value && currentMancheHistory.value > 1) {
     animateKey.value = Date.now()
     currentMancheHistory.value = currentMancheHistory.value - 1
@@ -203,7 +207,7 @@ onUpdated(() => {
 })
 
 onMounted(async () => {
-  bulleBounding.value = useElementBounding(bulle) 
+  bulleBounding.value = useElementBounding(bulle)
 })
 
 type ArrowPosition = {
