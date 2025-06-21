@@ -1,7 +1,7 @@
 <template>
   <div class="bg-white w-full h-screen lg:p-5">
     <div
-      class="grid grid-rows-[1fr] w-full h-full border border-amber"
+      class="grid grid-rows-[1fr] w-full h-full "
       ref="bandeau"
     >
       <!-- Bandeau supérieur -->

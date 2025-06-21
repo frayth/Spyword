@@ -15,7 +15,6 @@ const timerAnimation = computed<Partial<Record<AnimationName, number>>>(() => {
     target: base * 5,
     nextTurn: base * 1.7 < 1500 ? 2000 : base * 1.7,
     newRound: base * 1 < 2000 ? 2000 : base * 1,
-    start: base * 1.5 < 2000 ? 2000 : base * 1.5,
   };
 });
   const currentAnimation = ref<Animation | null>(null)
@@ -24,7 +23,7 @@ const timerAnimation = computed<Partial<Record<AnimationName, number>>>(() => {
     console.log('addAnimation', animation.name)
     const gameStore = useGameStore()
     const snapShot=structuredClone(toRaw(gameStore.currentGame))
-    animationList.value.push({duration:timerAnimation.value[animation.name]!,name: animation.name,gameSnapshot:snapShot})
+    animationList.value.push({duration:timerAnimation.value[animation.name]! === undefined?timerAnimation.value.default! : timerAnimation.value[animation.name]!,name: animation.name,gameSnapshot:snapShot})
 
     if (currentAnimation.value === null) play()
   }

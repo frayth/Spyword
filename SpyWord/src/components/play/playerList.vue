@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full my-2 px-2 grid place-items-center" ref="userList">
+  <div class="w-full my-2 px-2 grid place-items-center" ref="userList" @click="handleTutoStep">
     <Teleport to="body">
       <bulleComp
         ref="bulle"
@@ -61,6 +61,7 @@
             <portraitComp
               :url="player.gameStat?.urlAvatar!"
               :eliminated="!player.gameStat?.isAlive"
+              :animation="tutoStore.tutoStep.playerList && currentGame.inGame"
             />
           </div>
 
@@ -134,6 +135,7 @@ import { useFetch } from '@/composable/useFetch'
 import { useAppliStore } from '@/stores/appli'
 import { useAnimationStore } from '@/stores/animation'
 import portraitComp from '../animation/assets/portraitComp.vue'
+import { useTutoStore } from '@/stores/tuto'
 import {
   computed,
   ref,
@@ -146,6 +148,7 @@ import { useElementBounding } from '@vueuse/core'
 import bulleComp from '../game/bulleComp.vue'
 import type { User } from '@/models/user.model'
 
+const tutoStore = useTutoStore()
 const { infoWindow, gameWindowBoundaries } = storeToRefs(useAppliStore())
 const { currentGame } = storeToRefs(useGameStore())
 const { infoUser } = storeToRefs(useAuthStore())
@@ -319,6 +322,11 @@ const sortedUsers = computed(() => {
 
   return [...userAlive, ...userEliminated]
 })
+const handleTutoStep = () => {
+  if (tutoStore.tutoStep.playerList && currentGame.value.inGame) {
+    tutoStore.tutoStep.playerList=false
+  }
+}
 </script>
 
 <style scoped></style>
