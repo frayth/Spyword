@@ -9,6 +9,7 @@ export default class extends BaseSchema {
       table.integer('game_id').unsigned().references('games.id').onDelete('CASCADE')
       table.integer('max_players').notNullable().defaultTo(3)
       table.boolean('white_is_present').notNullable().defaultTo(false)
+      table.boolean('verification_owner').notNullable().defaultTo(true)
     })
   }
 

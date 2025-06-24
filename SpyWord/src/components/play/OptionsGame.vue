@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-full flex flex-col pt-2 md:gap-5 relative">
+  <div class="w-full h-full flex flex-col pt-2 md:gap-3 relative">
     <div
       v-if="helpBox.statut"
       id="helpBox"
@@ -29,11 +29,11 @@
     <hr class="border-gray-300 dark:border-gray-600 my-2" />
     <!-- Conteneur principal -->
     <div
-      class="w-full h-full mt-2 grid grid-rows-[auto_auto_1fr_1fr_auto] grid-cols-2 md:gap-4 grow overflow-auto"
+      class="w-full h-full mt-2 grid grid-rows-[auto_auto_1fr_1fr_auto] grid-cols-2 md:gap-4 grow overflow-visible"
     >
       <!-- Sélection du nombre de joueurs -->
       <div
-        class="w-full md:(max-w-md p-4) p-1 grid-col-start-1 grid-col-span-2 justify-self-center dark:bg-gray-800 rounded-xl"
+        class="w-full md:(max-w-md ) p-1 grid-col-start-1 grid-col-span-1 justify-self-center rounded-xl"
       >
         <label for="nbPlayer">
           <h2
@@ -77,6 +77,55 @@
                 d="M19 9l-7 7-7-7"
               />
             </svg>
+          </div>
+        </div>
+      </div>
+      <div
+        class="w-full md:max-w-md p-1 grid-col-start-2 grid-col-span-1 justify-self-center rounded-xl grid grid-rows-[auto_1fr] overflow-visible"
+      >
+        <h2
+          class="text-sm md:text-lg font-bold text-center mb-4 text-gray-800 dark:text-white"
+        >
+          Options de Partie
+        </h2>
+
+        <div
+          class="flex gap-3 items-center justify-center md:justify-start overflow-visible"
+        >
+          <input
+            type="checkbox"
+            id="verifPlayer"
+            class="accent-amber-500 scale-110 rounded-sm w-3 h-3 md:(w-4 h-4)"
+            @click="handleVerifOption"
+            v-model="currentGame.gameOption.verificationOwner"
+            :disabled="!userIsOwner"
+          />
+
+          <label
+            for="verifPlayer"
+            class="text-sm md:text-base text-gray-700 dark:text-gray-300"
+          >
+            <span class="font-medium text-8px md:(text-sm) select-none"
+              >Vérification par Joueur</span
+            >
+          </label>
+
+          <!-- Info Tooltip -->
+          <div class="relative group overflow-visible">
+            <div
+              class="w-4 h-4 md:(w-6 h-6 text-sm) bg-amber-500 text-white text-8px font-bold rounded-lg cursor-pointer flex items-center justify-center hover:scale-105 transition-transform"
+              @mouseenter="optionToolBoxIsVisible = true"
+              @mouseleave="optionToolBoxIsVisible = false"
+            >
+              ?
+            </div>
+            <div
+              v-if="optionToolBoxIsVisible"
+              class="absolute bottom-120% left--100px md:left-1/2 -translate-x-1/2 w-max max-w-[200px] text-xs px-3 py-2 bg-gray-700 text-white rounded-md opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300 z-10"
+            >
+              Si cette option est activée, le propriétaire devra valider
+              manuellement chaques propositions.
+            </div>
           </div>
         </div>
       </div>
@@ -228,6 +277,7 @@ const copyTextButton = ref('Copier le Code')
 const selectAvatarPanelOpen = ref(false)
 const changeAvatarElement = useTemplateRef('changeAvatarElement')
 const timerButton = ref(false)
+const optionToolBoxIsVisible = ref(false)
 const timerButtonEvent = setInterval(() => {
   timerButton.value = !timerButton.value
 }, 5000)
@@ -357,6 +407,18 @@ function closeAvatarPanel() {
     behavior: 'smooth',
     block: 'center',
   })
+}
+const handleVerifOption = async () => {
+  console.log('handleVerifOption')
+  console.log(currentGame.value.gameOption.verificationOwner)
+  await nextTick()
+  if (!userIsOwner.value) {
+    setTimeout(() => {
+      currentGame.value.gameOption.verificationOwner =
+        !currentGame.value.gameOption.verificationOwner
+    }, 10)
+    return
+  }
 }
 </script>
 

@@ -18,6 +18,7 @@ export const useGameStore = defineStore('game', () => {
       gameId: 0,
       maxPlayers: 0,
       whiteIsPresent: true,
+      verificationOwner:true
     },
   })
   const { data, fetchData } = useFetch<UserInfos>('api/users/info', {
@@ -45,6 +46,7 @@ export const useGameStore = defineStore('game', () => {
         gameId: 0,
         maxPlayers: 0,
         whiteIsPresent: true,
+        verificationOwner:true
       },
     }
   }

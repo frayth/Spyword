@@ -9,8 +9,16 @@ export default class GameOption extends BaseModel {
   declare maxPlayers: number
   @column()
   declare gameId: number
-  @column()
+  @column({
+    consume: (value: number) => Boolean(value),
+    prepare: (value: boolean) => Number(value),
+  })
   declare whiteIsPresent: boolean
+  @column({
+    consume: (value: number) => Boolean(value),
+    prepare: (value: boolean) => Number(value),
+  })
+  declare verificationOwner: boolean
   @belongsTo(() => Game)
   declare game: BelongsTo<typeof Game>
 }

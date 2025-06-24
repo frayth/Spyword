@@ -26,7 +26,7 @@ export interface GameProperties {
     playersValidation: { id: number; vote: boolean }[]
     whiteId: number | null
     validation: boolean
-  },  
+  },
   history?: {
     round: number
     events: GameEvent[]
@@ -77,4 +77,5 @@ export interface GameOption {
   gameId:number,
   id:number
   whiteIsPresent:boolean,
+  verificationOwner:boolean,
 }
