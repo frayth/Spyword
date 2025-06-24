@@ -205,7 +205,7 @@ export default class GamesController {
     await user.gameStat.save()
     await user.game.load('users', (query) => query.preload('gameStat'))
     transmitGame(user.game.id, user.game)
-    if (!userIsOwner) {
+    if (!userIsOwner && user.game.gameOption.verificationOwner) {
       user.game.properties.verifyPhase = true
       await user.game.save()
       transmitGame(user.game.id, user.game)

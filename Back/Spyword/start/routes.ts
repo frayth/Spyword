@@ -46,6 +46,7 @@ router
   .group(() => {
     router.put('/players', [OptionsController, 'changePlayers'])
     router.put('/white', [OptionsController, 'changeWhite'])
+    router.put('/verification', [OptionsController, 'changeVerification'])
   })
   .prefix('api/games/:id/options')
   .use([middleware.auth()])

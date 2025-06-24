@@ -1,11 +1,17 @@
 <template>
   <div class="w-full md:min-w-500px lg:min-w-700px">
     <div class="flex-center-col justify-center gap-10 w-full">
-      <div class="flex-center-col justify-center gap-4 w-200px overflow-hidden rounded-full">
+      <div class="relative">
+        <div class="flex justify-center items-center gap-4 w-200px overflow-hidden rounded-full relative">
         <portraitComp :url="currentPlayer?.gameStat?.urlAvatar!"></portraitComp>
       </div>
+        <div class="absolute! h-100px! w-100px! translate-50% right-50px bottom-50px rounded-full! overflow-hidden border-2 border-cyan-500 shadow-lg" v-if="currentGame.properties.verifyPhase">
+          <portraitComp  :url="owner?.gameStat?.urlAvatar!"></portraitComp>
+        </div>
+      </div>
 
-      <span
+
+      <span v-if="!currentGame.properties.verifyPhase"
         ><span class="font-bold text-size-lg">{{
           currentPlayer?.fullName
         }}</span>
@@ -13,6 +19,12 @@
         ><span class="pointAnime point-2">.</span
         ><span class="pointAnime point-3">.</span></span
       >
+      <span v-else>
+
+        Le <span class="text-cyan-500 font-900">propriétaire</span>  vérifie le mot <span class="pointAnime">.</span
+        ><span class="pointAnime point-2">.</span
+        ><span class="pointAnime point-3">.</span>
+      </span>
       <Transition name="down" appear
         ><verificationComp
           ref="verification"
@@ -44,6 +56,9 @@ const currentPlayer = computed(() =>
         currentGame.value.properties.indexCurrentPlayer!
       ],
   ),
+)
+const owner= computed(() =>
+  currentGame.value.users.find(user => user.id === currentGame.value.ownerId),
 )
 </script>
 

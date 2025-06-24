@@ -409,15 +409,21 @@ function closeAvatarPanel() {
   })
 }
 const handleVerifOption = async () => {
-  console.log('handleVerifOption')
-  console.log(currentGame.value.gameOption.verificationOwner)
-  await nextTick()
+  const {fetchData,inError} = useFetch(
+    `api/games/${currentGame.value.id}/options/verification?verification=${!currentGame.value.gameOption.verificationOwner}`,
+    { method: 'PUT' },
+  )
   if (!userIsOwner.value) {
     setTimeout(() => {
       currentGame.value.gameOption.verificationOwner =
         !currentGame.value.gameOption.verificationOwner
     }, 10)
     return
+  }
+  await fetchData()
+  if (inError.value) {
+    currentGame.value.gameOption.verificationOwner =
+      !currentGame.value.gameOption.verificationOwner
   }
 }
 </script>

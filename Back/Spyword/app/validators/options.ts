@@ -11,3 +11,9 @@ export const whiteOptionValidator = vine.compile(
     present: vine.boolean(),
   })
 )
+
+export const verificationOptionValidator = vine.compile(
+  vine.object({
+    verification: vine.boolean(),
+  })
+)
