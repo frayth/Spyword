@@ -18,7 +18,7 @@
     <!-- Main animée (si animation active) -->
     <div
       v-if="animation"
-      class="absolute bottom-50% right-50% transform-translate-50% z-100000 animate-clickHand"
+      class="absolute top-1/4 left-1/3 -translate-x-1/2 -translate-y-1/2  z-100000 animate-clickHand"
     >
       <img src="/icone/handClick.png" alt="main" class="w-10 h-10" />
     </div>
@@ -78,10 +78,14 @@ const srcImage = computed(() => {
 <style scoped>
 @keyframes clickHand {
   0%, 100% {
-    transform: translateY(50%) rotate(270deg) scale(1);
+    transform: translateY(0) rotateZ(0deg) rotateY(180deg) scale(1);
+    transform-origin: bottom center;
   }
-  50% {
-    transform: translateY(60%) rotate(270deg) scale(0.95);
+  30% {
+    transform: translateY(4px) rotateZ(-10deg) scale(0.96) rotateY(180deg);
+  }
+  60% {
+    transform: translateY(2px) rotateZ(-5deg) scale(0.98) rotateY(180deg);
   }
 }
 .animate-clickHand {

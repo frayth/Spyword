@@ -163,21 +163,24 @@ const historyVote = computed(() => {
 })
 
 const decrementCurrentManche = () => {
-  if(!animationLoad.value)animationLoad.value = true
+
   historySens.value = 'left'
 
   if (currentMancheHistory.value && currentMancheHistory.value > 1) {
+    if(!animationLoad.value)animationLoad.value = true
     animateKey.value = Date.now()
     currentMancheHistory.value = currentMancheHistory.value - 1
   }
 }
+
 const incrementCurrentManche = () => {
-  if(!animationLoad.value)animationLoad.value = true
+
   historySens.value = 'right'
   if (
     currentMancheHistory.value &&
     currentMancheHistory.value < currentGame.value.properties.history!.length
   ) {
+    if(!animationLoad.value)animationLoad.value = true
     animateKey.value = Date.now()
     currentMancheHistory.value = currentMancheHistory.value + 1
   }

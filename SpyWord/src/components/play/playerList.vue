@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full my-2 px-2 grid place-items-center" ref="userList" @click="handleTutoStep">
+  <div class="w-full my-2 px-2 grid place-items-center select-none" ref="userList" @click="handleTutoStep">
     <Teleport to="body">
       <bulleComp
         ref="bulle"
@@ -55,13 +55,14 @@
           <div
             class="w-full h-full rounded-full overflow-hidden border-4 transition-all"
             :class="
-              player.gameStat?.isAlive ? 'border-green-400' : 'border-red-400'
+              player.gameStat?.isAlive && player.id=== infoUser.id ? 'border-green-400' : player.gameStat?.isAlive?'border-gray-400' : 'border-red-400'
             "
           >
             <portraitComp
               :url="player.gameStat?.urlAvatar!"
               :eliminated="!player.gameStat?.isAlive"
-              :animation="tutoStore.tutoStep.playerList && currentGame.inGame"
+              :animation="tutoStore.tutoStep.playerList && currentGame.inGame && currentGame.properties?.round! > 1"
+
             />
           </div>
 

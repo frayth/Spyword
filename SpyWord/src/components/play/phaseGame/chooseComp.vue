@@ -5,7 +5,7 @@
   }">
     <div
     :class="{
-      'w-full h-fit bg-gradient-to-br from-gray-800 via-gray-700 to-gray-900 p4 rounded-2xl lg:py-10!':true,
+      'w-full h-fit bg-gradient-to-br from-gray-800 via-gray-700 to-gray-900 p4 rounded-2xl lg:py-10!  flex flex-col justify-center ':true,
       'h-80%!': app.activeBreakPoint !== 'mobile',
     }"
     ref="container">

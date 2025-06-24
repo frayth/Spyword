@@ -2,7 +2,7 @@
   <OnClickOutside @trigger="close" class="w-full h-full flex items-center justify-center bg-black/20 backdrop-blur-sm rounded-2xl">
   <div class="p-6 max-w-xl    rounded-xl  space-y-6 flex flex-col items-center">
     <div class="space-y-4 w-full flex gap-3 flex-col items-center bg-white/35 rounded-2xl p-2">
-      <label class="block text-lg font-semibold text-gray-800 ">
+      <label class="block text-lg font-semibold text-gray-800 whitespace-nowrap  ">
         Durée de l'animation
       </label>
 
