@@ -1,6 +1,6 @@
 <template>
   <div
-  class="flex flex-col items-center justify-center  gap-4 p-10 bg-gray-900 text-white rounded-lg  min-h-50% shadow-lg w-full max-w-md mx-auto transition-all duration-300"
+  class="flex flex-col items-center justify-center  gap-4 py-10 px-5  bg-gray-900 text-white rounded-lg  min-h-50% shadow-lg w-full max-w-md mx-auto transition-all duration-300"
   :class="{
     'text-green-400': isVictory,
     'text-red-400 shadow-bloody': !isVictory
@@ -34,7 +34,7 @@
       <!-- Bouton "Fin de partie" -->
       <button
         class="w-36 py-2 rounded-lg bg-red-600 text-white font-semibold text-lg shadow-md hover:bg-red-700 transition-all duration-300 transform hover:scale-105 focus:outline-none"
-        @click="endGame"
+        @click="gameStore.endGame"
       >
         Fin de partie
       </button>
@@ -63,7 +63,8 @@ import { useAuthStore } from '@/stores/auth';
 import { computed } from 'vue';
 import portraitComp from '@/components/animation/assets/portraitComp.vue';
 import { useFetch } from '@/composable/useFetch';
-const {currentGame  } = storeToRefs( useGameStore() );
+const {currentGame } = storeToRefs( useGameStore() );
+const gameStore = useGameStore();
 const { infoUser } = storeToRefs( useAuthStore() );
 const isVictory=computed(()=>{
   return currentGame.value.properties.endDetails?.winnersId.includes(infoUser.value.id)
@@ -88,12 +89,6 @@ const victorySentence = computed(() => {
       return 'Erreur'
   };
 });
-async function endGame() {
-  const {fetchData } = useFetch('api/games/reset',{
-    method: 'POST'
-  })
-  await fetchData()
-}
 
 async function nextRound() {
   const {fetchData } = useFetch('api/games/nextRound',{

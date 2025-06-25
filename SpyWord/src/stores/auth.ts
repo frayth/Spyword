@@ -11,7 +11,13 @@ import { JoinUserChannel } from '@/Services/useWs'
 
 export const useAuthStore = defineStore('auth', () => {
   const gameStore = useGameStore()
-  const infoUser = ref<User & { isConnect: boolean ,currentWord:string | null }>({
+  const userIsOwner = computed(() => {
+    return infoUser.value.id === gameStore.currentGame.ownerId
+  })
+
+  const infoUser = ref<
+    User & { isConnect: boolean; currentWord: string | null }
+  >({
     createdAt: '',
     fullName: '',
     gameId: 0,
@@ -57,11 +63,13 @@ export const useAuthStore = defineStore('auth', () => {
     })
     return { data, error, loading, getErrorMessage }
   }
-  function logout(){
+
+  function logout() {
     setCredentials({ name: '', token: { type: '', value: '' } })
     infoUser.value.isConnect = false
     router.replace('/login')
   }
+  
   async function connect() {
     const { data, error, loading, fetchData, getErrorMessage, isComplete } =
       useFetch<UserResponse>(
@@ -75,15 +83,11 @@ export const useAuthStore = defineStore('auth', () => {
     if (isComplete.value === false) {
       setCredentials({ name: '', token: { type: '', value: '' } })
     } else {
-      const info =
-      useFetch<WordResponse>(
-        `api/users/word`,
-        {
-          method: 'GET',
-        },
-      )
+      const info = useFetch<WordResponse>(`api/users/word`, {
+        method: 'GET',
+      })
       await info.fetchData()
-      if(info.isComplete.value){
+      if (info.isComplete.value) {
         infoUser.value.currentWord = info.data.value!.data
       }
       infoUser.value.fullName = data.value!.fullName
@@ -110,6 +114,7 @@ export const useAuthStore = defineStore('auth', () => {
     credentials,
     isCredentials,
     connect,
-    logout
+    logout,
+    userIsOwner,
   }
 })

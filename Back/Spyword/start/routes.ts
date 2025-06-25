@@ -34,7 +34,7 @@ router
     router.post('/proposition', [GamesController, 'proposition'])
     router.post('/validateWord', [GamesController, 'validateWord'])
     router.post('/vote', [GamesController, 'vote'])
-    router.post('/reset', [GamesController, 'reset'])
+    router.put('/reset', [GamesController, 'reset'])
     router.post('/nextRound', [GamesController, 'nextRound'])
     router.post('/white/guess', [GamesController, 'whiteGuess'])
     router.post('/white/validate', [GamesController, 'whiteValidate'])

@@ -12,7 +12,7 @@ const timerAnimation = computed<Partial<Record<AnimationName, number>>>(() => {
     default: base,
     nextPlayer: base * 2.2 < 1500 ? 1500 : base * 2.2,
     resultVote: base * 2.2  < 2000 ? 2000 : base * 2.2,
-    target: base * 5,
+    target: base * 100000,//5,
     nextTurn: base * 1.7 < 1500 ? 2000 : base * 1.7,
     newRound: base * 1 < 2000 ? 2000 : base * 1,
   };

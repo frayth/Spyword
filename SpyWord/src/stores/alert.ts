@@ -46,6 +46,8 @@ export const useAlertStore = defineStore('alert', () => {
     switch (code){
       case 10:
         return "Un joueur a quitté la partie, retour au lobby!"
+      case 11:
+        return "La partie a été réinitialisée"
       default:
         return "oups! une erreur est survenue"
     }

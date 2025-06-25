@@ -21,10 +21,11 @@ export const useGameStore = defineStore('game', () => {
       verificationOwner:true
     },
   })
-  const { data, fetchData } = useFetch<UserInfos>('api/users/info', {
-    method: 'GET',
-  })
+
   async function fetchUserInfo() {
+      const { data, fetchData } = useFetch<UserInfos>('api/users/info', {
+    method: 'GET',
+    })
     await fetchData()
     //console.log('fetch data')
     if (data.value === null || data.value.data.game === null) return //TODO handle error
@@ -50,8 +51,16 @@ export const useGameStore = defineStore('game', () => {
       },
     }
   }
+
+  async function endGame(){
+    const {fetchData,inError } = useFetch('api/games/reset',{
+    method: 'PUT'
+    })
+    await fetchData()
+    return !inError.value
+  }
   function add(){
     //console.log('add')
   }
-  return { currentGame, fetchUserInfo, resetGame,add }
+  return { currentGame, fetchUserInfo, resetGame,add,endGame }
 })

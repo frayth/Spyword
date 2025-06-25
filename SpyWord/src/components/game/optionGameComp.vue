@@ -23,8 +23,8 @@
         {{ defaultAnimationTime === '0' ? 'Pas d\'animation' : `Vitesse animation : ${+defaultAnimationTime / 1000}` }}
       </span>
     </div>
-
-    <LeaveGame />
+    <LeaveGame v-if="userIsOwner && currentGame.inGame "  action="reset" />
+    <LeaveGame action="leave" />
   </div>
   </OnClickOutside>
 
@@ -34,9 +34,12 @@
   import LeaveGame from '../play/LeaveGame.vue';
   import { OnClickOutside } from '@vueuse/components';
   import { useAnimationStore } from '@/stores/animation';
-import { storeToRefs } from 'pinia';
+  import { useGameStore } from '@/stores/game';
+  import { useAuthStore } from '@/stores/auth';
+  import { storeToRefs } from 'pinia';
   const { defaultAnimationTime } = storeToRefs( useAnimationStore() );
-
+  const { userIsOwner } = storeToRefs( useAuthStore() );
+  const { currentGame } = storeToRefs( useGameStore() );
   const emits=defineEmits(['close']);
   const close = () => {
     emits('close');

@@ -77,7 +77,7 @@ export default class GamesController {
       let gameCurr = await Game.findBy('id', gameid)
       if (gameCurr?.inGame) {
         ////console.log('reset game')
-        await gameCurr.resetGame()
+        await gameCurr.resetGame('leave')
         await gameCurr.refresh()
       }
       // if game still exist
@@ -318,10 +318,8 @@ export default class GamesController {
     if (user.id !== user.game.ownerId) {
       return response.status(403).send({ message: 'not owner', code: 4033 })
     }
-    if (user.game.properties.gamePhase !== 'end') {
-      return response.status(400).send({ message: 'not end phase', code: 4006 })
-    }
-    await user.game.resetGame()
+
+    await user.game.resetGame('reset')
     await user.game.refresh()
     await user.game.load('users')
     await Promise.all(

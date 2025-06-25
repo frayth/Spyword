@@ -2,13 +2,14 @@
   <div class="grid place-items-center text-white p-6 w-full h-full bg-gray-950">
 
     <Teleport to="body">
-      <transition name="fade-slide">
+      <transition >
         <div
+          ref="nameOverPortrait"
           v-if="currentOverPortrait !== null"
           class="absolute z-[1200000] px-4 py-3 rounded-xl bg-white border border-black text-black text-sm pointer-events-none"
           :style="{
             top: `${y}px`,
-            left: `${x + 20}px`,
+            left: `${x + 20 + ToolWidth >=appli.infoWindow.width? `${x - 20 - ToolWidth}` : `${x + 20}`   }px`,
             boxShadow: '2px 2px 0 #000, 4px 4px 0 #555',
           }"
         >
@@ -113,8 +114,13 @@
 import { useGameStore } from '@/stores/game'
 import { useMouse } from '@vueuse/core'
 import portraitComp from '@/components/animation/assets/portraitComp.vue'
-import { computed, ref, watchEffect } from 'vue'
+import { computed, ref, useTemplateRef, watchEffect } from 'vue'
 import { useTutoStore } from '@/stores/tuto'
+import { useElementBounding } from '@vueuse/core'
+import { useAppliStore } from '@/stores/appli'
+const appli = useAppliStore()
+const nameToolTip = useTemplateRef('nameOverPortrait')
+const {width:ToolWidth} = useElementBounding(nameToolTip)
 const tutoStore = useTutoStore()
 const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0
 const showclickHand = ref(true)
