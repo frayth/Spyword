@@ -95,6 +95,7 @@ async function nextRound() {
     method: 'POST'
   })
   await fetchData()
+  gameStore.playersRoles = [];
 }
 </script>
 

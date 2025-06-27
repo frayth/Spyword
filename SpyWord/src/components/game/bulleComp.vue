@@ -9,7 +9,6 @@
       v-show="props.arrowPosition.side !== 'none'"
       :class="{
         'absolute w-6 h-6 bg-white border-l-4 border-b-4 border-black': true,
-
       }"
       :style="arrowStyle"
     ></div>
@@ -30,16 +29,10 @@
         <span
           :class="{
             'font-bold': true,
-            'text-green-500':
-              selectedPlayerInfo?.gameStat?.roleIfDead === 'civil',
-            'text-red-500':
-              selectedPlayerInfo?.gameStat?.roleIfDead !== 'civil',
+            'text-green-500': roleSelectedPlayer === 'Civil',
+            'text-red-500': roleSelectedPlayer !== 'Civil',
           }"
-          >{{
-            selectedPlayerInfo?.gameStat?.roleIfDead === null
-              ? 'Inconnue'
-              : selectedPlayerInfo?.gameStat?.roleIfDead
-          }}</span
+          >{{ roleSelectedPlayer }}</span
         >
       </p>
     </div>
@@ -49,24 +42,33 @@
     >
       <!-- Contrôles de navigation -->
       <div class="flex items-center justify-between gap-5">
-        <div @click="decrementCurrentManche" class=" cursor-pointer p-2  rounded-full flex justify-center items-center text-2xl bg-gray-200 dark:bg-gray-700 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 transition-all">
-          <button
-
-            class="h-fit flex justify-center items-center"
-          >
+        <div
+          @click="decrementCurrentManche"
+          class="cursor-pointer p-2 rounded-full flex justify-center items-center text-2xl bg-gray-200 dark:bg-gray-700 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 transition-all"
+        >
+          <button class="h-fit flex justify-center items-center">
             <chevronLeftSvg :stroke-width="2" :size="18" />
           </button>
         </div>
 
         <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
-          Tour <span :key="animateKey" :class="{'roll-animation':animationLoad} ">{{ currentMancheHistory }}</span>
-        </p>
-        <div @click="incrementCurrentManche" class="cursor-pointer text-2xl  p-2 rounded-full flex justify-center items-center  bg-gray-200 dark:bg-gray-700 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 transition-all">
-          <button
-
-            class=" h-fit flex justify-center items-center  "
+          Tour
+          <span
+            :key="animateKey"
+            :class="{ 'roll-animation': animationLoad }"
+            >{{ currentMancheHistory }}</span
           >
-           <chevronLeftSvg :stroke-width="2" :size="18" class="rotate-180deg" />
+        </p>
+        <div
+          @click="incrementCurrentManche"
+          class="cursor-pointer text-2xl p-2 rounded-full flex justify-center items-center bg-gray-200 dark:bg-gray-700 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 transition-all"
+        >
+          <button class="h-fit flex justify-center items-center">
+            <chevronLeftSvg
+              :stroke-width="2"
+              :size="18"
+              class="rotate-180deg"
+            />
           </button>
         </div>
       </div>
@@ -80,7 +82,7 @@
           "
           :key="`histo-${animateKey}`"
           :class="{
-            'animate-duration-200':true,
+            'animate-duration-200': true,
             'animate-fade-in-left': historySens === 'left' && animationLoad,
             'animate-fade-in-right': historySens === 'right' && animationLoad,
           }"
@@ -107,19 +109,25 @@
         v-if="selectedPlayerInfo?.gameStat?.words.length! > 0"
       >
         <p
-  v-for="(word, index) in selectedPlayerInfo?.gameStat?.words"
-  :key="word"
-  class="inline-block m-2 px-4 py-2 rounded shadow-md cursor-default transition-all duration-200 font-semibold text-gray-800 font-handwriting hover:scale-105"
-  :class="[
-    ['bg-yellow-200', 'bg-pink-200', 'bg-green-200', 'bg-blue-200', 'bg-orange-200'][index % 5]
-  ]"
-  :style="{
-    fontSize: `${Math.max(0.8, Math.min(1.2, 1 - word.length / 15))}rem`,
-    transform: `rotate(${(index % 3 - 1) * 3}deg)`,
-  }"
->
-  {{ word }}
-</p>
+          v-for="(word, index) in selectedPlayerInfo?.gameStat?.words"
+          :key="word"
+          class="inline-block m-2 px-4 py-2 rounded shadow-md cursor-default transition-all duration-200 font-semibold text-gray-800 font-handwriting hover:scale-105"
+          :class="[
+            [
+              'bg-yellow-200',
+              'bg-pink-200',
+              'bg-green-200',
+              'bg-blue-200',
+              'bg-orange-200',
+            ][index % 5],
+          ]"
+          :style="{
+            fontSize: `${Math.max(0.8, Math.min(1.2, 1 - word.length / 15))}rem`,
+            transform: `rotate(${((index % 3) - 1) * 3}deg)`,
+          }"
+        >
+          {{ word }}
+        </p>
       </div>
       <div v-else class="text-gray-500 italic text-sm">
         <p class="text-gray-500 italic text-sm">Aucun mot prononcé</p>
@@ -144,10 +152,10 @@ import {
   withDefaults,
 } from 'vue'
 import { useElementBounding } from '@vueuse/core'
-const { currentGame } = storeToRefs(useGameStore())
+const { currentGame, playersRoles } = storeToRefs(useGameStore())
 const historySens = ref<'left' | 'right'>('left')
 const animateKey = ref(0)
-const animationLoad=ref(false)
+const animationLoad = ref(false)
 const currentMancheHistory = ref(
   currentGame.value.properties.round! === 1
     ? 1
@@ -163,24 +171,22 @@ const historyVote = computed(() => {
 })
 
 const decrementCurrentManche = () => {
-
   historySens.value = 'left'
 
   if (currentMancheHistory.value && currentMancheHistory.value > 1) {
-    if(!animationLoad.value)animationLoad.value = true
+    if (!animationLoad.value) animationLoad.value = true
     animateKey.value = Date.now()
     currentMancheHistory.value = currentMancheHistory.value - 1
   }
 }
 
 const incrementCurrentManche = () => {
-
   historySens.value = 'right'
   if (
     currentMancheHistory.value &&
     currentMancheHistory.value < currentGame.value.properties.history!.length
   ) {
-    if(!animationLoad.value)animationLoad.value = true
+    if (!animationLoad.value) animationLoad.value = true
     animateKey.value = Date.now()
     currentMancheHistory.value = currentMancheHistory.value + 1
   }
@@ -238,8 +244,30 @@ const emits = defineEmits(['clickOutside', 'infoBulle'])
 const selectedPlayerInfo = computed(() => {
   return currentGame.value.users.find(user => user.id === props.selectedPlayer)
 })
+
+const roleSelectedPlayer = computed(() => {
+  type Role = 'civil' | 'spy' | 'mrwhite'
+  const role = playersRoles.value.find(user => user.id === props.selectedPlayer)
+    ?.role as Role | undefined
+
+  const tradRole: Record<Role, string> = {
+    civil: 'Civil',
+    spy: 'Espion',
+    mrwhite: 'Mr White',
+  }
+
+  return role
+    ? tradRole[role]
+    : selectedPlayerInfo.value?.gameStat?.roleIfDead
+      ? tradRole[selectedPlayerInfo.value?.gameStat?.roleIfDead as Role]
+      : 'Inconnue'
+})
+
 const validOffset = computed(() => {
-  return props.arrowPosition.offset! >= 0 || props.arrowPosition.offset!<= bulleBounding.value.height ? props.arrowPosition.offset! : 0
+  return props.arrowPosition.offset! >= 0 ||
+    props.arrowPosition.offset! <= bulleBounding.value.height
+    ? props.arrowPosition.offset!
+    : 0
 })
 
 const arrowStyle = computed(() => {
@@ -254,7 +282,7 @@ const arrowStyle = computed(() => {
     case 'left':
       return {
         left: `-6px`,
-        top: `${validOffset.value > bulleBounding.value.height ? bulleBounding.value.height - 35 : validOffset.value }px`,
+        top: `${validOffset.value > bulleBounding.value.height ? bulleBounding.value.height - 35 : validOffset.value}px`,
         transform: 'rotate(45deg) translateX(-50%)',
       }
 
@@ -311,6 +339,6 @@ function deleteModal() {
 
 .roll-animation {
   animation: roll 0.3s ease-in-out;
-  display:inline-block;
+  display: inline-block;
 }
 </style>

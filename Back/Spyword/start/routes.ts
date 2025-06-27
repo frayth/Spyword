@@ -38,6 +38,7 @@ router
     router.post('/nextRound', [GamesController, 'nextRound'])
     router.post('/white/guess', [GamesController, 'whiteGuess'])
     router.post('/white/validate', [GamesController, 'whiteValidate'])
+    router.get('/roles', [GamesController, 'getRoles'])
   })
   .prefix('api/games')
   .use([middleware.auth()])

@@ -5,13 +5,12 @@
       :class="{
         'w-full h-10  bg-red-500 text-white text-center! rounded-md hover:bg-red-600 transition ': true,
         'bg-blue-500! hover:bg-blue-600!': action === 'reset',
+        'bg-yellow-500! hover:bg-yellow-600!': action === 'help',
       }"
       @click="verif = true"
     >
       {{
-        props.action === 'leave'
-          ? 'Quitter la partie'
-          : 'Réinitialiser la partie'
+        title
       }}
     </button>
 
@@ -25,10 +24,10 @@
         >
           <p class="text-center text-lg font-bold">
             {{
-              `Veux-tu vraiment ${action === 'leave' ? 'quitter' : 'réinitialiser'} la partie ?`
+              message
             }}
           </p>
-          <p class="text-center text-sm">
+          <p class="text-center text-sm" v-if="showLeaveMessage" >
             Cela mettra
             <span class="font-bold text-red-500">fin à la partie</span> pour
             tous les joueurs. 😢
@@ -42,7 +41,7 @@
               Annuler
             </button>
             <button
-              @click="leaveGame"
+              @click="handleAction"
               class="w-32 h-10 bg-red-500 text-white rounded-md hover:bg-red-600 transition"
             >
               {{ props.action === 'leave' ? 'Quitter' : 'Réinitialiser' }}
@@ -60,11 +59,13 @@ import type { GameResponse } from '@/models/game.model'
 import router from '@/router'
 import { useGameStore } from '@/stores/game'
 import { subscription } from '@/Services/useWs'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { useTutoStore } from '@/stores/tuto'
+const tutoStore = useTutoStore()
 const game = useGameStore()
 const verif = ref(false)
 const props = defineProps<{
-  action: 'leave' | 'reset'
+  action: 'leave' | 'reset' | 'help'
 }>()
 const { fetchData, isComplete } = useFetch<GameResponse>(
   `api/games/${props.action}`,
@@ -77,13 +78,53 @@ async function leaveGame() {
     verif.value = true
     return
   }
-  verif.value = false
   await fetchData()
   if (isComplete.value && props.action === 'leave') {
     game.resetGame()
     await subscription?.delete()
     router.replace('/')
   }
+}
+const title=computed(()=>{
+  switch (props.action) {
+    case 'leave':
+      return 'Quitter la partie'
+    case 'reset':
+      return 'Réinitialiser la partie'
+    case 'help':
+      return 'Reset Aide'
+    default:
+      return ''
+  }
+})
+
+const message= computed(() => {
+  switch (props.action) {
+    case 'leave':
+      return 'Veux-tu vraiment quitter la partie ?'
+    case 'reset':
+      return 'Veux-tu vraiment réinitialiser la partie ?'
+    case 'help':
+      return 'Veux-tu vraiment réinitialiser l\'aide ?'
+    default:
+      return ''
+  }
+})
+
+const showLeaveMessage = computed(() => {
+  return props.action ==='leave' || props.action === 'reset'
+})
+const resetHelp = () =>{
+  tutoStore.clearTutoStep()
+}
+
+const handleAction = () => {
+  if (props.action === 'help') {
+    resetHelp()
+  } else {
+    leaveGame()
+  }
+  verif.value = false
 }
 </script>
 

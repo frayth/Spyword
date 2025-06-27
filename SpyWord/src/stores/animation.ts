@@ -5,7 +5,7 @@ import type { AnimationName } from '@/models/ws.model'
 import { useGameStore } from './game'
 export const useAnimationStore = defineStore('animation', () => {
   const animationList = ref<Animation[]>([])
-  const defaultAnimationTime = ref('3000')
+  const defaultAnimationTime = ref('2000')
 const timerAnimation = computed<Partial<Record<AnimationName, number>>>(() => {
   const base = +defaultAnimationTime.value;
   return {

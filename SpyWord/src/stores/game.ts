@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 import type { Game } from '@/models/game.model'
 import { useFetch } from '@/composable/useFetch'
@@ -21,6 +21,7 @@ export const useGameStore = defineStore('game', () => {
       verificationOwner:true
     },
   })
+  const playersRoles=ref<{id:number,role:string}[]>([])
 
   async function fetchUserInfo() {
       const { data, fetchData } = useFetch<UserInfos>('api/users/info', {
@@ -50,6 +51,7 @@ export const useGameStore = defineStore('game', () => {
         verificationOwner:true
       },
     }
+    playersRoles.value = []
   }
 
   async function endGame(){
@@ -62,5 +64,19 @@ export const useGameStore = defineStore('game', () => {
   function add(){
     //console.log('add')
   }
-  return { currentGame, fetchUserInfo, resetGame,add,endGame }
+  async function getRoles() {
+    const { data, fetchData } = useFetch<{message:string,data:{id:number,role:string}[],code:number}>('api/games/roles', {
+      method: 'GET',
+    })
+    await fetchData()
+    if (data.value) {
+      playersRoles.value = data.value.data
+    }
+  }
+  watch(currentGame, ()=>{
+    if (currentGame.value.properties.gamePhase === 'end') {
+      getRoles()
+    }
+  },{immediate:true, deep:true})
+  return { currentGame, fetchUserInfo, resetGame,add,endGame,getRoles,playersRoles }
 })

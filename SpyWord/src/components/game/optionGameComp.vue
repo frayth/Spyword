@@ -1,7 +1,7 @@
 <template>
-  <OnClickOutside @trigger="close" class="w-full h-full flex items-center justify-center bg-black/20 backdrop-blur-sm rounded-2xl">
-  <div class="p-6 max-w-xl    rounded-xl  space-y-6 flex flex-col items-center">
-    <div class="space-y-4 w-full flex gap-3 flex-col items-center bg-white/35 rounded-2xl p-2">
+  <OnClickOutside @trigger="close" class="w-full h-fit  bg-black/20 backdrop-blur-sm rounded-2xl">
+  <div class="p-6 max-w-xl h-full   rounded-xl   flex flex-col items-center justify-center gap-6">
+    <div class=" w-full flex gap-3 flex-col items-center bg-white/35 rounded-2xl p-2">
       <label class="block text-lg font-semibold text-gray-800 whitespace-nowrap  ">
         Durée de l'animation
       </label>
@@ -22,6 +22,10 @@
       >
         {{ defaultAnimationTime === '0' ? 'Pas d\'animation' : `Vitesse animation : ${+defaultAnimationTime / 1000}` }}
       </span>
+    </div>
+    <div class="h-fit w-full ">
+    <LeaveGame action="help">
+    </LeaveGame>
     </div>
     <LeaveGame v-if="userIsOwner && currentGame.inGame "  action="reset" />
     <LeaveGame action="leave" />

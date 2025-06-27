@@ -449,4 +449,21 @@ export default class GamesController {
 
     return response.status(200).send({ message: 'white validation', code: 200 })
   }
+
+  async getRoles({ auth, response }: HttpContext) {
+    const user = auth.user!
+    await user.load('game')
+    await user.game.getAllInfo()
+    if (!user.game) {
+      return response.status(400).send({ message: 'not in game', code: 4002 })
+    }
+    if (user.game.properties.gamePhase !== 'end') {
+      return response.status(400).send({ message: 'game not ended', code: 4003 })
+    }
+    const roles = user.game.users.map((el) => ({
+      id: el.id,
+      role: el.gameStat.role,
+    }))
+    return response.status(200).send({ message: 'roles retrieved', data: roles, code: 200 })
+  }
 }

@@ -2,7 +2,6 @@
   <div class="grid place-items-center text-white p-6 w-full h-full bg-gray-950">
 
     <Teleport to="body">
-      <transition >
         <div
           ref="nameOverPortrait"
           v-if="currentOverPortrait !== null"
@@ -22,7 +21,6 @@
             </div>
           </div>
         </div>
-      </transition>
     </Teleport>
       <div v-if="introIsOpen" class="fixed inset-0 flex items-center justify-center z-50">
     <div
@@ -179,7 +177,7 @@ const handleLeave = () => {
 const handleHandClick= (i:number,idTarget:number) => {
   if(!tutoStore.tutoStep.targetAnimation)return
   if(i === 0 && idTarget === 0){
-    tutoStore.tutoStep.targetAnimation = false
+    tutoStore.setTutoStep('targetAnimation', false)
   }
 }
 
@@ -215,16 +213,5 @@ const handleHandClick= (i:number,idTarget:number) => {
     transform: translateY(-10px);
   }
 }
-.fade-slide-enter-active,
-.fade-slide-leave-active {
-  transition: all 0.2s ease-out;
-}
-.fade-slide-enter-from {
-  opacity: 0;
-  transform: translateY(5px);
-}
-.fade-slide-leave-to {
-  opacity: 0;
-  transform: translateY(5px);
-}
+
 </style>

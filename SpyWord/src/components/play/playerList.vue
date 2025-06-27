@@ -325,7 +325,7 @@ const sortedUsers = computed(() => {
 })
 const handleTutoStep = () => {
   if (tutoStore.tutoStep.playerList && currentGame.value.inGame) {
-    tutoStore.tutoStep.playerList=false
+    tutoStore.setTutoStep('playerList', false)
   }
 }
 </script>

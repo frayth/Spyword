@@ -26,11 +26,11 @@
       <p class="text-lg font-semibold mt-3 text-gray-300 text-shadow text-center">
         En attente des autres joueurs...
       </p>
-        <div class="flex gap-4 justify-center items-center flex-wrap mt-3">
+        <div class="flex gap-2 justify-center items-center flex-wrap mt-3">
           <div
             v-for="player in currentGame.users.filter(user => !user.gameStat?.asVoted && user.gameStat?.isAlive)"
             :key="player.id"
-            class="flex flex-col items-center space-y-1"
+            class="flex flex-col items-center w-80px gap-1"
           >
             <div class="w-50px h-50px rounded-full overflow-hidden border-2 border-gray-300 shadow-sm">
               <portraitComp :url="player.gameStat?.urlAvatar!" />
@@ -61,7 +61,7 @@
           <div
             v-for="player in currentGame.users.filter(user => !user.gameStat?.asVoted && user.gameStat?.isAlive)"
             :key="player.id"
-            class="flex flex-col items-center space-y-1"
+            class="flex flex-col items-center  "
           >
             <div class="w-50px h-50px rounded-full overflow-hidden border-2 border-gray-300 shadow-sm">
               <portraitComp :url="player.gameStat?.urlAvatar!" />
@@ -110,11 +110,5 @@ const target = computed(() => {
 </script>
 
 <style scoped>
-.waiting-screen {
-  @apply flex flex-col items-center justify-center h-full w-full bg-gray-900 text-white;
-}
 
-.loader {
-  @apply;
-}
 </style>
