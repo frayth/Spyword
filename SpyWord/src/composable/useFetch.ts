@@ -70,7 +70,6 @@ export function useFetch<T>(url: string, options: FetchOptions) {
       case 4035:
         return 'Condition non remplie pour éffectuer cette action'
         case 4034:
-        case 4035:
         case 40311:
         case 40312:
         case 40313:
