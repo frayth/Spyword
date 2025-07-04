@@ -5,7 +5,8 @@ import { defineConfig } from '@adonisjs/lucid'
 
 const Filename = fileURLToPath(import.meta.url)
 const Dirname = path.dirname(Filename)
-
+console.log('> DB DIRNAME:', Dirname)
+console.log('> DB FILENAME:', Filename)
 function resolveProdDbPath() {
   const basePath = Dirname.includes('/build')
     ? path.join(Dirname, '../production/db/prod.sqlite3')
