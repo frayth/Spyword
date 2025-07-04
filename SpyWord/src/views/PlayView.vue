@@ -1,7 +1,7 @@
 <template>
-  <div class="bg-white w-full h-screen lg:p-5">
+  <div class="bg-white w-full h-screen  lg:p-5">
     <div
-      class="grid grid-rows-[1fr] w-full h-full "
+      class="grid grid-rows-[1fr] w-full h-full  "
       ref="bandeau"
     >
       <!-- Bandeau supérieur -->
@@ -9,12 +9,12 @@
 
       <!-- Contenu principal -->
       <div
-        :class="`h-full w-full grid grid-rows-[auto_2px_3fr] lg:(grid-rows-1 grid-cols-[1fr_2px_2fr])  lg:max-h-[calc(100vh)] relative bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 dark:from-gray-800 dark:via-gray-900 dark:to-black`"
+        :class="`h-full w-full  grid grid-rows-[auto_2px_3fr] lg:(grid-rows-1 grid-cols-[1fr_2px_2fr])  lg:max-h-[calc(100vh)] relative bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 dark:from-gray-800 dark:via-gray-900 dark:to-black`"
         id="mainPanel"
         ref="gameView"
       >
         <!-- Liste des joueurs -->
-        <div class="overflow-auto">
+        <div class="overflow-auto" :style="{maxHeight:(+appli.gameWindowBoundaries?.height! - 5)+'px'}">
           <playerList />
         </div>
 
@@ -24,7 +24,8 @@
         ></div>
         <!-- Zone de jeu -->
         <div
-          class="h-full overflow-auto relative grid grid-rows-[auto_1fr]"
+          class="h-full overflow-auto relative grid grid-rows-[auto_1fr] "
+          :style="{maxHeight:(+appli.gameWindowBoundaries?.height! - 5) +'px'}"
           @click="animation = true"
           ref="mainPanel"
         >
@@ -84,6 +85,7 @@ onMounted(() => {
   JoinChanel(game.currentGame.id)
   wakeLock.request('screen')
 })
+
 </script>
 
 <style scoped></style>

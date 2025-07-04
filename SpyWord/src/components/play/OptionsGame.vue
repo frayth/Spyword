@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-full flex flex-col pt-2 md:gap-3 relative">
+  <div class="w-full h-full flex flex-col pt-2 md:gap-2 relative">
     <div
       v-if="helpBox.statut"
       id="helpBox"
@@ -178,7 +178,7 @@
     </div>
 
     <!-- Boutons de validation -->
-    <div class="grid grid-cols-2 gap-4 p-4">
+    <div class="grid grid-cols-2 gap-4 px-4 p-y-2">
       <!-- Bouton "Lancer la partie" -->
       <div
       ref="lauchGameButton"
