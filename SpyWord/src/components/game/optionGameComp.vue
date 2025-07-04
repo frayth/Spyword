@@ -24,7 +24,7 @@
       </span>
     </div>
     <div class="h-fit w-full ">
-    <LeaveGame action="help">
+    <LeaveGame action="help" v-if="showHelpResetButton">
     </LeaveGame>
     </div>
     <LeaveGame v-if="userIsOwner && currentGame.inGame "  action="reset" />
@@ -41,6 +41,9 @@
   import { useGameStore } from '@/stores/game';
   import { useAuthStore } from '@/stores/auth';
   import { storeToRefs } from 'pinia';
+  import { useTutoStore } from '@/stores/tuto';
+  import { computed } from 'vue';
+  const tutoStore = useTutoStore();
   const { defaultAnimationTime } = storeToRefs( useAnimationStore() );
   const { userIsOwner } = storeToRefs( useAuthStore() );
   const { currentGame } = storeToRefs( useGameStore() );
@@ -54,6 +57,9 @@
       defaultAnimationTime.value = target.value;
     }
   };
+  const showHelpResetButton = computed(() => {
+  return Object.values(tutoStore.tutoStep).some(step => step === false)
+})
 </script>
 
 <style scoped>

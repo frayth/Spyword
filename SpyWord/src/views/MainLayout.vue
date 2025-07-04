@@ -14,7 +14,6 @@
         }"
       ></headerComp>
       <RouterView class="h-full flex-basis-2xl" />
-      <footer class="grid place-items-center bg-amber">{{ x }} {{ y }}</footer>
     </div>
   </div>
 </template>
@@ -22,11 +21,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import headerComp from '@/components/inputs/headerComp.vue'
-import { useMouse } from '@/composable/useMouse'
 const scrollY = ref(0)
 const main = ref<HTMLElement | null>(null)
 const header = ref<{header:HTMLElement}|null>(null)
-const { x, y } = useMouse()
+
 
 function handleScroll() {
   if (main.value) {

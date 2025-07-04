@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full my-2 px-2 grid place-items-center select-none" ref="userList" @click="handleTutoStep">
+  <div class="w-full my-2 px-2 grid place-items-center select-none" ref="userList" >
     <Teleport to="body">
       <bulleComp
         ref="bulle"
@@ -23,32 +23,16 @@
       <div
         v-for="player in sortedUsers"
         :key="player.id"
-        @click="selectPlayer($event, player.id)"
-        :class="[
-          'overflow-visible  container-player transform scale-90 lg:(scale-100 scale-x-95 origin-left) p-3 flex flex-col items-center gap-3 bg-gradient-to-b shadow-md rounded-lg transition-all lg:grid lg:grid-cols-[100px_auto_50px] lg:items-center lg:w-full',
+        @click="selectPlayer($event, player.id);handleTutoStep()"
+        :class="{
+          'overflow-visible  container-player w-120px transform scale-90 lg:(scale-100 scale-x-95 origin-left) p-3 flex flex-col items-center gap-3 bg-gradient-to-b shadow-md rounded-lg transition-all lg:grid lg:grid-cols-[100px_auto_50px] lg:items-center lg:w-full':true,
+          'cursor-pointer':currentGame.inGame,
+          'scale-100! from-sky-100! to-sky-200!':!currentGame.inGame || currentGame.properties?.gamePhase === 'end' || (currentGame.properties?.gamePhase === 'vote' && player.gameStat?.isAlive) ,
+          'scale-100! from-amber-300! via-amber-100! to-amber-400!':currentGame.inGame && player.id === currentGame.properties?.orderGame?.[currentGame.properties?.indexCurrentPlayer!] &&  currentGame.properties.gamePhase === 'play',
+          'from-slate-100! via-slate-200! to-blue-300!':currentGame.inGame && player.id !== currentGame.properties?.orderGame?.[currentGame.properties?.indexCurrentPlayer!] && currentGame.properties.gamePhase === 'play' && player.gameStat?.isAlive,
 
-          // Si pas en jeu ou phase finale/vote : fond doux bleu-gris
-          !currentGame.inGame ||
-          currentGame.properties?.gamePhase === 'end' ||
-          currentGame.properties?.gamePhase === 'vote'
-            ? 'scale-100! from-sky-100! to-sky-200! '
-            : '',
-
-          // Joueur actif pendant la phase de jeu : jaune doux
-          currentGame.inGame &&
-          player.id ===
-            currentGame.properties?.orderGame?.[
-              currentGame.properties?.indexCurrentPlayer!
-            ] &&
-          currentGame.properties.gamePhase === 'play'
-            ? 'scale-100! from-amber-300! to-amber-400! '
-            : '',
-
-          // Si en jeu et non actif : fond neutre doux
-          currentGame.inGame
-            ? 'cursor-pointer from-cyan-300 to-cyan-400  '
-            : '',
-        ]"
+          'from-gray-300! via-sky-100! to-gray-400!': !player.gameStat?.isAlive,
+        }"
       >
         <!-- Avatar -->
         <div class="relative w-20 h-20 lg:col-start-1">
@@ -69,18 +53,18 @@
           <!-- Icône utilisateur -->
           <div
             v-if="player.id === infoUser.id"
-            class="absolute bottom-0 left-2 w-6 h-6 bg-green-500 rounded-full p-1 flex items-center justify-center shadow-md"
+            class="absolute bottom-0 left-2 w-6 h-6 z-2 bg-green-500 rounded-full p-1 flex items-center justify-center shadow-md"
           >
             <img
-              src="../../assets/images/UserProfile.png"
-              class="w-full h-full object-contain"
+              src="/icone/UserProfile.png"
+              class="w-full h-full "
             />
           </div>
 
           <!-- Icône Propriétaire -->
           <div
             v-if="player.id === currentGame.ownerId"
-            class="absolute bottom-0 right-2 w-6 h-6 bg-amber-500 rounded-full flex items-center justify-center shadow-md"
+            class="absolute bottom-0 right-2 w-6 h-6 z-2 bg-amber-500 rounded-full flex items-center justify-center shadow-md"
           >
             <img
               src="../../assets/images/superUser.png"
@@ -324,7 +308,7 @@ const sortedUsers = computed(() => {
   return [...userAlive, ...userEliminated]
 })
 const handleTutoStep = () => {
-  if (tutoStore.tutoStep.playerList && currentGame.value.inGame) {
+  if (tutoStore.tutoStep.playerList && currentGame.value.inGame && currentGame.value.properties.round! > 1) {
     tutoStore.setTutoStep('playerList', false)
   }
 }

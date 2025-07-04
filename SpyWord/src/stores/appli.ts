@@ -16,6 +16,7 @@ export const useAppliStore = defineStore('appli', () => {
     width:window.innerWidth,
     height:window.innerHeight
   })
+  const appBoundaries=useElementBounding(document.getElementById('app') as HTMLElement)
   const gameWindowBoundaries=ref<UseElementBoundingReturn>()
   function setGameWindowBoundaries(element:MaybeComputedElementRef){
     gameWindowBoundaries.value=useElementBounding(element)
@@ -25,5 +26,5 @@ export const useAppliStore = defineStore('appli', () => {
       infoWindow.value.height=window.innerHeight
   })
 
-  return { infoWindow,setGameWindowBoundaries,gameWindowBoundaries,activeBreakPoint }
+  return { infoWindow,setGameWindowBoundaries,gameWindowBoundaries,activeBreakPoint,appBoundaries }
 })

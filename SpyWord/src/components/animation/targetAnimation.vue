@@ -22,11 +22,11 @@
           </div>
         </div>
     </Teleport>
-      <div v-if="introIsOpen" class="fixed inset-0 flex items-center justify-center z-50">
+    <div v-if="introIsOpen" class="flex items-center justify-center z-50">
     <div
       class="bg-white text-black border border-gray-200 shadow-lg rounded-2xl p-6 max-w-sm w-full text-center animate-fade-in"
     >
-      <div class="flex flex-col items-center space-y-4">
+      <div class="flex flex-col items-center justify-center space-y-4">
         <svg class="w-12 h-12 text-green-500" fill="none" stroke="currentColor" stroke-width="1.5"
           viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round"

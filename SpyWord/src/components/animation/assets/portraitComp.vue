@@ -8,7 +8,7 @@
     </div>
 
     <!-- Croix rouge -->
-    <div v-if="eliminated" class="absolute top-0 right-6px z-10 w-full h-full">
+    <div v-if="eliminated" class="absolute top-0 right-0px z-1 w-full h-full opacity-60">
       <img src="/img/crossRed.png" alt="" loading="lazy">
     </div>
 

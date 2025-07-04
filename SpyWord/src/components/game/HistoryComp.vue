@@ -1,6 +1,6 @@
 <template>
   <div v-if="event.type === 'vote'" class="w-full h-full">
-    <div  class="flex items-center md:gap-4 w-full border-2 border-black lg:p-5 p-2 rounded-xl shadow-lg bg-white/80 backdrop-blur-sm transition-all duration-300" >
+    <div  class="flex items-center gap-1 md:gap-4 w-full border-2 border-black lg:p-5 p-2 rounded-xl shadow-lg bg-white/80 backdrop-blur-sm transition-all duration-300" >
       <div class="overflow-hidden max-w-100px max-h-100px rounded-full md:(max-w-100px max-h-100px)">
         <PortraitComp class="" :url="sourcePlayer!.gameStat!.urlAvatar" ></PortraitComp>
       </div>

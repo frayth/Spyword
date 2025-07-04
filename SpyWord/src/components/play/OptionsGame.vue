@@ -16,7 +16,7 @@
     </div>
     <div
       v-if="selectAvatarPanelOpen"
-      class="absolute top-0 left-0 w-full h-full z-1000000 bg-gray-900/50 grid justify-center items-center"
+      class="absolute top-0 left-0 w-full h-full z-999 bg-gray-900/50 grid justify-center items-center"
     >
       <AvatarPanel @close="closeAvatarPanel" />
     </div>
@@ -181,6 +181,7 @@
     <div class="grid grid-cols-2 gap-4 p-4">
       <!-- Bouton "Lancer la partie" -->
       <div
+      ref="lauchGameButton"
         :class="{
           'flex items-center justify-center rounded-xl': true,
           'bg-amber h-12  text-center text-lg font-bold cursor-pointer hover:scale-101 transition':
@@ -253,6 +254,7 @@
 <script setup lang="ts">
 import { useFetch } from '@/composable/useFetch'
 import { useAppliStore } from '@/stores/appli'
+
 import {
   computed,
   nextTick,
@@ -312,6 +314,12 @@ watch(numberOfPlayer, (newValue, old) => {
   if (newValue < currentGame.value.users.length) {
     //console.log('inferieur')
     numberOfPlayer.value = old
+  }
+})
+watch(checkWhiteCondition,async (newValue)=>{
+  if (newValue === false && currentGame.value.gameOption.whiteIsPresent) {
+    currentGame.value.gameOption.whiteIsPresent = false
+    await changeMrWhite()
   }
 })
 watchEffect(async () => {

@@ -126,6 +126,7 @@ const handleAction = () => {
   }
   verif.value = false
 }
+
 </script>
 
 <style scoped></style>

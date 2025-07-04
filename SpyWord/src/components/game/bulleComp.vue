@@ -246,14 +246,14 @@ const selectedPlayerInfo = computed(() => {
 })
 
 const roleSelectedPlayer = computed(() => {
-  type Role = 'civil' | 'spy' | 'mrwhite'
+  type Role = 'civil' | 'spy' | 'white'
   const role = playersRoles.value.find(user => user.id === props.selectedPlayer)
     ?.role as Role | undefined
 
   const tradRole: Record<Role, string> = {
     civil: 'Civil',
     spy: 'Espion',
-    mrwhite: 'Mr White',
+    white: 'Mr White',
   }
 
   return role

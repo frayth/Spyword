@@ -73,10 +73,13 @@ export const useGameStore = defineStore('game', () => {
       playersRoles.value = data.value.data
     }
   }
+  const resetRoles = () => {
+    playersRoles.value = []
+  }
   watch(currentGame, ()=>{
     if (currentGame.value.properties.gamePhase === 'end') {
       getRoles()
     }
   },{immediate:true, deep:true})
-  return { currentGame, fetchUserInfo, resetGame,add,endGame,getRoles,playersRoles }
+  return { currentGame, fetchUserInfo, resetGame,add,endGame,getRoles,playersRoles,resetRoles }
 })
