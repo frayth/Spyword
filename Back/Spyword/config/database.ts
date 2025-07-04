@@ -9,7 +9,7 @@ console.log('> DB DIRNAME:', Dirname)
 console.log('> DB FILENAME:', Filename)
 function resolveProdDbPath() {
   const basePath = Dirname.includes('/build')
-    ? path.join(Dirname, '../production/db/prod.sqlite3')
+    ? path.join(Dirname, '../../production/db/prod.sqlite3')
     : path.join(process.cwd(), 'production/db/prod.sqlite3')
 
   return basePath
@@ -22,9 +22,7 @@ const dbConfig = defineConfig({
     sqlite: {
       client: 'better-sqlite3',
       connection: {
-        filename: isProd
-          ? path.join(process.cwd(), 'production/db/prod.sqlite3')
-          : app.tmpPath('dev.sqlite3'),
+        filename: isProd ? resolveProdDbPath() : app.tmpPath('dev.sqlite3'),
       },
       useNullAsDefault: true,
       migrations: {
