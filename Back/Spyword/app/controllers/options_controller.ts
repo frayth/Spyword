@@ -1,5 +1,9 @@
 import type { HttpContext } from '@adonisjs/core/http'
-import { playerOptionValidator, whiteOptionValidator } from '#validators/options'
+import {
+  playerOptionValidator,
+  whiteOptionValidator,
+  verificationOptionValidator,
+} from '#validators/options'
 import db from '#services/use_database'
 import { inject } from '@adonisjs/core'
 import { transmitGame } from '#services/ws/ws'
@@ -46,6 +50,24 @@ export default class OptionsController {
         return response.status(403).send({ message: 'not owner', code: 4033 })
       }
       game.gameOption.whiteIsPresent = payload.present
+      await game.gameOption.save()
+      transmitGame(game.id, game)
+      response.status(200).send({ message: 'ok', code: 200 })
+    } catch (e) {
+      return response.status(400).send({ message: e, code: 4002 })
+    }
+  }
+  @inject()
+  async changeVerification({ auth, request, params, response }: HttpContext, { findGame }: db) {
+    const payload = await request.validateUsing(verificationOptionValidator)
+    const user = auth.user!
+    try {
+      const game = await findGame(params.id)
+      await game.getAllInfo()
+      if (user.id !== game.ownerId) {
+        return response.status(403).send({ message: 'not owner', code: 4033 })
+      }
+      game.gameOption.verificationOwner = payload.verification
       await game.gameOption.save()
       transmitGame(game.id, game)
       response.status(200).send({ message: 'ok', code: 200 })

@@ -24,6 +24,7 @@ export type AnimationName =
   | 'newRound'
   | 'whiteWin'
   | 'whiteLose'
+  | 'default'
 
 export type InfoUser = {
   role?: string

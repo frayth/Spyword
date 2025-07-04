@@ -49,9 +49,14 @@
 import { useGameStore } from '@/stores/game'
 import portraitComp from '../portraitComp.vue'
 import { ref, onMounted, computed } from 'vue'
+import { useAnimationStore } from '@/stores/animation'
+import { storeToRefs } from 'pinia';
+const { defaultAnimationTime } = storeToRefs( useAnimationStore() );
 const gameStore = useGameStore()
-const eliminatedPlayer =
-  gameStore.currentGame.properties.resultRound?.eliminated
+const eliminatedPlayer =computed(() => {
+  return gameStore.currentGame.properties.resultRound?.eliminated
+})
+
 const tradRole = computed(() => {
   switch (gameStore.currentGame.properties.resultRound?.role) {
     case 'spy':
@@ -73,7 +78,7 @@ const revelation = ref({
 onMounted(() => {
   setTimeout(() => {
     revelation.value.role = true
-  }, 2500)
+  }, +defaultAnimationTime.value < 2500 ? 2500 : +defaultAnimationTime.value)
 })
 </script>
 

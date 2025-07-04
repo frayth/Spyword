@@ -4,7 +4,6 @@ import type {
   WsMessages,
   UserWSMessages,
   GameWSMessage,
-  AnimationName,
 } from '@/models/ws.model'
 import { useGameStore } from '@/stores/game'
 import { storeToRefs } from 'pinia'
@@ -12,16 +11,7 @@ import router from '@/router'
 import { useAlertStore } from '@/stores/alert'
 import { useAnimationStore } from '@/stores/animation'
 import { useAuthStore } from '@/stores/auth'
-const defaultAnimationTime = 3000
-type TimerAnimation = AnimationName | 'default'
-const timerAnimation: Partial<Record<TimerAnimation, number>> = {
-  default: defaultAnimationTime,
-  nextPlayer : defaultAnimationTime * 2.2, //2.2,
-  resultVote: defaultAnimationTime * 2.2, //2.2,
-  target: defaultAnimationTime * 5,//,
-  nextTurn: defaultAnimationTime * 1.7,
-  newRound: defaultAnimationTime * 1,
-}
+
 
 const wsURL = import.meta.env.VITE_WEBSOCKET_URL
 
@@ -58,7 +48,7 @@ export async function JoinChanel(id: number) {
 export async function JoinUserChannel(id: number) {
   const auth = useAuthStore()
   const gameStore = useGameStore()
-  const { addAnimation } = useAnimationStore()
+  const { addAnimation,timerAnimation } = useAnimationStore()
   const { addAlert } = useAlertStore()
 
   if (userSubscription !== null) {
@@ -89,10 +79,9 @@ export async function JoinUserChannel(id: number) {
           duration:timerAnimation.target!
         })
       }
-      //console.log('ANIMATION', json.data)
       addAnimation({
         name: json.data,
-        duration: timerAnimation[json.data as TimerAnimation]! || timerAnimation.default!,
+        duration: timerAnimation[json.data]! || timerAnimation.default!,
       })
     }
   })

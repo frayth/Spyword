@@ -3,6 +3,7 @@ import Alert from '@/components/alert/alertComponent.vue'
 import { useAlertStore } from '@/stores/alert'
 import { storeToRefs } from 'pinia'
 import { useWakeLock } from '@vueuse/core'
+import errorModal from './components/modal/errorModal.vue'
 
 const { alerts, alertIsVisible } = storeToRefs(useAlertStore())
 const {}=useWakeLock()
@@ -24,6 +25,7 @@ const {}=useWakeLock()
       :key="`${i}alert`"
     />
   </div>
+  <Transition name="slideError" mode="out-in"> <errorModal/> </Transition>
 
   <RouterView
   ref="app"
@@ -78,6 +80,15 @@ const {}=useWakeLock()
 * {
   scrollbar-width: thin; /* Mince */
   scrollbar-color: rgba(100, 100, 100, 0.5) transparent; /* Poignée + fond */
+}
+.slideError-enter-active,
+.slideError-leave-active {
+  transition: all 0.5s ease;
+}
+.slideError-enter-from,
+.slideError-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
 }
 /*header {
   line-height: 1.5;

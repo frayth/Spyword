@@ -1,5 +1,5 @@
 <template>
-  <div class=" h-full grid justify-items-center items-center overflow-hidden">
+  <div class=" p-1 w-full h-full grid justify-items-center items-center overflow-hidden">
     <choosseComp v-if="game.currentGame.properties.gamePhase === 'choose'" />
     <playComp v-else-if="game.currentGame.properties.gamePhase === 'play'" />
     <voteComp v-else-if="game.currentGame.properties.gamePhase === 'vote'" />

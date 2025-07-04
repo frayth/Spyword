@@ -1,23 +1,15 @@
 <template>
   <div class="bg-white w-full h-screen lg:p-5">
     <div
-      class="grid grid-rows-[auto_1fr] w-full h-full border border-amber"
+      class="grid grid-rows-[1fr] w-full h-full "
       ref="bandeau"
     >
       <!-- Bandeau supérieur -->
-      <div class="w-full grid grid-cols-3 items-center p-2">
-        <LeaveGame />
-        <h1
-          class="font-black text-xl md:text-2xl text-center cursor-pointer hover:scale-105 transition-transform grid-col-span-2"
-        >
-          SpyWord
-        </h1>
-        <div></div>
-      </div>
+
 
       <!-- Contenu principal -->
       <div
-        :class="`h-full w-full grid grid-rows-[auto_2px_3fr] lg:(grid-rows-1 grid-cols-[1fr_2px_2fr])  lg:max-h-[calc(100vh-56px-42px)] relative bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 dark:from-gray-800 dark:via-gray-900 dark:to-black`"
+        :class="`h-full w-full grid grid-rows-[auto_2px_3fr] lg:(grid-rows-1 grid-cols-[1fr_2px_2fr])  lg:max-h-[calc(100vh)] relative bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 dark:from-gray-800 dark:via-gray-900 dark:to-black`"
         id="mainPanel"
         ref="gameView"
       >
@@ -32,10 +24,11 @@
         ></div>
         <!-- Zone de jeu -->
         <div
-          class="h-full overflow-auto relative grid"
+          class="h-full overflow-auto relative grid grid-rows-[auto_1fr]"
           @click="animation = true"
           ref="mainPanel"
         >
+        <div class="w-full flex justify-end py-2 px-3"><optionSvg class="cursor-pointer" @click="optionIsOpen=true"></optionSvg></div>
           <OptionsGame
             v-if="!game.currentGame.inGame"
             :game="game.currentGame"
@@ -43,6 +36,9 @@
           <gameComponent v-else>
             {{ auth.infoUser.currentWord }}
           </gameComponent>
+          <div class=" w-fit h-fit min-w-200px absolute top-50% left-50% translate--50% shadow-2xl z-10 rounded-2xl" v-if="optionIsOpen">
+            <optionGameComp @close="optionIsOpen = false" />
+          </div>
           <Animation
             :width="width"
             :height="height"
@@ -62,7 +58,8 @@ import { useAppliStore } from '@/stores/appli'
 import { useElementBounding, useWakeLock } from '@vueuse/core'
 import playerList from '@/components/play/playerList.vue'
 import { useGameStore } from '@/stores/game'
-import LeaveGame from '@/components/play/LeaveGame.vue'
+import optionGameComp from '@/components/game/optionGameComp.vue'
+import optionSvg from '@/assets/SVG/optionSvg.vue'
 import { JoinChanel } from '@/Services/useWs'
 import { onMounted, reactive, ref, useTemplateRef } from 'vue'
 import Animation from '@/components/game/animationComponent.vue'
@@ -76,6 +73,7 @@ const auth = useAuthStore()
 const game = useGameStore()
 const panel = useTemplateRef('mainPanel')
 const bodyElement = ref<HTMLElement | null>(null)
+const optionIsOpen = ref(false)
 onMounted(() => {
   bodyElement.value = document.querySelector('body')
 })

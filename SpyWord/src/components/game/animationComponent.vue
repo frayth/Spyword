@@ -3,7 +3,6 @@
   <Transition name="fade">
     <component
       :is="currentAnimation"
-      
       class="w-full h-full"
     />
   </Transition>

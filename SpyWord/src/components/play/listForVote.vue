@@ -67,7 +67,7 @@
           class="w-full mt-4 p-4 bg-white bg-opacity-10 rounded-lg shadow-md"
         >
           <h2 class="text-lg font-semibold text-white text-center mb-2">
-            Mots proposés par {{ playerSelected.fullName }}
+            Mots proposés
           </h2>
           <div class="flex flex-wrap justify-center gap-2">
             <span

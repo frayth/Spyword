@@ -1,14 +1,14 @@
 <template>
   <div class="grid place-items-center text-white p-6 w-full h-full bg-gray-950">
-    
+
     <Teleport to="body">
-      <transition name="fade-slide">
         <div
+          ref="nameOverPortrait"
           v-if="currentOverPortrait !== null"
           class="absolute z-[1200000] px-4 py-3 rounded-xl bg-white border border-black text-black text-sm pointer-events-none"
           :style="{
             top: `${y}px`,
-            left: `${x + 20}px`,
+            left: `${x + 20 + ToolWidth >=appli.infoWindow.width? `${x - 20 - ToolWidth}` : `${x + 20}`   }px`,
             boxShadow: '2px 2px 0 #000, 4px 4px 0 #555',
           }"
         >
@@ -21,13 +21,12 @@
             </div>
           </div>
         </div>
-      </transition>
     </Teleport>
-      <div v-if="introIsOpen" class="fixed inset-0 flex items-center justify-center z-50">
+    <div v-if="introIsOpen" class="flex items-center justify-center z-50">
     <div
       class="bg-white text-black border border-gray-200 shadow-lg rounded-2xl p-6 max-w-sm w-full text-center animate-fade-in"
     >
-      <div class="flex flex-col items-center space-y-4">
+      <div class="flex flex-col items-center justify-center space-y-4">
         <svg class="w-12 h-12 text-green-500" fill="none" stroke="currentColor" stroke-width="1.5"
           viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round"
@@ -39,7 +38,7 @@
   </div>
     <div v-else class="flex flex-col gap-6 w-full lg:w-90%">
       <div
-        v-for="{ target, idList } in game.currentGame.properties.resultRound
+        v-for="({ target, idList },idTarget) in game.currentGame.properties.resultRound
           ?.history"
         :key="target"
         class="b b-amber grid grid-rows-[20px_3fr] grid-cols-[auto_1fr] gap-x-4 items-center w-full bg-gray-800 p-4 rounded-2xl shadow-lg md:(grid-rows-[1fr_3fr] grid-cols-[auto_1fr] gap-x-10) lg:(min-h-200px )"
@@ -51,9 +50,11 @@
               class="w-20 h-20 rounded-full overflow-hidden border-4 border-white shadow-md relative lg:(w-40 h-40)"
             >
               <portraitComp
-                  @mouseenter="handleNameShow($event, target, 'target')"
+                  @mouseenter="handleNameShow($event, target, 'target');handleHandClick(idTarget,0)"
                   @mouseleave="currentOverPortrait = null"
-                  @click.stop="mobileHandleNameShow($event, target, 'target')"
+                  @click.stop="mobileHandleNameShow($event, target, 'target');handleHandClick(idTarget,0)"
+                  :animation="showclickHand && idTarget === 0 && tutoStore.tutoStep.targetAnimation"
+
                 :url="
                   game.currentGame.users.find(el => el.id === target)?.gameStat
                     ?.urlAvatar!
@@ -80,7 +81,7 @@
             @enter="enter"
           >
             <div
-              v-for="id in idList"
+              v-for="(id,i) in idList"
               :key="`ennemy-${id}`"
               class="relative w-14 h-14 opacity-0 lg:(w-20 h-20)"
             >
@@ -89,9 +90,10 @@
                 :id="`ennemy-${id}`"
               >
                 <portraitComp
-                  @mouseenter="handleNameShow($event, id, 'ennemy')"
+                  @mouseenter="handleNameShow($event, id, 'ennemy');handleHandClick(i,idTarget)"
                   @mouseleave="handleLeave()"
-                  @click.stop="mobileHandleNameShow($event, id, 'ennemy')"
+                  :animation="showclickHand && i === 0 && idTarget === 0 && tutoStore.tutoStep.targetAnimation"
+                  @click.stop="mobileHandleNameShow($event, id, 'ennemy');handleHandClick(i,idTarget)"
                   :url="
                     game.currentGame.users.find(el => el.id === id)?.gameStat
                       ?.urlAvatar!
@@ -110,8 +112,16 @@
 import { useGameStore } from '@/stores/game'
 import { useMouse } from '@vueuse/core'
 import portraitComp from '@/components/animation/assets/portraitComp.vue'
-import { computed, ref, watchEffect } from 'vue'
+import { computed, ref, useTemplateRef, watchEffect } from 'vue'
+import { useTutoStore } from '@/stores/tuto'
+import { useElementBounding } from '@vueuse/core'
+import { useAppliStore } from '@/stores/appli'
+const appli = useAppliStore()
+const nameToolTip = useTemplateRef('nameOverPortrait')
+const {width:ToolWidth} = useElementBounding(nameToolTip)
+const tutoStore = useTutoStore()
 const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0
+const showclickHand = ref(true)
 const introIsOpen = ref(true)
 setTimeout(() => {
   introIsOpen.value = false
@@ -158,11 +168,17 @@ watchEffect(()=>{
 })
 const mobileHandleNameShow = (event: MouseEvent, id: number ,role: 'target' | 'ennemy') => {
   if( currentOverPortrait.value !== null) return
-  currentOverPortrait.value ={id,role,position:{x:x.value,y:y.value}} 
+  currentOverPortrait.value ={id,role,position:{x:x.value,y:y.value}}
 }
 const handleLeave = () => {
   if(isMobile) return
   currentOverPortrait.value = null
+}
+const handleHandClick= (i:number,idTarget:number) => {
+  if(!tutoStore.tutoStep.targetAnimation)return
+  if(i === 0 && idTarget === 0){
+    tutoStore.setTutoStep('targetAnimation', false)
+  }
 }
 
 </script>
@@ -197,16 +213,5 @@ const handleLeave = () => {
     transform: translateY(-10px);
   }
 }
-.fade-slide-enter-active,
-.fade-slide-leave-active {
-  transition: all 0.2s ease-out;
-}
-.fade-slide-enter-from {
-  opacity: 0;
-  transform: translateY(5px);
-}
-.fade-slide-leave-to {
-  opacity: 0;
-  transform: translateY(5px);
-}
+
 </style>

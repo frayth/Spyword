@@ -135,7 +135,7 @@ function shuffleArray(array: User[]): number[] {
   return arrayIndex
 }
 
-export async function resetGame(this: Game) {
+export async function resetGame(this: Game, source: 'leave' | 'reset') {
   this.inGame = false
   this.properties = {}
   await this.getAllInfo()
@@ -145,7 +145,10 @@ export async function resetGame(this: Game) {
     await user.gameStat.save()
   }
   await this.save()
-  await this.alert(10, 'Un joueur à quitté la partie')
+  await this.alert(
+    source === 'leave' ? 10 : 11,
+    `${source === 'leave' ? 'Un joueur à quitté la partie' : 'La partie a été réinitialisée'}`
+  )
 }
 
 export async function alert(this: Game, code: number, message: string) {

@@ -1,11 +1,11 @@
 <template>
   <div class="flex justify-center items-center p-4">
     <div
-      class="bg-gradient-to-br from-gray-100 to-gray-200 w-11/12 md:w-3/4 rounded-3xl shadow-custom-yellow p-6 lg:p-10 text-gray-800 text-center"
+      class="flex justify-center items-center bg-gradient-to-br from-gray-100 to-gray-200 w-11/12 md:w-3/4 rounded-3xl shadow-custom-yellow p-6 lg:p-10 text-gray-800 text-center"
     >
       <textTimer
         class="bg-white/30 backdrop-blur-sm rounded-xl p-5 text-lg lg:text-2xl font-semibold shadow-inner animate-pulse text-gray-900"
-        :timer="1500"
+        :timer="1000"
         value="C'est l'heure des votes"
       />
     </div>
