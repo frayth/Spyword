@@ -41,7 +41,7 @@ export default class OptionsController {
     try {
       const game = await findGame(params.id)
       await game.getAllInfo()
-      if (game.gameOption.maxPlayers <= 3) {
+      if (game.gameOption.maxPlayers <= 3 && payload.present) {
         return response
           .status(403)
           .send({ message: 'maxPlayers must be greater than 3', code: 4035 })

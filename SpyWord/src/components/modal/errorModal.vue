@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-fit h-fit z-1000 absolute top-10% right-0 select-none pointer-events-none flex flex-col bg-transparent overflow-hidden transition-none pt-4 pl-4 pb-4"
+    class="w-fit h-fit z-1000 absolute top-10% right-0 select-none pointer-events-none flex flex-col bg-transparent overflow-hidden transition-none pt-4 pl-4 pb-4 scrollbar-none"
     :style="{
       maxWidth: appliStore.infoWindow.width - 10 + 'px',
       maxHeight: appliStore.infoWindow.height * 0.5 + 'px',
@@ -17,7 +17,7 @@
       <li
         v-for="error in errorsStore.errorsList"
         :key="error.id"
-        class="pointer-events-auto shadow-black shadow-md flex items-center w-fit h-30px md:h-50px rounded-l-lg"
+        class="pointer-events-auto shadow-black shadow-md flex items-center w-fit h-30px md:h-50px rounded-l-lg scrollbar-none"
         @mouseenter="errorsStore.removeError(error.id)"
       >
         <div
