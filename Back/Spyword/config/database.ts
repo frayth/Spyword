@@ -3,7 +3,7 @@ import { defineConfig } from '@adonisjs/lucid'
 const isProd = process.env.NODE_ENV === 'production'
 console.log(
   '> DB PATH:',
-  isProd ? app.makePath('production/db/prod.sqlite3') : app.tmpPath('dev.sqlite3')
+  isProd ? app.makePath('../production/db/prod.sqlite3') : app.tmpPath('dev.sqlite3')
 )
 const dbConfig = defineConfig({
   connection: 'sqlite',
@@ -11,7 +11,9 @@ const dbConfig = defineConfig({
     sqlite: {
       client: 'better-sqlite3',
       connection: {
-        filename: isProd ? app.makePath('production/db/prod.sqlite3') : app.tmpPath('dev.sqlite3'),
+        filename: isProd
+          ? app.makePath('../production/db/prod.sqlite3')
+          : app.tmpPath('dev.sqlite3'),
       },
       useNullAsDefault: true,
       migrations: {
