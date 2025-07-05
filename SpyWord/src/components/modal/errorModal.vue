@@ -17,18 +17,18 @@
       <li
         v-for="error in errorsStore.errorsList"
         :key="error.id"
-        class="pointer-events-auto shadow-black shadow-md flex items-center w-fit h-30px md:h-50px rounded-l-lg scrollbar-none"
+        class="pointer-events-auto shadow-black shadow-md flex items-center w-fit h-40px md:h-50px rounded-l-lg scrollbar-none overflow-auto"
         @mouseenter="errorsStore.removeError(error.id)"
       >
         <div
-          class="bg-white w-30px h-30px md:(w-50px h-50px)  overflow-hidden flex items-center justify-center shrink-0 rounded-l-lg"
+          class="bg-white w-40px h-40px md:(w-50px h-50px)  overflow-hidden flex items-center justify-center shrink-0 rounded-l-lg"
         >
-          <img src="/icone/crossError.png" class="w-25px h-25px md:(w-40px h-40px)" alt="" />
+          <img src="/icone/alert.png" class="w-25px h-25px md:(w-40px h-40px)" alt="" />
         </div>
         <div
           class="bg-red-500 h-full w-full flex items-center justify-end px-1 md:px-4"
           :style="{
-            fontSize: `${Math.max(10, 20 - error.message.length / (appliStore.infoWindow.width<= 750 ? 2 : 4))}px`,
+            fontSize: `${Math.max(10, 20 - error.message.length / (appliStore.infoWindow.width<= 1024 ? 2 : 8))}px`,
           }"
         >
           {{ error.message }}
