@@ -11,6 +11,7 @@ import router from '@/router'
 import { useAlertStore } from '@/stores/alert'
 import { useAnimationStore } from '@/stores/animation'
 import { useAuthStore } from '@/stores/auth'
+import { useErrorsStore } from '@/stores/errors'
 
 
 const wsURL = import.meta.env.VITE_WEBSOCKET_URL
@@ -91,12 +92,15 @@ function handleUserAction(
   action: string,
   gameStore: ReturnType<typeof useGameStore>,
 ) {
+  const errorsStore = useErrorsStore()
   switch (action) {
     case 'leave':
       subscription?.delete()
       gameStore.resetGame()
       router.push('/')
       break
+    case 'verifyCancel':
+      errorsStore.addError('Le propriétaire de la partie n\'a pas validé votre mot.')
     default:
       console.warn('Action non reconnue:', action)
   }

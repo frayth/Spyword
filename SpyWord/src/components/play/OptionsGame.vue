@@ -254,6 +254,7 @@
 <script setup lang="ts">
 import { useFetch } from '@/composable/useFetch'
 import { useAppliStore } from '@/stores/appli'
+import { useErrorsStore } from '@/stores/errors'
 
 import {
   computed,
@@ -272,6 +273,7 @@ import helpBoxComp from '../game/helpBoxComp.vue'
 import changeAvatar from './changeAvatar.vue'
 import AvatarPanel from './AvatarPanel.vue'
 const { activeBreakPoint } = storeToRefs(useAppliStore())
+const errorsStore = useErrorsStore()
 const { infoUser } = storeToRefs(useAuthStore())
 const { currentGame } = storeToRefs(useGameStore())
 const numberOfPlayer = ref(currentGame.value.gameOption.maxPlayers)
@@ -391,7 +393,10 @@ async function emitMrWhite() {
 }
 
 async function lauchGame() {
-  if (currentGame.value.ownerId !== infoUser.value.id) return
+  if (currentGame.value.ownerId !== infoUser.value.id){
+    errorsStore.addError('Veuillez attendre que le propriétaire lance la partie.')
+    return
+  }
   const { fetchData } = useFetch(`api/games/start`, { method: 'PUT' })
   await fetchData()
 }

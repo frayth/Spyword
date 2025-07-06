@@ -36,6 +36,28 @@
         >
       </p>
     </div>
+      <div
+      v-if="selectedPlayerInfo?.id === infoUser.id"
+      :class="{
+        'p-1 bg-white rounded-lg shadow-md flex  gap-2 flex-row p-1 justify-center items-center': true,
+        'flex-center-col ': bulleBounding.width < 300,
+      }"
+    >
+      <p class="text-sm text-gray-600 font-semibold italic" >
+        {{ infoUser.currentWord ? 'Mon mot est :' : 'Je suis' }}
+      </p>
+      <p
+        class="text-xl lg:(text-2xl) font-medium text-gray-800 transform-translate-y--3px"
+      >
+        <span
+          :class="{
+            'font-bold': true,
+          }"
+          >{{ infoUser.currentWord? infoUser.currentWord : 'Mr.White' }}</span
+        >
+      </p>
+
+    </div>
     <!-- History -->
     <div
       class="p2 rounded-xl shadow bg-white dark:bg-gray-800 w-full flex-center-col"
@@ -138,6 +160,7 @@
 
 <script setup lang="ts">
 import { useGameStore } from '@/stores/game'
+import { useAuthStore } from '@/stores/auth'
 import { storeToRefs } from 'pinia'
 import { vOnClickOutside } from '@vueuse/components'
 import HistoryComp from './HistoryComp.vue'
@@ -154,6 +177,7 @@ import {
 import { useElementBounding } from '@vueuse/core'
 const { currentGame, playersRoles } = storeToRefs(useGameStore())
 const historySens = ref<'left' | 'right'>('left')
+const { infoUser } = storeToRefs(useAuthStore())
 const animateKey = ref(0)
 const animationLoad = ref(false)
 const currentMancheHistory = ref(

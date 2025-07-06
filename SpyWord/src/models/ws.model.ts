@@ -10,7 +10,7 @@ export interface GameWSMessage extends BaseWSMessage {
   data: Game
 }
 
-export type UserAction = 'leave' | 'alert'
+export type UserAction = 'leave' | 'alert' |'verifyCancel'
 
 export type AnimationName =
   | 'start'

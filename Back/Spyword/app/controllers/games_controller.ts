@@ -249,7 +249,9 @@ export default class GamesController {
       user.game.properties.verifyPhase = false
       currentPlayer?.gameStat.words.pop()
       await currentPlayer?.gameStat.save()
+      transmitUser(currentPlayer?.id!, 'action', 'verifyCancel')
     }
+
     transmitGame(user.game.id, user.game)
     return response.status(200).send({ message: 'validate ok', code: 200 })
   }

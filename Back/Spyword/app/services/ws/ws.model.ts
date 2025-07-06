@@ -1,5 +1,5 @@
 export type TypeUser = 'action' | 'info' | 'alert' | 'animate' | 'verify'
-export type Action = 'leave' | 'animate'
+export type Action = 'leave' | 'animate' | 'verifyCancel'
 export interface InfoUser {
   role?: string
   word?: string
